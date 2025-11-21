@@ -15,12 +15,14 @@ import Glossary from "./pages/Glossary";
 import NoticeOfDefaultGuide from "./pages/NoticeOfDefaultGuide";
 import NoticeOfDefaultChecklist from "@/pages/NoticeOfDefaultChecklist";
 import ContactingYourLenderGuide from "@/pages/ContactingYourLenderGuide";
+import KnowledgeBase from "@/pages/KnowledgeBase";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path="/knowledge-base" component={KnowledgeBase} />
       <Route path="/knowledge-base/understanding-foreclosure" component={UnderstandingForeclosure} />
       <Route path="/knowledge-base/homeowner-rights" component={HomeownerRights} />
       <Route path="/knowledge-base/options" component={OptionsToAvoidForeclosure} />
