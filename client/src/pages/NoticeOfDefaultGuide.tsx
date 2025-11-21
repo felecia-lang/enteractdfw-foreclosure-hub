@@ -330,9 +330,9 @@ export default function NoticeOfDefaultGuide() {
             Get a printable PDF checklist to track your progress through each step. Stay organized and ensure you don't miss critical deadlines.
           </p>
           <Button size="lg" asChild>
-            <Link href="/">
+            <Link href="/guides/notice-of-default/checklist">
               <Download className="h-5 w-5 mr-2" />
-              <span>Get Free Checklist & Guide</span>
+              <span>View Printable Checklist</span>
             </Link>
           </Button>
         </div>

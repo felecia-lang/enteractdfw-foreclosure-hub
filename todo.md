@@ -86,3 +86,9 @@
 - [x] Include timeline and urgency indicators
 - [x] Add downloadable checklist functionality
 - [x] Link from knowledge base navigation
+
+## Downloadable Checklist
+- [x] Create printable checklist page summarizing Notice of Default action items
+- [x] Add print-friendly styling
+- [x] Include checkbox format for tracking progress
+- [x] Link from Notice of Default guide page

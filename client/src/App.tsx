@@ -13,6 +13,7 @@ import HomeownerRights from "./pages/HomeownerRights";
 import About from "./pages/About";
 import Glossary from "./pages/Glossary";
 import NoticeOfDefaultGuide from "./pages/NoticeOfDefaultGuide";
+import NoticeOfDefaultChecklist from "./pages/NoticeOfDefaultChecklist";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/glossary" component={Glossary} />
       <Route path="/guides/notice-of-default" component={NoticeOfDefaultGuide} />
+      <Route path="/guides/notice-of-default/checklist" component={NoticeOfDefaultChecklist} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
