@@ -65,7 +65,7 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
           </Link>
           <div className="flex items-center gap-4">
             <Button variant="outline" size="sm" asChild className="hidden sm:flex">
-              <a href="tel:+1234567890">
+              <a href="tel:+18329327585">
                 <Phone className="h-4 w-4 mr-2" />
                 Call Now
               </a>

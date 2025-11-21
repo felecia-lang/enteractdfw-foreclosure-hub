@@ -64,3 +64,9 @@
 
 ## Branding Updates
 - [x] Replace logo with EnterActDFW branded logo
+
+## Contact Information Updates
+- [x] Update agent name to Felecia Fair
+- [x] Update phone number to 832-932-7585
+- [x] Update email to info@enteractdfw.com
+- [x] Update address to 4400 State Hwy 121, Suite 300 Lewisville Texas 75056

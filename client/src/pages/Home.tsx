@@ -77,7 +77,7 @@ export default function Home() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+1234567890">
+              <a href="tel:+18329327585">
                 <Phone className="h-4 w-4 mr-2" />
                 Call Now
               </a>
@@ -167,7 +167,7 @@ export default function Home() {
                       <Input
                         id="phone"
                         type="tel"
-                        placeholder="(555) 123-4567"
+                        placeholder="(832) 932-7585"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         required
@@ -362,9 +362,10 @@ export default function Home() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: (555) 123-4567</li>
-                <li>Email: help@enteractdfw.com</li>
-                <li>Dallas-Fort Worth, TX</li>
+                <li>Phone: (832) 932-7585</li>
+                <li>Email: info@enteractdfw.com</li>
+                <li>4400 State Hwy 121, Suite 300</li>
+                <li>Lewisville, Texas 75056</li>
               </ul>
             </div>
           </div>
