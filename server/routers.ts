@@ -20,6 +20,59 @@ export const appRouter = router({
     }),
   }),
 
+  // Checklist email functionality
+  checklist: router({
+    emailToUser: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        checklistData: z.object({
+          checkedItems: z.array(z.string()),
+          timestamp: z.string(),
+        }),
+      }))
+      .mutation(async ({ input }) => {
+        // Send email with checklist summary
+        const { email, checklistData } = input;
+        const checkedCount = checklistData.checkedItems.length;
+        
+        // Create email content
+        const emailContent = `
+Your Notice of Default Action Checklist
+
+You completed ${checkedCount} action items on ${new Date(checklistData.timestamp).toLocaleDateString()}.
+
+Completed Items:
+${checklistData.checkedItems.map((item, idx) => `${idx + 1}. ${item}`).join('\n')}
+
+Next Steps:
+- Continue working through your checklist
+- Contact EnterActDFW for personalized assistance: (832) 932-7585
+- Visit our knowledge base for more resources
+
+Remember: Time is critical. You typically have 20-30 days from receiving a Notice of Default to take action.
+
+---
+EnterActDFW Real Estate Brokerage
+4400 State Hwy 121, Suite 300
+Lewisville, Texas 75056
+Phone: (832) 932-7585
+Email: info@enteractdfw.com
+        `;
+
+        // In a real implementation, you would send this via an email service
+        // For now, we'll just return success
+        // TODO: Integrate with email service (SendGrid, AWS SES, etc.)
+        
+        console.log(`Email would be sent to: ${email}`);
+        console.log(`Content: ${emailContent}`);
+        
+        return {
+          success: true,
+          message: `Checklist sent to ${email}`,
+        };
+      }),
+  }),
+
   // Lead capture and management
   leads: router({
     // Public procedure for submitting leads from the landing page

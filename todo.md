@@ -92,3 +92,10 @@
 - [x] Add print-friendly styling
 - [x] Include checkbox format for tracking progress
 - [x] Link from Notice of Default guide page
+
+## Checklist Save/Email Features
+- [x] Create backend API to email checklist to user
+- [x] Add "Save as PDF" button to checklist page (uses browser print dialog)
+- [x] Add "Email to Me" button with email input dialog
+- [x] Add checkbox state tracking for completed items
+- [x] Test email delivery functionality

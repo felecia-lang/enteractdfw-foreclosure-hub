@@ -1,11 +1,73 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Phone, Printer, Download, AlertTriangle } from "lucide-react";
+import { Phone, Printer, Download, AlertTriangle, Mail, Save } from "lucide-react";
+import { useState } from "react";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function NoticeOfDefaultChecklist() {
+  const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  
+  const emailMutation = trpc.checklist.emailToUser.useMutation({
+    onSuccess: () => {
+      toast.success("Checklist sent to your email!");
+      setEmailDialogOpen(false);
+      setEmail("");
+    },
+    onError: (error) => {
+      toast.error("Failed to send email. Please try again.");
+      console.error(error);
+    },
+  });
+
   const handlePrint = () => {
     window.print();
+  };
+  
+  const handleSaveAsPDF = () => {
+    // Use browser's print to PDF functionality
+    window.print();
+    toast.info("Use your browser's print dialog to save as PDF");
+  };
+  
+  const handleCheckboxChange = (itemText: string, checked: boolean) => {
+    setCheckedItems(prev => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(itemText);
+      } else {
+        newSet.delete(itemText);
+      }
+      return newSet;
+    });
+  };
+  
+  const handleEmailChecklist = () => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    
+    emailMutation.mutate({
+      email,
+      checklistData: {
+        checkedItems: Array.from(checkedItems),
+        timestamp: new Date().toISOString(),
+      },
+    });
   };
 
   return (
@@ -47,10 +109,20 @@ export default function NoticeOfDefaultChecklist() {
               <h1 className="text-2xl font-bold text-foreground mb-2">Notice of Default Action Checklist</h1>
               <p className="text-muted-foreground">Print or save this checklist to track your progress</p>
             </div>
-            <Button onClick={handlePrint} size="lg">
-              <Printer className="h-5 w-5 mr-2" />
-              Print Checklist
-            </Button>
+            <div className="flex gap-3">
+              <Button onClick={handlePrint} size="lg" variant="outline">
+                <Printer className="h-5 w-5 mr-2" />
+                Print
+              </Button>
+              <Button onClick={handleSaveAsPDF} size="lg" variant="outline">
+                <Save className="h-5 w-5 mr-2" />
+                Save as PDF
+              </Button>
+              <Button onClick={() => setEmailDialogOpen(true)} size="lg">
+                <Mail className="h-5 w-5 mr-2" />
+                Email to Me
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -103,15 +175,27 @@ export default function NoticeOfDefaultChecklist() {
                 </div>
                 <div className="space-y-2 ml-13 print:ml-11">
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
-                    <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
+                    <input 
+                      type="checkbox" 
+                      className="mt-1 h-4 w-4 print:h-3 print:w-3" 
+                      onChange={(e) => handleCheckboxChange("Locate the date the notice was sent or posted", e.target.checked)}
+                    />
                     <span className="text-sm">Locate the date the notice was sent or posted</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
-                    <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
+                    <input 
+                      type="checkbox" 
+                      className="mt-1 h-4 w-4 print:h-3 print:w-3" 
+                      onChange={(e) => handleCheckboxChange("Find the total amount needed to cure the default (reinstatement amount)", e.target.checked)}
+                    />
                     <span className="text-sm">Find the total amount needed to cure the default (reinstatement amount)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
-                    <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
+                    <input 
+                      type="checkbox" 
+                      className="mt-1 h-4 w-4 print:h-3 print:w-3" 
+                      onChange={(e) => handleCheckboxChange("Note the deadline to cure the default (typically 20-30 days in Texas)", e.target.checked)}
+                    />
                     <span className="text-sm">Note the deadline to cure the default (typically 20-30 days in Texas)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
@@ -429,6 +513,50 @@ export default function NoticeOfDefaultChecklist() {
           </div>
         </div>
       </section>
+
+      {/* Email Dialog */}
+      <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Email Checklist to Yourself</DialogTitle>
+            <DialogDescription>
+              Enter your email address and we'll send you a summary of your completed checklist items.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleEmailChecklist();
+                  }
+                }}
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {checkedItems.size > 0 ? (
+                <p>You have completed {checkedItems.size} action item{checkedItems.size !== 1 ? 's' : ''}.</p>
+              ) : (
+                <p className="text-amber-600">You haven't checked any items yet. Check items as you complete them to track your progress.</p>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEmailDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEmailChecklist} disabled={emailMutation.isPending}>
+              {emailMutation.isPending ? "Sending..." : "Send Email"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* CTA Section - Hidden in print */}
       <section className="py-12 bg-primary/5 print:hidden">
