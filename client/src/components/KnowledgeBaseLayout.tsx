@@ -59,9 +59,8 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/">
-            <a className="flex items-center gap-2">
-              <Home className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold text-foreground">EnterActDFW</span>
+            <a className="flex items-center gap-3">
+              <img src="/enteractdfw-logo.png" alt="EnterActDFW" className="h-10" />
             </a>
           </Link>
           <div className="flex items-center gap-4">

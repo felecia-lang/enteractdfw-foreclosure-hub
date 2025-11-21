@@ -57,9 +57,8 @@ export default function Home() {
       {/* Header */}
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <HomeIcon className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold text-foreground">EnterActDFW</span>
+          <div className="flex items-center gap-3">
+            <img src="/enteractdfw-logo.png" alt="EnterActDFW" className="h-10" />
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/knowledge-base">
@@ -346,7 +345,7 @@ export default function Home() {
         <div className="container">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
-              <h4 className="font-semibold text-foreground mb-4">EnterActDFW</h4>
+              <img src="/enteractdfw-logo.png" alt="EnterActDFW" className="h-8 mb-4" />
               <p className="text-sm text-muted-foreground mb-4">
                 Licensed real estate brokerage helping Texas homeowners navigate foreclosure with dignity and fairness.
               </p>

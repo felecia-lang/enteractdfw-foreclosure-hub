@@ -61,3 +61,6 @@
 
 ## New Features
 - [x] Create Homeowner Rights and Protections page with federal and Texas-specific laws
+
+## Branding Updates
+- [x] Replace logo with EnterActDFW branded logo
