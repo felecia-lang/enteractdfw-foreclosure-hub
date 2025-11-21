@@ -63,19 +63,19 @@ export default function Home() {
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/knowledge-base">
-              <a className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
                 Knowledge Base
-              </a>
+              </span>
             </Link>
             <Link href="/resources">
-              <a className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
                 Resources
-              </a>
+              </span>
             </Link>
             <Link href="/faq">
-              <a className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
                 FAQ
-              </a>
+              </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
               <a href="tel:+1234567890">
@@ -354,10 +354,10 @@ export default function Home() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Resources</h4>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/knowledge-base"><a className="text-muted-foreground hover:text-primary">Knowledge Base</a></Link></li>
-                <li><Link href="/resources"><a className="text-muted-foreground hover:text-primary">Support Directory</a></Link></li>
-                <li><Link href="/faq"><a className="text-muted-foreground hover:text-primary">FAQ</a></Link></li>
-                <li><Link href="/glossary"><a className="text-muted-foreground hover:text-primary">Glossary</a></Link></li>
+                <li><Link href="/knowledge-base"><span className="text-muted-foreground hover:text-primary cursor-pointer">Knowledge Base</span></Link></li>
+                <li><Link href="/resources"><span className="text-muted-foreground hover:text-primary cursor-pointer">Support Directory</span></Link></li>
+                <li><Link href="/faq"><span className="text-muted-foreground hover:text-primary cursor-pointer">FAQ</span></Link></li>
+                <li><Link href="/glossary"><span className="text-muted-foreground hover:text-primary cursor-pointer">Glossary</span></Link></li>
               </ul>
             </div>
             <div>
