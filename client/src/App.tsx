@@ -9,6 +9,7 @@ import UnderstandingForeclosure from "./pages/UnderstandingForeclosure";
 import FAQ from "./pages/FAQ";
 import Resources from "./pages/Resources";
 import OptionsToAvoidForeclosure from "./pages/OptionsToAvoidForeclosure";
+import HomeownerRights from "./pages/HomeownerRights";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -16,6 +17,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path="/knowledge-base/understanding-foreclosure" component={UnderstandingForeclosure} />
+      <Route path="/knowledge-base/homeowner-rights" component={HomeownerRights} />
       <Route path="/knowledge-base/options" component={OptionsToAvoidForeclosure} />
       <Route path="/faq" component={FAQ} />
       <Route path="/resources" component={Resources} />

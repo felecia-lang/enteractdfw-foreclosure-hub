@@ -18,7 +18,7 @@
 ## Knowledge Base Content
 - [x] Navigation structure for all KB sections
 - [x] Understanding Foreclosure in Texas page
-- [ ] Homeowner Rights page
+- [x] Homeowner Rights page
 - [x] Options to Avoid Foreclosure page
 - [ ] Action Guide: Notice of Default checklist
 - [ ] Action Guide: Contacting Your Lender
@@ -58,3 +58,6 @@
 ## Bug Fixes
 - [x] Fix nested anchor tag error in Home.tsx navigation
 - [x] Add Options to Avoid Foreclosure page with loan modifications and short sales
+
+## New Features
+- [x] Create Homeowner Rights and Protections page with federal and Texas-specific laws
