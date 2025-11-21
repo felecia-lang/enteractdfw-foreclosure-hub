@@ -21,7 +21,7 @@
 - [x] Homeowner Rights page
 - [x] Options to Avoid Foreclosure page
 - [x] Action Guide: Notice of Default checklist
-- [ ] Action Guide: Contacting Your Lender
+- [x] Action Guide: Contacting Your Lender
 - [x] Resources & Support Directory
 - [x] FAQ page with search functionality
 - [ ] Avoiding Scams guide
@@ -99,3 +99,12 @@
 - [x] Add "Email to Me" button with email input dialog
 - [x] Add checkbox state tracking for completed items
 - [x] Test email delivery functionality
+
+## Lender Contact Guide
+- [x] Create comprehensive guide page for contacting lenders
+- [x] Include phone conversation scripts (opening, questions, closing)
+- [x] Add list of important questions to ask servicers
+- [x] Provide call log template for documenting conversations
+- [x] Include sample hardship letter template
+- [x] Add tips for negotiation and documentation
+- [x] Link from homepage and knowledge base navigation
