@@ -257,20 +257,32 @@ export default function Home() {
               { icon: BookOpen, title: "Understand the Texas Foreclosure Process", desc: "Learn the timeline, your rights, and what to expect at each stage." },
               { icon: Shield, title: "Know Your Legal Rights & Protections", desc: "Federal and Texas laws that protect homeowners facing foreclosure." },
               { icon: FileText, title: "Explore All Your Options", desc: "From loan modifications to short sales—see every path forward." },
-              { icon: Phone, title: "Scripts for Talking to Your Lender", desc: "What to say, what to ask, and how to negotiate effectively." },
+              { icon: FileText, title: "What to Do: Notice of Default", desc: "Step-by-step action guide when you receive a Notice of Default.", link: "/guides/notice-of-default" },
               { icon: AlertCircle, title: "Avoid Common Foreclosure Scams", desc: "Protect yourself from predatory companies and fraud." },
               { icon: DollarSign, title: "Get Fair Cash Offer Info", desc: "Learn how selling quickly can help you avoid foreclosure." },
-            ].map((item, idx) => (
-              <Card key={idx} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <item.icon className="h-10 w-10 text-primary mb-3" />
-                  <CardTitle className="text-lg">{item.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{item.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
+            ].map((item, idx) => {
+              const cardContent = (
+                <Card className="hover:shadow-lg transition-shadow h-full">
+                  <CardHeader>
+                    <item.icon className="h-10 w-10 text-primary mb-3" />
+                    <CardTitle className="text-lg">{item.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              );
+              
+              if (item.link) {
+                return (
+                  <Link key={idx} href={item.link}>
+                    {cardContent}
+                  </Link>
+                );
+              }
+              
+              return <div key={idx}>{cardContent}</div>;
+            })}
           </div>
         </div>
       </section>

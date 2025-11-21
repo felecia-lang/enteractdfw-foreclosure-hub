@@ -20,7 +20,7 @@
 - [x] Understanding Foreclosure in Texas page
 - [x] Homeowner Rights page
 - [x] Options to Avoid Foreclosure page
-- [ ] Action Guide: Notice of Default checklist
+- [x] Action Guide: Notice of Default checklist
 - [ ] Action Guide: Contacting Your Lender
 - [x] Resources & Support Directory
 - [x] FAQ page with search functionality
@@ -80,3 +80,9 @@
 - [x] Include search functionality for terms
 - [x] Organize alphabetically with jump navigation
 - [x] Add definitions for key terms (acceleration, deed in lieu, reinstatement, etc.)
+
+## Action Guide Pages
+- [x] Create Notice of Default action guide with step-by-step checklist
+- [x] Include timeline and urgency indicators
+- [x] Add downloadable checklist functionality
+- [x] Link from knowledge base navigation
