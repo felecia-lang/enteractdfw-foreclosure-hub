@@ -70,3 +70,7 @@
 - [x] Update phone number to 832-932-7585
 - [x] Update email to info@enteractdfw.com
 - [x] Update address to 4400 State Hwy 121, Suite 300 Lewisville Texas 75056
+
+## New Pages
+- [x] Create About the Agent page for Felecia Fair with credentials and bio
+- [x] Add navigation links to About page from header and footer

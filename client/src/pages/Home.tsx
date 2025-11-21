@@ -76,6 +76,11 @@ export default function Home() {
                 FAQ
               </span>
             </Link>
+            <Link href="/about">
+              <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+                About
+              </span>
+            </Link>
             <Button variant="outline" size="sm" asChild>
               <a href="tel:+18329327585">
                 <Phone className="h-4 w-4 mr-2" />
@@ -356,7 +361,7 @@ export default function Home() {
                 <li><Link href="/knowledge-base"><span className="text-muted-foreground hover:text-primary cursor-pointer">Knowledge Base</span></Link></li>
                 <li><Link href="/resources"><span className="text-muted-foreground hover:text-primary cursor-pointer">Support Directory</span></Link></li>
                 <li><Link href="/faq"><span className="text-muted-foreground hover:text-primary cursor-pointer">FAQ</span></Link></li>
-                <li><Link href="/glossary"><span className="text-muted-foreground hover:text-primary cursor-pointer">Glossary</span></Link></li>
+                <li><Link href="/about"><span className="text-muted-foreground hover:text-primary cursor-pointer">About Felecia Fair</span></Link></li>
               </ul>
             </div>
             <div>

@@ -10,6 +10,7 @@ import FAQ from "./pages/FAQ";
 import Resources from "./pages/Resources";
 import OptionsToAvoidForeclosure from "./pages/OptionsToAvoidForeclosure";
 import HomeownerRights from "./pages/HomeownerRights";
+import About from "./pages/About";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/knowledge-base/options" component={OptionsToAvoidForeclosure} />
       <Route path="/faq" component={FAQ} />
       <Route path="/resources" component={Resources} />
+      <Route path="/about" component={About} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
