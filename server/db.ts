@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertLead, InsertUser, leads, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,50 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Lead management functions
+export async function createLead(lead: InsertLead) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create lead: database not available");
+    return undefined;
+  }
+
+  try {
+    const result = await db.insert(leads).values(lead);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create lead:", error);
+    throw error;
+  }
+}
+
+export async function getAllLeads() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get leads: database not available");
+    return [];
+  }
+
+  try {
+    return await db.select().from(leads).orderBy(desc(leads.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get leads:", error);
+    return [];
+  }
+}
+
+export async function getLeadById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get lead: database not available");
+    return undefined;
+  }
+
+  try {
+    const result = await db.select().from(leads).where(eq(leads.id, id)).limit(1);
+    return result.length > 0 ? result[0] : undefined;
+  } catch (error) {
+    console.error("[Database] Failed to get lead:", error);
+    return undefined;
+  }
+}

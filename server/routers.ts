@@ -1,7 +1,10 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { z } from "zod";
+import { createLead, getAllLeads } from "./db";
+import { notifyOwner } from "./_core/notification";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -17,12 +20,48 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  // Lead capture and management
+  leads: router({
+    // Public procedure for submitting leads from the landing page
+    submit: publicProcedure
+      .input(
+        z.object({
+          firstName: z.string().min(1, "First name is required"),
+          email: z.string().email("Valid email is required"),
+          phone: z.string().min(10, "Valid phone number is required"),
+          propertyZip: z.string().min(5, "Valid ZIP code is required"),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          // Create lead in database
+          await createLead({
+            firstName: input.firstName,
+            email: input.email,
+            phone: input.phone,
+            propertyZip: input.propertyZip,
+            source: "landing_page",
+            status: "new",
+          });
+
+          // Notify owner of new lead
+          await notifyOwner({
+            title: "New Foreclosure Lead",
+            content: `New lead from ${input.firstName}\nEmail: ${input.email}\nPhone: ${input.phone}\nZIP: ${input.propertyZip}`,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("Failed to create lead:", error);
+          throw new Error("Failed to submit lead. Please try again.");
+        }
+      }),
+
+    // Protected procedure for viewing all leads (admin only)
+    list: protectedProcedure.query(async () => {
+      return await getAllLeads();
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
