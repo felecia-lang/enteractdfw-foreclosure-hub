@@ -76,6 +76,18 @@ export const testimonials = mysqlTable("testimonials", {
   email: varchar("email", { length: 320 }),
   phone: varchar("phone", { length: 20 }),
   status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  theme: mysqlEnum("theme", [
+    "loan_modification",
+    "foreclosure_prevention",
+    "short_sale",
+    "cash_offer",
+    "deed_in_lieu",
+    "bankruptcy_alternative",
+    "job_loss",
+    "medical_emergency",
+    "divorce",
+    "other"
+  ]),
   publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

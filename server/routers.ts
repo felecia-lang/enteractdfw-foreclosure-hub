@@ -390,6 +390,18 @@ Email: info@enteractdfw.com
         situation: z.string().optional(),
         story: z.string().optional(),
         outcome: z.string().optional(),
+        theme: z.enum([
+          "loan_modification",
+          "foreclosure_prevention",
+          "short_sale",
+          "cash_offer",
+          "deed_in_lieu",
+          "bankruptcy_alternative",
+          "job_loss",
+          "medical_emergency",
+          "divorce",
+          "other"
+        ]).optional(),
       }))
       .mutation(async ({ input }) => {
         const { id, ...data } = input;

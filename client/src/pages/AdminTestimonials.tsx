@@ -38,6 +38,7 @@ type Testimonial = {
   email: string | null;
   phone: string | null;
   status: "pending" | "approved" | "rejected";
+  theme: "loan_modification" | "foreclosure_prevention" | "short_sale" | "cash_offer" | "deed_in_lieu" | "bankruptcy_alternative" | "job_loss" | "medical_emergency" | "divorce" | "other" | null;
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -207,10 +208,15 @@ export default function AdminTestimonials() {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <CardTitle className="text-lg">{testimonial.name}</CardTitle>
                       {getStatusBadge(testimonial.status)}
                       {getPermissionBadge(testimonial.permissionToPublish)}
+                      {testimonial.theme && (
+                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                          {testimonial.theme.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                        </Badge>
+                      )}
                     </div>
                     <CardDescription className="flex items-center gap-4">
                       <span className="flex items-center gap-1">
@@ -429,6 +435,30 @@ export default function AdminTestimonials() {
                   }
                   rows={4}
                 />
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-theme">Theme Category</Label>
+                <select
+                  id="edit-theme"
+                  value={editingTestimonial.theme || ""}
+                  onChange={(e) =>
+                    setEditingTestimonial({ ...editingTestimonial, theme: e.target.value as Testimonial["theme"] })
+                  }
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">No Theme</option>
+                  <option value="loan_modification">Loan Modification</option>
+                  <option value="foreclosure_prevention">Foreclosure Prevention</option>
+                  <option value="short_sale">Short Sale</option>
+                  <option value="cash_offer">Cash Offer</option>
+                  <option value="deed_in_lieu">Deed in Lieu</option>
+                  <option value="bankruptcy_alternative">Bankruptcy Alternative</option>
+                  <option value="job_loss">Job Loss</option>
+                  <option value="medical_emergency">Medical Emergency</option>
+                  <option value="divorce">Divorce</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
             </div>
           )}

@@ -259,3 +259,13 @@
 - [x] Add link to testimonials management from admin dashboard
 - [x] Update Success Stories page to only show approved testimonials
 - [x] Test full testimonial workflow (submit → review → approve → publish)
+
+## Testimonial Theme Categorization
+- [x] Add theme field to testimonials table (enum or array)
+- [x] Define theme options: Loan Modification, Foreclosure Prevention, Short Sale, Cash Offer, Deed in Lieu, Bankruptcy Alternative, etc.
+- [x] Update backend API to support theme filtering
+- [x] Add theme dropdown/multi-select to admin edit modal
+- [x] Display theme badges on testimonial cards in admin page
+- [ ] Add theme filter to admin testimonials page
+- [ ] Optionally add theme filtering to public Success Stories page
+- [x] Test theme categorization workflow (theme saves to database and displays in edit modal)

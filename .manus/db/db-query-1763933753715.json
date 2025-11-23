@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, name, theme, status FROM testimonials LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user tYQ9sMJ3YyJbnfU.ac4291f19fa3 --database LjpDYh45TKLXumuEiGDadw --execute SELECT id, name, theme, status FROM testimonials LIMIT 5",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Test User",
+      "theme": "NULL",
+      "status": "approved"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\ttheme\tstatus\n1\tTest User\tNULL\tapproved\n",
+  "stderr": "",
+  "execution_time_ms": 196
+}
