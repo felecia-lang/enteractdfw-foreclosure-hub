@@ -44,3 +44,19 @@ export const leads = mysqlTable("leads", {
 
 export type Lead = typeof leads.$inferSelect;
 export type InsertLead = typeof leads.$inferInsert;
+
+/**
+ * Lead notes table for tracking all interactions and updates for each lead.
+ * Allows multiple notes per lead with timestamps and author tracking.
+ */
+export const leadNotes = mysqlTable("leadNotes", {
+  id: int("id").autoincrement().primaryKey(),
+  leadId: int("leadId").notNull(),
+  note: text("note").notNull(),
+  noteType: mysqlEnum("noteType", ["general", "status_change", "call", "email", "meeting"]).default("general").notNull(),
+  createdBy: varchar("createdBy", { length: 100 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LeadNote = typeof leadNotes.$inferSelect;
+export type InsertLeadNote = typeof leadNotes.$inferInsert;

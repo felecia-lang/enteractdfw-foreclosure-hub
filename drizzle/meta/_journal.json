@@ -15,6 +15,13 @@
       "when": 1763713039891,
       "tag": "0001_noisy_the_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1763927203292,
+      "tag": "0002_plain_pride",
+      "breakpoints": true
     }
   ]
 }

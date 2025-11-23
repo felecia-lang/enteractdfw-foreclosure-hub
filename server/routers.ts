@@ -2,8 +2,9 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, getAllLeads } from "./db";
+import { createLead, createLeadNote, getAllLeads, getLeadById, getLeadNotes, updateLeadNotes, updateLeadStatus } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL } from "./ghl";
 
@@ -127,10 +128,101 @@ Email: info@enteractdfw.com
         }
       }),
 
-    // Protected procedure for viewing all leads (admin only)
-    list: protectedProcedure.query(async () => {
+    // Admin-only procedure
+    list: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    }).query(async () => {
       return await getAllLeads();
     }),
+
+    // Get single lead with details (admin only)
+    getById: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await getLeadById(input.id);
+      }),
+
+    // Update lead status (admin only)
+    updateStatus: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["new", "contacted", "qualified", "closed"]),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Update status
+        await updateLeadStatus(input.id, input.status);
+
+        // Create a note for the status change
+        await createLeadNote({
+          leadId: input.id,
+          note: `Status changed to: ${input.status}`,
+          noteType: "status_change",
+          createdBy: ctx.user?.name || "Admin",
+        });
+
+        return { success: true };
+      }),
+
+    // Update lead notes (admin only)
+    updateNotes: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({
+        id: z.number(),
+        notes: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        return await updateLeadNotes(input.id, input.notes);
+      }),
+
+    // Add a new note to a lead (admin only)
+    addNote: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({
+        leadId: z.number(),
+        note: z.string(),
+        noteType: z.enum(["general", "status_change", "call", "email", "meeting"]).default("general"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return await createLeadNote({
+          leadId: input.leadId,
+          note: input.note,
+          noteType: input.noteType,
+          createdBy: ctx.user?.name || "Admin",
+        });
+      }),
+
+    // Get all notes for a lead (admin only)
+    getNotes: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({ leadId: z.number() }))
+      .query(async ({ input }) => {
+        return await getLeadNotes(input.leadId);
+      }),
   }),
 });
 

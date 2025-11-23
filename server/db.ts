@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLead, InsertUser, leads, users } from "../drizzle/schema";
+import { InsertLead, InsertLeadNote, InsertUser, leadNotes, leads, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -134,5 +134,69 @@ export async function getLeadById(id: number) {
   } catch (error) {
     console.error("[Database] Failed to get lead:", error);
     return undefined;
+  }
+}
+
+export async function updateLeadStatus(id: number, status: "new" | "contacted" | "qualified" | "closed") {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update lead: database not available");
+    return undefined;
+  }
+
+  try {
+    await db.update(leads).set({ status, updatedAt: new Date() }).where(eq(leads.id, id));
+    return { success: true };
+  } catch (error) {
+    console.error("[Database] Failed to update lead status:", error);
+    throw error;
+  }
+}
+
+export async function updateLeadNotes(id: number, notes: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update lead: database not available");
+    return undefined;
+  }
+
+  try {
+    await db.update(leads).set({ notes, updatedAt: new Date() }).where(eq(leads.id, id));
+    return { success: true };
+  } catch (error) {
+    console.error("[Database] Failed to update lead notes:", error);
+    throw error;
+  }
+}
+
+// Lead notes functions
+export async function createLeadNote(note: InsertLeadNote) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create note: database not available");
+    return undefined;
+  }
+
+  try {
+    const result = await db.insert(leadNotes).values(note);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create note:", error);
+    throw error;
+  }
+}
+
+export async function getLeadNotes(leadId: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get notes: database not available");
+    return [];
+  }
+
+  try {
+    return await db.select().from(leadNotes).where(eq(leadNotes.leadId, leadId)).orderBy(desc(leadNotes.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get notes:", error);
+    return [];
   }
 }

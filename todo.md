@@ -135,3 +135,15 @@
 - [x] Add GHL custom fields for property ZIP and foreclosure stage
 - [ ] Configure valid GHL API credentials to activate integration
 - [ ] Test end-to-end GHL integration with valid credentials
+
+## Admin Dashboard
+- [x] Update database schema to add lead notes and status history
+- [x] Create backend API for lead management (update status, add notes, filter, export)
+- [x] Build protected /admin route with authentication check
+- [x] Create lead table with sorting and filtering (status, date, ZIP)
+- [x] Add lead detail modal with full information
+- [x] Implement status update functionality (new/contacted/qualified/closed)
+- [x] Add notes/comments system for each lead
+- [ ] Create export to CSV functionality
+- [x] Add lead statistics dashboard (total, by status, conversion rate)
+- [x] Test admin dashboard with sample leads
