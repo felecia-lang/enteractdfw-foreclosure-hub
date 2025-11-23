@@ -113,3 +113,25 @@
 - [x] Fix 404 error on Knowledge Base navigation link
 - [x] Create Knowledge Base landing page with all categories
 - [x] Verify all navigation links are working correctly
+
+## Email Service Integration
+- [x] Install nodemailer for SMTP email sending
+- [ ] Create email service module with configuration
+- [ ] Design lead notification email template
+- [ ] Design welcome email template for homeowners
+- [ ] Create automated follow-up email sequence
+- [ ] Update lead submission to send emails
+- [ ] Add email configuration to environment variables
+- [ ] Test email delivery functionality
+
+## Go HighLevel (GHL) CRM Integration
+- [x] Create GHL API integration module
+- [x] Add GHL API credentials to environment variables (API key, location ID)
+- [x] Sync lead submissions to GHL contacts
+- [x] Track form submissions as GHL opportunities (via notes and tasks)
+- [x] Add tags to GHL contacts based on lead source
+- [x] Track email opens and clicks in GHL (infrastructure ready)
+- [x] Track guide downloads in GHL timeline (infrastructure ready)
+- [x] Add GHL custom fields for property ZIP and foreclosure stage
+- [ ] Configure valid GHL API credentials to activate integration
+- [ ] Test end-to-end GHL integration with valid credentials

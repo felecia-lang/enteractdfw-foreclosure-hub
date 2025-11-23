@@ -1,0 +1,400 @@
+/**
+ * Go HighLevel (GHL) CRM Integration
+ * 
+ * This module handles all interactions with the Go HighLevel API
+ * to sync leads, track activities, and manage CRM data.
+ * 
+ * Setup Instructions:
+ * 1. Get your GHL API Key from Settings → API Keys in your GHL account
+ * 2. Get your Location ID from Settings → Business Profile
+ * 3. Add these to your environment variables via the Management UI:
+ *    - GHL_API_KEY: Your GHL API key
+ *    - GHL_LOCATION_ID: Your GHL location ID
+ *    - GHL_API_URL: https://services.leadconnectorhq.com (default)
+ */
+
+const GHL_API_URL = process.env.GHL_API_URL || "https://services.leadconnectorhq.com";
+const GHL_API_KEY = process.env.GHL_API_KEY;
+const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID;
+
+interface GHLContact {
+  firstName: string;
+  lastName?: string;
+  email: string;
+  phone?: string;
+  address1?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  website?: string;
+  tags?: string[];
+  customFields?: Record<string, string>;
+  source?: string;
+}
+
+interface GHLOpportunity {
+  pipelineId: string;
+  locationId: string;
+  name: string;
+  pipelineStageId: string;
+  status: "open" | "won" | "lost" | "abandoned";
+  contactId: string;
+  monetaryValue?: number;
+  assignedTo?: string;
+  customFields?: Record<string, string>;
+}
+
+interface GHLNote {
+  contactId: string;
+  body: string;
+  userId?: string;
+}
+
+interface GHLTask {
+  contactId: string;
+  title: string;
+  body?: string;
+  dueDate: string;
+  assignedTo?: string;
+  status?: "incomplete" | "completed";
+}
+
+/**
+ * Make a request to the GHL API
+ */
+async function makeGHLRequest(
+  endpoint: string,
+  method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
+  body?: any
+): Promise<any> {
+  if (!GHL_API_KEY) {
+    console.warn("[GHL] API key not configured. Skipping GHL API call.");
+    return { success: false, error: "GHL_API_KEY not configured" };
+  }
+
+  if (!GHL_LOCATION_ID) {
+    console.warn("[GHL] Location ID not configured. Skipping GHL API call.");
+    return { success: false, error: "GHL_LOCATION_ID not configured" };
+  }
+
+  try {
+    const url = `${GHL_API_URL}${endpoint}`;
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Authorization": `Bearer ${GHL_API_KEY}`,
+        "Content-Type": "application/json",
+        "Version": "2021-07-28", // GHL API version
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[GHL] API error (${response.status}):`, errorText);
+      return {
+        success: false,
+        error: `GHL API error: ${response.status}`,
+        details: errorText,
+      };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error("[GHL] Request failed:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+/**
+ * Create or update a contact in GHL
+ */
+export async function syncContactToGHL(contact: GHLContact): Promise<{
+  success: boolean;
+  contactId?: string;
+  error?: string;
+}> {
+  console.log("[GHL] Syncing contact:", contact.email);
+
+  // First, search for existing contact by email
+  const searchResult = await makeGHLRequest(
+    `/contacts/?locationId=${GHL_LOCATION_ID}&email=${encodeURIComponent(contact.email)}`,
+    "GET"
+  );
+
+  if (!searchResult.success) {
+    return { success: false, error: searchResult.error };
+  }
+
+  const existingContact = searchResult.data?.contacts?.[0];
+
+  if (existingContact) {
+    // Update existing contact
+    console.log("[GHL] Updating existing contact:", existingContact.id);
+    const updateResult = await makeGHLRequest(
+      `/contacts/${existingContact.id}`,
+      "PUT",
+      {
+        ...contact,
+        locationId: GHL_LOCATION_ID,
+      }
+    );
+
+    if (!updateResult.success) {
+      return { success: false, error: updateResult.error };
+    }
+
+    return { success: true, contactId: existingContact.id };
+  } else {
+    // Create new contact
+    console.log("[GHL] Creating new contact");
+    const createResult = await makeGHLRequest(
+      `/contacts/`,
+      "POST",
+      {
+        ...contact,
+        locationId: GHL_LOCATION_ID,
+      }
+    );
+
+    if (!createResult.success) {
+      return { success: false, error: createResult.error };
+    }
+
+    return { success: true, contactId: createResult.data?.contact?.id };
+  }
+}
+
+/**
+ * Create an opportunity in GHL
+ */
+export async function createGHLOpportunity(opportunity: GHLOpportunity): Promise<{
+  success: boolean;
+  opportunityId?: string;
+  error?: string;
+}> {
+  console.log("[GHL] Creating opportunity:", opportunity.name);
+
+  const result = await makeGHLRequest(
+    `/opportunities/`,
+    "POST",
+    opportunity
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  return { success: true, opportunityId: result.data?.opportunity?.id };
+}
+
+/**
+ * Add a note to a contact in GHL
+ */
+export async function addGHLNote(note: GHLNote): Promise<{
+  success: boolean;
+  noteId?: string;
+  error?: string;
+}> {
+  console.log("[GHL] Adding note to contact:", note.contactId);
+
+  const result = await makeGHLRequest(
+    `/contacts/${note.contactId}/notes`,
+    "POST",
+    note
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  return { success: true, noteId: result.data?.note?.id };
+}
+
+/**
+ * Create a task for a contact in GHL
+ */
+export async function createGHLTask(task: GHLTask): Promise<{
+  success: boolean;
+  taskId?: string;
+  error?: string;
+}> {
+  console.log("[GHL] Creating task for contact:", task.contactId);
+
+  const result = await makeGHLRequest(
+    `/contacts/${task.contactId}/tasks`,
+    "POST",
+    task
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  return { success: true, taskId: result.data?.task?.id };
+}
+
+/**
+ * Add tags to a contact in GHL
+ */
+export async function addGHLTags(contactId: string, tags: string[]): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  console.log("[GHL] Adding tags to contact:", contactId, tags);
+
+  const result = await makeGHLRequest(
+    `/contacts/${contactId}/tags`,
+    "POST",
+    { tags }
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Track a custom event/activity in GHL
+ */
+export async function trackGHLActivity(
+  contactId: string,
+  activityType: string,
+  description: string,
+  metadata?: Record<string, any>
+): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  console.log("[GHL] Tracking activity:", activityType, "for contact:", contactId);
+
+  // Add as a note with metadata
+  const noteBody = `${description}\n\nMetadata: ${JSON.stringify(metadata, null, 2)}`;
+  
+  return await addGHLNote({
+    contactId,
+    body: noteBody,
+  });
+}
+
+/**
+ * Sync a lead submission to GHL
+ * This is the main function called when a lead submits the form
+ */
+export async function syncLeadToGHL(leadData: {
+  firstName: string;
+  lastName?: string;
+  email: string;
+  phone: string;
+  propertyZip: string;
+  source?: string;
+}): Promise<{
+  success: boolean;
+  contactId?: string;
+  error?: string;
+}> {
+  try {
+    // Step 1: Create/update contact
+    const contactResult = await syncContactToGHL({
+      firstName: leadData.firstName,
+      lastName: leadData.lastName,
+      email: leadData.email,
+      phone: leadData.phone,
+      postalCode: leadData.propertyZip,
+      tags: ["Foreclosure Lead", "Website Lead", leadData.source || "Direct"],
+      customFields: {
+        property_zip: leadData.propertyZip,
+        lead_source: leadData.source || "Website Form",
+        foreclosure_stage: "Initial Contact",
+      },
+      source: "EnterActDFW Foreclosure Hub",
+    });
+
+    if (!contactResult.success || !contactResult.contactId) {
+      return { success: false, error: contactResult.error };
+    }
+
+    // Step 2: Add initial note
+    await addGHLNote({
+      contactId: contactResult.contactId,
+      body: `New foreclosure lead submitted via website.\n\nProperty ZIP: ${leadData.propertyZip}\nPhone: ${leadData.phone}\n\nLead requested foreclosure survival guide.`,
+    });
+
+    // Step 3: Create follow-up task
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    await createGHLTask({
+      contactId: contactResult.contactId,
+      title: "Follow up with foreclosure lead",
+      body: `Contact ${leadData.firstName} to discuss their foreclosure situation and options.`,
+      dueDate: tomorrow.toISOString(),
+      status: "incomplete",
+    });
+
+    console.log("[GHL] Successfully synced lead to GHL:", contactResult.contactId);
+    return { success: true, contactId: contactResult.contactId };
+  } catch (error) {
+    console.error("[GHL] Error syncing lead:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+/**
+ * Track email interaction in GHL
+ */
+export async function trackEmailInteraction(
+  contactId: string,
+  interactionType: "sent" | "opened" | "clicked",
+  emailSubject: string,
+  linkClicked?: string
+): Promise<void> {
+  let description = "";
+  
+  switch (interactionType) {
+    case "sent":
+      description = `Email sent: "${emailSubject}"`;
+      break;
+    case "opened":
+      description = `Email opened: "${emailSubject}"`;
+      break;
+    case "clicked":
+      description = `Email link clicked: "${emailSubject}"${linkClicked ? `\nLink: ${linkClicked}` : ""}`;
+      break;
+  }
+
+  await trackGHLActivity(contactId, `email_${interactionType}`, description, {
+    emailSubject,
+    linkClicked,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+/**
+ * Track guide download in GHL
+ */
+export async function trackGuideDownload(
+  contactId: string,
+  guideName: string,
+  downloadMethod: "email" | "direct"
+): Promise<void> {
+  await trackGHLActivity(
+    contactId,
+    "guide_download",
+    `Downloaded: ${guideName} (via ${downloadMethod})`,
+    {
+      guideName,
+      downloadMethod,
+      timestamp: new Date().toISOString(),
+    }
+  );
+}

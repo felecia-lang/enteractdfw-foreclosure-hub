@@ -5,6 +5,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { createLead, getAllLeads } from "./db";
 import { notifyOwner } from "./_core/notification";
+import { syncLeadToGHL } from "./ghl";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -102,6 +103,22 @@ Email: info@enteractdfw.com
             title: "New Foreclosure Lead",
             content: `New lead from ${input.firstName}\nEmail: ${input.email}\nPhone: ${input.phone}\nZIP: ${input.propertyZip}`,
           });
+
+          // Sync lead to Go HighLevel CRM
+          const ghlResult = await syncLeadToGHL({
+            firstName: input.firstName,
+            email: input.email,
+            phone: input.phone,
+            propertyZip: input.propertyZip,
+            source: "Website - Landing Page",
+          });
+
+          if (ghlResult.success) {
+            console.log("[Leads] Successfully synced to GHL:", ghlResult.contactId);
+          } else {
+            console.warn("[Leads] Failed to sync to GHL:", ghlResult.error);
+            // Don't fail the request if GHL sync fails - lead is still captured in our DB
+          }
 
           return { success: true };
         } catch (error) {
