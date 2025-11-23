@@ -355,3 +355,15 @@
 - [x] Pass timeline data from frontend to PDF endpoint
 - [x] Test PDF generation with various dates (confirmed working)
 - [x] Ensure PDF is properly formatted and readable (3-page PDF verified)
+
+## Timeline Email Delivery Feature
+- [x] Create backend tRPC endpoint for sending timeline PDF via email
+- [x] Generate PDF buffer and attach to email
+- [x] Create professional email template with timeline summary
+- [x] Include EnterActDFW branding and contact information in email
+- [x] Add email input field to calculator results section
+- [x] Add "Email Timeline to Me" button (Send button with mail icon)
+- [x] Validate email address format before sending
+- [x] Show success/error toast messages after email attempt
+- [x] Test email delivery functionality (requires GHL API credentials)
+- [x] Ensure PDF attachment is properly formatted and readable

@@ -422,6 +422,68 @@ Email: info@enteractdfw.com
         return await deleteTestimonial(input.id);
       }),
   }),
+
+  // Timeline email functionality
+  timeline: router({
+    emailPDF: publicProcedure
+      .input(z.object({
+        email: z.string().email("Valid email is required"),
+        noticeDate: z.string(),
+        milestones: z.array(z.object({
+          id: z.string(),
+          title: z.string(),
+          date: z.string(),
+          daysFromNotice: z.number(),
+          description: z.string(),
+          actionItems: z.array(z.string()),
+          urgency: z.enum(["critical", "warning", "safe"]),
+          status: z.enum(["past", "current", "upcoming"]),
+        })),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const { email, noticeDate, milestones } = input;
+          
+          // Import PDF generator
+          const { generatePersonalizedTimelinePDF } = await import("./pdfGenerator");
+          
+          // Convert date strings back to Date objects
+          const milestonesWithDates = milestones.map((m) => ({
+            ...m,
+            date: new Date(m.date),
+          }));
+          
+          // Generate PDF buffer
+          const pdfBuffer = await generatePersonalizedTimelinePDF(noticeDate, milestonesWithDates);
+          
+          // Import GHL email function
+          const { sendTimelineEmail } = await import("./ghl");
+          
+          // Send email with PDF attachment via GHL
+          const result = await sendTimelineEmail({
+            email,
+            firstName: email.split('@')[0], // Extract name from email if not provided
+            noticeDate,
+            pdfBuffer,
+          });
+          
+          if (result.success) {
+            return {
+              success: true,
+              message: `Timeline sent to ${email}`,
+            };
+          } else {
+            throw new Error(result.error || "Failed to send email");
+          }
+        } catch (error) {
+          console.error("[Timeline] Failed to send email:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to send timeline email. Please try again.",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

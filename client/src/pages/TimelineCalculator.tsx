@@ -13,8 +13,11 @@ import {
   Phone,
   Download,
   Home as HomeIcon,
-  ArrowRight
+  ArrowRight,
+  Mail
 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 interface TimelineMilestone {
   id: string;
@@ -31,6 +34,10 @@ export default function TimelineCalculator() {
   const [noticeDate, setNoticeDate] = useState<string>("");
   const [timeline, setTimeline] = useState<TimelineMilestone[] | null>(null);
   const [daysUntilSale, setDaysUntilSale] = useState<number | null>(null);
+  const [email, setEmail] = useState<string>("");
+  const [isEmailSending, setIsEmailSending] = useState<boolean>(false);
+
+  const emailTimelineMutation = trpc.timeline.emailPDF.useMutation();
 
   const calculateTimeline = (noticeDateStr: string): TimelineMilestone[] => {
     const notice = new Date(noticeDateStr);
@@ -220,6 +227,41 @@ export default function TimelineCalculator() {
     }
   };
 
+  const handleEmailTimeline = async () => {
+    if (!timeline || !noticeDate || !email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsEmailSending(true);
+
+    try {
+      await emailTimelineMutation.mutateAsync({
+        email,
+        noticeDate,
+        milestones: timeline.map(m => ({
+          ...m,
+          date: m.date.toISOString(),
+        })),
+      });
+
+      toast.success(`Timeline sent to ${email}!`);
+      setEmail(""); // Clear email input after successful send
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error("Failed to send email. Please try again.");
+    } finally {
+      setIsEmailSending(false);
+    }
+  };
+
   const getUrgencyColor = (urgency: "critical" | "warning" | "safe") => {
     switch (urgency) {
       case "critical":
@@ -354,6 +396,50 @@ export default function TimelineCalculator() {
                     </>
                   )}
                 </div>
+
+                {/* Email Timeline Section */}
+                {timeline && (
+                  <div className="mt-6 pt-6 border-t">
+                    <Label htmlFor="email" className="text-sm font-medium">
+                      Email Timeline to Me
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-1 mb-3">
+                      Receive your personalized timeline PDF in your inbox for offline access
+                    </p>
+                    <div className="flex gap-2">
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleEmailTimeline();
+                          }
+                        }}
+                        disabled={isEmailSending}
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleEmailTimeline}
+                        disabled={isEmailSending || !email}
+                      >
+                        {isEmailSending ? (
+                          <>
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Mail className="mr-2 h-4 w-4" />
+                            Send
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </form>
             </CardContent>
           </Card>
