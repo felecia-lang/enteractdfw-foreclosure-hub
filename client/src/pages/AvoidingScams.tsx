@@ -1,20 +1,38 @@
-import { AlertTriangle, Shield, CheckCircle2, XCircle, Phone, Mail, ExternalLink } from "lucide-react";
+import { AlertTriangle, Shield, CheckCircle2, XCircle, Phone, Mail, ExternalLink, Download } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 export default function AvoidingScams() {
+  const downloadPDF = () => {
+    // Direct link to PDF download endpoint
+    const url = '/api/pdf/avoiding-scams-guide';
+    window.open(url, '_blank');
+    toast.success('PDF download started');
+  };
   return (
     <KnowledgeBaseLayout title="Avoiding Foreclosure Scams">
       <div className="max-w-4xl mx-auto">
         {/* Hero Section */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Shield className="h-10 w-10 text-[#00A6A6]" />
-            <h1 className="text-4xl font-bold text-[#0A2342]">
-              Avoiding Foreclosure Scams
-            </h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Shield className="h-10 w-10 text-[#00A6A6]" />
+              <h1 className="text-4xl font-bold text-[#0A2342]">
+                Avoiding Foreclosure Scams
+              </h1>
+            </div>
+            <Button 
+              onClick={downloadPDF}
+              variant="outline"
+              className="flex items-center gap-2 border-[#00A6A6] text-[#00A6A6] hover:bg-[#00A6A6] hover:text-white"
+            >
+              <Download className="h-4 w-4" />
+              Download PDF
+            </Button>
           </div>
           <p className="text-lg text-gray-700 leading-relaxed">
             When you're facing foreclosure, you're vulnerable to predatory companies and scammers who prey on homeowners in distress. Learn how to recognize common scams, protect yourself, and find legitimate help.

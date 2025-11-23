@@ -7,6 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { generateAvoidingScamsPDF } from "../pdfGenerator";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -35,6 +36,21 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
+  // PDF download route
+  app.get("/api/pdf/avoiding-scams-guide", (req, res) => {
+    try {
+      const doc = generateAvoidingScamsPDF();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="Avoiding_Foreclosure_Scams_Guide.pdf"');
+      doc.pipe(res);
+      doc.end();
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  });
+  
   // tRPC API
   app.use(
     "/api/trpc",

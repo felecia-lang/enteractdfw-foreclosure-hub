@@ -172,3 +172,10 @@
 - [x] Support exporting all leads or filtered leads
 - [x] Include all lead fields in CSV
 - [x] Test CSV export functionality
+
+## Downloadable PDF Resources
+- [x] Create PDF generation endpoint for Avoiding Scams guide
+- [x] Add download PDF button to AvoidingScams.tsx page
+- [x] Style PDF with proper formatting and branding
+- [x] Test PDF download functionality
+- [ ] Consider adding PDF downloads for other guides (Notice of Default, Contacting Lender)
