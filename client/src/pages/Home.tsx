@@ -254,12 +254,12 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: BookOpen, title: "Understand the Texas Foreclosure Process", desc: "Learn the timeline, your rights, and what to expect at each stage." },
-              { icon: Shield, title: "Know Your Legal Rights & Protections", desc: "Federal and Texas laws that protect homeowners facing foreclosure." },
-              { icon: FileText, title: "Explore All Your Options", desc: "From loan modifications to short sales—see every path forward." },
+              { icon: BookOpen, title: "Understand the Texas Foreclosure Process", desc: "Learn the timeline, your rights, and what to expect at each stage.", link: "/knowledge-base/understanding-foreclosure" },
+              { icon: Shield, title: "Know Your Legal Rights & Protections", desc: "Federal and Texas laws that protect homeowners facing foreclosure.", link: "/knowledge-base/homeowner-rights" },
+              { icon: FileText, title: "Explore All Your Options", desc: "From loan modifications to short sales—see every path forward.", link: "/knowledge-base/options-to-avoid-foreclosure" },
               { icon: FileText, title: "What to Do: Notice of Default", desc: "Step-by-step action guide when you receive a Notice of Default.", link: "/guides/notice-of-default" },
-              { icon: AlertCircle, title: "Avoid Common Foreclosure Scams", desc: "Protect yourself from predatory companies and fraud." },
-              { icon: DollarSign, title: "Get Fair Cash Offer Info", desc: "Learn how selling quickly can help you avoid foreclosure." },
+              { icon: Phone, title: "How to Contact Your Lender", desc: "Phone scripts, questions to ask, and templates for effective communication.", link: "/contacting-lender-guide" },
+              { icon: AlertCircle, title: "Avoid Common Foreclosure Scams", desc: "Protect yourself from predatory companies and fraud.", link: "/knowledge-base/avoiding-scams" },
             ].map((item, idx) => {
               const cardContent = (
                 <Card className="hover:shadow-lg transition-shadow h-full">

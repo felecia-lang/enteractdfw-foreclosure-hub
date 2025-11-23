@@ -190,3 +190,10 @@
 - [x] Add prominent "Schedule Free Consultation" CTA to Contacting Lender guide
 - [ ] Add prominent "Schedule Free Consultation" CTA to other knowledge base pages
 - [x] Test CTA buttons on all guide pages
+
+## Navigation Integration
+- [x] Add Avoiding Scams guide to main site header navigation
+- [x] Add Avoiding Scams to homepage action guide section
+- [x] Add Contacting Lender guide to homepage action guide section
+- [x] Make all guide cards on homepage clickable with proper links
+- [x] Test navigation flow from homepage to all guides
