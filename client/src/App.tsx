@@ -20,6 +20,7 @@ import Admin from "@/pages/Admin";
 import AvoidingScams from "@/pages/AvoidingScams";
 import SuccessStories from "@/pages/SuccessStories";
 import AdminTestimonials from "@/pages/AdminTestimonials";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/success-stories" component={SuccessStories} />
       <Route path="/admin" component={Admin} />
       <Route path="/admin/testimonials" component={AdminTestimonials} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
