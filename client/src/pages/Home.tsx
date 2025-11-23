@@ -76,6 +76,11 @@ export default function Home() {
                 FAQ
               </span>
             </Link>
+            <Link href="/success-stories">
+              <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+                Success Stories
+              </span>
+            </Link>
             <Link href="/about">
               <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
                 About

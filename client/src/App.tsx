@@ -18,6 +18,7 @@ import ContactingYourLenderGuide from "@/pages/ContactingYourLenderGuide";
 import KnowledgeBase from "@/pages/KnowledgeBase";
 import Admin from "@/pages/Admin";
 import AvoidingScams from "@/pages/AvoidingScams";
+import SuccessStories from "@/pages/SuccessStories";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/notice-of-default-checklist" component={NoticeOfDefaultChecklist} />
       <Route path="/contacting-lender-guide" component={ContactingYourLenderGuide} />
       <Route path="/knowledge-base/avoiding-scams" component={AvoidingScams} />
+      <Route path="/success-stories" component={SuccessStories} />
       <Route path="/admin" component={Admin} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
