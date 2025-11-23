@@ -46,12 +46,18 @@ type Testimonial = {
 
 export default function AdminTestimonials() {
   const [statusFilter, setStatusFilter] = useState<"pending" | "approved" | "rejected" | undefined>(undefined);
+  const [themeFilter, setThemeFilter] = useState<Testimonial["theme"] | "all">("all");
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
   const [deletingTestimonialId, setDeletingTestimonialId] = useState<number | null>(null);
   const [viewingTestimonial, setViewingTestimonial] = useState<Testimonial | null>(null);
 
   const utils = trpc.useUtils();
-  const { data: testimonials, isLoading } = trpc.testimonials.list.useQuery({ status: statusFilter });
+  const { data: allTestimonials, isLoading } = trpc.testimonials.list.useQuery({ status: statusFilter });
+  
+  // Filter testimonials by theme on the client side
+  const testimonials = allTestimonials?.filter(t => 
+    themeFilter === "all" || t.theme === themeFilter
+  );
   
   const updateStatusMutation = trpc.testimonials.updateStatus.useMutation({
     onSuccess: () => {
@@ -187,16 +193,39 @@ export default function AdminTestimonials() {
         </Card>
       </div>
 
-      {/* Filter Indicator */}
-      {statusFilter && (
-        <div className="mb-4 flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Filtering by:</span>
-          <Badge>{statusFilter}</Badge>
-          <Button variant="ghost" size="sm" onClick={() => setStatusFilter(undefined)}>
-            Clear filter
-          </Button>
+      {/* Filters */}
+      <div className="mb-4 flex items-center gap-4 flex-wrap">
+        {statusFilter && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Status:</span>
+            <Badge>{statusFilter}</Badge>
+            <Button variant="ghost" size="sm" onClick={() => setStatusFilter(undefined)}>
+              Clear
+            </Button>
+          </div>
+        )}
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Theme:</span>
+          <select
+            value={themeFilter || "all"}
+            onChange={(e) => setThemeFilter(e.target.value === "all" ? "all" : e.target.value as Testimonial["theme"])}
+            className="flex h-9 rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <option value="all">All Themes</option>
+            <option value="loan_modification">Loan Modification</option>
+            <option value="foreclosure_prevention">Foreclosure Prevention</option>
+            <option value="short_sale">Short Sale</option>
+            <option value="cash_offer">Cash Offer</option>
+            <option value="deed_in_lieu">Deed in Lieu</option>
+            <option value="bankruptcy_alternative">Bankruptcy Alternative</option>
+            <option value="job_loss">Job Loss</option>
+            <option value="medical_emergency">Medical Emergency</option>
+            <option value="divorce">Divorce</option>
+            <option value="other">Other</option>
+          </select>
         </div>
-      )}
+      </div>
 
       {/* Testimonials List */}
       {isLoading ? (

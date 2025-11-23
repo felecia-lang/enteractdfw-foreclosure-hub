@@ -266,6 +266,9 @@
 - [x] Update backend API to support theme filtering
 - [x] Add theme dropdown/multi-select to admin edit modal
 - [x] Display theme badges on testimonial cards in admin page
-- [ ] Add theme filter to admin testimonials page
+- [x] Add theme filter dropdown to admin testimonials page header
+- [x] Implement theme filtering logic to filter testimonials by selected theme
+- [x] Add "All Themes" option to show all testimonials
+- [x] Test theme filter functionality
 - [ ] Optionally add theme filtering to public Success Stories page
 - [x] Test theme categorization workflow (theme saves to database and displays in edit modal)
