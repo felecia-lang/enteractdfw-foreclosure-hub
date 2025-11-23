@@ -222,7 +222,7 @@ Email: info@enteractdfw.com
         });
       }),
 
-    // Get all notes for a lead (admin only)
+     // Get notes for a lead (admin only)
     getNotes: protectedProcedure.use(({ ctx, next }) => {
       if (ctx.user.role !== "admin") {
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
@@ -232,6 +232,75 @@ Email: info@enteractdfw.com
       .input(z.object({ leadId: z.number() }))
       .query(async ({ input }) => {
         return await getLeadNotes(input.leadId);
+      }),
+
+    // Export leads to CSV (admin only)
+    exportCSV: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({
+        leadIds: z.array(z.number()).optional(), // If not provided, export all leads
+      }))
+      .query(async ({ input }) => {
+        // Get leads to export
+        const allLeads = await getAllLeads();
+        const leadsToExport = input.leadIds
+          ? allLeads.filter(lead => input.leadIds!.includes(lead.id))
+          : allLeads;
+
+        // Build CSV header
+        const headers = [
+          "ID",
+          "First Name",
+          "Email",
+          "Phone",
+          "Property ZIP",
+          "Status",
+          "Source",
+          "Submitted At",
+          "Last Updated",
+        ];
+
+        // Build CSV rows
+        const rows = leadsToExport.map(lead => [
+          lead.id.toString(),
+          lead.firstName,
+          lead.email,
+          lead.phone,
+          lead.propertyZip,
+          lead.status,
+          lead.source || "",
+          lead.createdAt.toISOString(),
+          lead.updatedAt.toISOString(),
+        ]);
+
+        // Combine header and rows
+        const csvLines = [headers, ...rows];
+
+        // Convert to CSV format (handle commas and quotes in values)
+        const csvContent = csvLines
+          .map(row =>
+            row
+              .map(cell => {
+                // Escape quotes and wrap in quotes if contains comma, quote, or newline
+                const cellStr = String(cell);
+                if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+                  return `"${cellStr.replace(/"/g, '""')}"`;
+                }
+                return cellStr;
+              })
+              .join(',')
+          )
+          .join('\n');
+
+        return {
+          csv: csvContent,
+          filename: `leads_export_${new Date().toISOString().split('T')[0]}.csv`,
+          count: leadsToExport.length,
+        };
       }),
   }),
 });

@@ -31,6 +31,7 @@ import { trpc } from "@/lib/trpc";
 import {
   CheckCircle2,
   Clock,
+  Download,
   FileText,
   Mail,
   MapPin,
@@ -131,6 +132,39 @@ export default function Admin() {
       note: newNote,
       noteType,
     });
+  };
+
+  const utils = trpc.useUtils();
+
+  const handleExportCSV = async () => {
+    try {
+      // Get lead IDs to export (filtered leads)
+      const leadIds = filteredLeads.map(lead => lead.id);
+      
+      // Call the export API
+      const result = await utils.leads.exportCSV.fetch({ leadIds });
+      
+      if (result) {
+        // Create a blob from the CSV string
+        const blob = new Blob([result.csv], { type: 'text/csv;charset=utf-8;' });
+        
+        // Create a download link
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', result.filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        toast.success(`Exported ${result.count} leads to CSV`);
+      }
+    } catch (error) {
+      console.error('CSV export error:', error);
+      toast.error("Failed to export leads");
+    }
   };
 
   const openLeadDetail = (leadId: number) => {
@@ -288,10 +322,23 @@ export default function Admin() {
         {/* Leads Table */}
         <Card>
           <CardHeader>
-            <CardTitle>All Leads ({filteredLeads.length})</CardTitle>
-            <CardDescription>
-              Click on a lead to view details and add notes
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>All Leads ({filteredLeads.length})</CardTitle>
+                <CardDescription>
+                  Click on a lead to view details and add notes
+                </CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                onClick={handleExportCSV}
+                disabled={filteredLeads.length === 0}
+                className="flex items-center gap-2"
+              >
+                <Download className="h-4 w-4" />
+                Export CSV
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {leadsLoading ? (

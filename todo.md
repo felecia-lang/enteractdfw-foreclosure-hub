@@ -156,3 +156,10 @@
 - [x] Add email tracking and analytics (via GHL)
 - [x] Test email delivery with valid GHL credentials (infrastructure tested, awaiting valid credentials for live test)
 - [x] Integrate email sending into lead submission flow
+
+## CSV Export Feature
+- [x] Create backend API to generate CSV from lead data
+- [x] Add CSV export button to admin dashboard
+- [x] Support exporting all leads or filtered leads
+- [x] Include all lead fields in CSV
+- [x] Test CSV export functionality
