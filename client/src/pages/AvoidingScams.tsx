@@ -651,8 +651,42 @@ export default function AvoidingScams() {
           </Card>
         </section>
 
+        {/* Call-to-Action Section */}
+        <div className="mt-12 mb-8 p-8 bg-gradient-to-br from-[#00A6A6]/10 to-[#0A2342]/10 rounded-lg border-2 border-[#00A6A6]">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-[#0A2342] mb-3">
+              Need Help Protecting Your Home?
+            </h3>
+            <p className="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
+              Don't face foreclosure alone. Schedule a free, no-obligation consultation with our team to explore your options and get honest answers.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
+                asChild
+              >
+                <a href="tel:+18329327585">
+                  <Phone className="h-5 w-5 mr-2" />
+                  Call Now: (832) 932-7585
+                </a>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-2 border-[#0A2342] text-[#0A2342] hover:bg-[#0A2342] hover:text-white font-semibold px-8 py-6 text-lg"
+                asChild
+              >
+                <a href="/#lead-form">
+                  Schedule Free Consultation
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Legal Disclaimer */}
-        <div className="mt-12 p-6 bg-gray-100 rounded-lg border border-gray-300">
+        <div className="mt-8 p-6 bg-gray-100 rounded-lg border border-gray-300">
           <p className="text-sm text-gray-700 italic">
             <strong>Legal Disclaimer:</strong> This information is for educational purposes only and is not legal advice. If you believe you've been the victim of fraud or need legal assistance, consult with a licensed attorney. EnterActDFW is a licensed Texas real estate brokerage and is not a law firm or housing counseling agency.
           </p>

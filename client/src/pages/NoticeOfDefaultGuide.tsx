@@ -465,6 +465,42 @@ export default function NoticeOfDefaultGuide() {
         </div>
       </section>
 
+      {/* Call-to-Action Section */}
+      <section className="py-16 bg-gradient-to-br from-[#00A6A6]/10 to-[#0A2342]/10">
+        <div className="container max-w-4xl">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0A2342] mb-4">
+              Don't Face Foreclosure Alone
+            </h2>
+            <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+              Get expert guidance and explore all your options. Schedule a free, no-obligation consultation with our team today.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
+                asChild
+              >
+                <a href="tel:+18329327585">
+                  <Phone className="h-5 w-5 mr-2" />
+                  Call Now: (832) 932-7585
+                </a>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-2 border-[#0A2342] text-[#0A2342] hover:bg-[#0A2342] hover:text-white font-semibold px-8 py-6 text-lg"
+                asChild
+              >
+                <a href="/#lead-form">
+                  Schedule Free Consultation
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-card border-t py-12">
         <div className="container">

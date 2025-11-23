@@ -756,6 +756,42 @@ export default function ContactingYourLenderGuide() {
         </div>
       </section>
 
+      {/* Call-to-Action Section - Hidden in print */}
+      <section className="py-16 bg-gradient-to-br from-[#00A6A6]/10 to-[#0A2342]/10 print:hidden">
+        <div className="container max-w-4xl">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0A2342] mb-4">
+              Ready to Talk to Your Lender?
+            </h2>
+            <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+              Need help preparing for the call or want us to handle it for you? Schedule a free consultation and we'll guide you through every step.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
+                asChild
+              >
+                <a href="tel:+18329327585">
+                  <Phone className="h-5 w-5 mr-2" />
+                  Call Now: (832) 932-7585
+                </a>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-2 border-[#0A2342] text-[#0A2342] hover:bg-[#0A2342] hover:text-white font-semibold px-8 py-6 text-lg"
+                asChild
+              >
+                <a href="/#lead-form">
+                  Schedule Free Consultation
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer - Print version */}
       <footer className="hidden print:block py-6 border-t mt-12">
         <div className="container text-center text-sm text-muted-foreground">

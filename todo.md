@@ -183,3 +183,10 @@
 - [x] Add download buttons to both guide pages
 - [x] Add Express routes for both PDF downloads
 - [x] Test both PDF downloads
+
+## Call-to-Action Enhancements
+- [x] Add prominent "Schedule Free Consultation" CTA to Avoiding Scams guide
+- [x] Add prominent "Schedule Free Consultation" CTA to Notice of Default guide
+- [x] Add prominent "Schedule Free Consultation" CTA to Contacting Lender guide
+- [ ] Add prominent "Schedule Free Consultation" CTA to other knowledge base pages
+- [x] Test CTA buttons on all guide pages
