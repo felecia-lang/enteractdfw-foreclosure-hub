@@ -367,3 +367,17 @@
 - [x] Show success/error toast messages after email attempt
 - [x] Test email delivery functionality (requires GHL API credentials)
 - [x] Ensure PDF attachment is properly formatted and readable
+
+## AI-Powered FAQ Chatbot
+- [x] Create chatbot backend tRPC endpoint for message handling
+- [x] Integrate LLM API with foreclosure knowledge base context
+- [x] Build comprehensive foreclosure FAQ knowledge base (Texas-specific)
+- [x] Create system prompt with EnterActDFW expertise and tone
+- [x] Build chatbot UI component with message bubbles and input (using AIChatBox)
+- [x] Add typing indicator animation for AI responses (built into AIChatBox)
+- [x] Implement message history with user/assistant differentiation
+- [x] Add suggested questions/quick replies for common topics (6 questions)
+- [x] Include disclaimer about AI-generated content (not legal advice)
+- [x] Integrate chatbot into Knowledge Base page layout
+- [x] Test chatbot with foreclosure-related questions (timeline question confirmed)
+- [x] Verify responses are accurate and helpful (4-5 month timeline confirmed)

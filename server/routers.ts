@@ -484,6 +484,59 @@ Email: info@enteractdfw.com
         }
       }),
   }),
+
+  // AI Chatbot functionality
+  chatbot: router({
+    sendMessage: publicProcedure
+      .input(z.object({
+        message: z.string().min(1, "Message is required"),
+        conversationHistory: z.array(z.object({
+          role: z.enum(["user", "assistant"]),
+          content: z.string(),
+        })).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const { message, conversationHistory = [] } = input;
+          
+          // Import LLM and knowledge base
+          const { invokeLLM } = await import("./_core/llm");
+          const { FORECLOSURE_KNOWLEDGE_BASE, CHATBOT_SYSTEM_PROMPT } = await import("./foreclosureKnowledgeBase");
+          
+          // Build messages array with system prompt and conversation history
+          const messages = [
+            {
+              role: "system" as const,
+              content: `${CHATBOT_SYSTEM_PROMPT}\n\n---\n\nKNOWLEDGE BASE:\n${FORECLOSURE_KNOWLEDGE_BASE}`,
+            },
+            ...conversationHistory.map(msg => ({
+              role: msg.role as "user" | "assistant",
+              content: msg.content,
+            })),
+            {
+              role: "user" as const,
+              content: message,
+            },
+          ];
+          
+          // Call LLM API
+          const response = await invokeLLM({ messages });
+          
+          const assistantMessage = response.choices[0]?.message?.content || "I apologize, but I'm having trouble responding right now. Please call us at (832) 932-7585 for immediate assistance.";
+          
+          return {
+            success: true,
+            message: assistantMessage,
+          };
+        } catch (error) {
+          console.error("[Chatbot] Failed to process message:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to process your message. Please try again or call us at (832) 932-7585.",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

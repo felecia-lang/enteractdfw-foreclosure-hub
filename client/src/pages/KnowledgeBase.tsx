@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Link } from "wouter";
 import { 
   BookOpen, 
@@ -11,10 +12,23 @@ import {
   HelpCircle, 
   Shield,
   BookMarked,
-  Home as HomeIcon
+  Home as HomeIcon,
+  MessageCircle
 } from "lucide-react";
 import { APP_LOGO } from "@/const";
 import { cn } from "@/lib/utils";
+import { AIChatBox, type Message } from "@/components/AIChatBox";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+
+const SUGGESTED_QUESTIONS = [
+  "What is the foreclosure timeline in Texas?",
+  "What are my rights as a homeowner facing foreclosure?",
+  "What options do I have to avoid foreclosure?",
+  "How does a short sale work?",
+  "Can EnterActDFW help me sell my home quickly?",
+  "What happens if I ignore the foreclosure notices?",
+];
 
 const knowledgeBaseCategories = [
   {
@@ -83,6 +97,57 @@ const knowledgeBaseCategories = [
 ];
 
 export default function KnowledgeBase() {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: "👋 Hello! I'm here to help answer your questions about foreclosure in Texas. I can explain the process, your rights, and the options available to you.\n\n**Please note**: I provide educational information only, not legal or financial advice. For personalized guidance, please consult with an attorney or call our team at **(832) 932-7585**.\n\nWhat would you like to know?",
+    },
+  ]);
+
+  const chatbotMutation = trpc.chatbot.sendMessage.useMutation();
+
+  const handleSendMessage = async (content: string) => {
+    // Add user message to chat
+    const userMessage: Message = { role: "user", content };
+    setMessages((prev) => [...prev, userMessage]);
+
+    try {
+      // Send message to backend with conversation history
+      const conversationHistory = messages
+        .filter((msg) => msg.role !== "system")
+        .map((msg) => ({
+          role: msg.role as "user" | "assistant",
+          content: msg.content,
+        }));
+
+      const response = await chatbotMutation.mutateAsync({
+        message: content,
+        conversationHistory,
+      });
+
+      // Add assistant response to chat
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: String(response.message || ""),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      toast.error("Failed to send message. Please try again.");
+      
+      // Add error message to chat
+      const errorMessage: Message = {
+        role: "assistant",
+        content: "I apologize, but I'm having trouble responding right now. Please call us at **(832) 932-7585** for immediate assistance.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
+  };
+
+  const handleSuggestedQuestion = (question: string) => {
+    handleSendMessage(question);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -139,6 +204,63 @@ export default function KnowledgeBase() {
               </Link>
             </Button>
           </div>
+        </div>
+      </section>
+
+      {/* AI Chatbot Section */}
+      <section className="py-12 bg-gradient-to-br from-teal-50 to-cyan-50">
+        <div className="container max-w-5xl">
+          <Card className="shadow-lg">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-teal-100 rounded-lg">
+                  <MessageCircle className="h-6 w-6 text-teal-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">AI Foreclosure Assistant</CardTitle>
+                  <CardDescription>
+                    Ask me anything about the Texas foreclosure process, your rights, and available options
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Suggested Questions */}
+              <div className="mb-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Suggested questions:</p>
+                <div className="flex flex-wrap gap-2">
+                  {SUGGESTED_QUESTIONS.map((question, idx) => (
+                    <Button
+                      key={idx}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleSuggestedQuestion(question)}
+                      className="text-xs hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300"
+                    >
+                      {question}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Chatbot */}
+              <AIChatBox
+                messages={messages}
+                onSendMessage={handleSendMessage}
+                isLoading={chatbotMutation.isPending}
+                placeholder="Ask a question about foreclosure..."
+                height={500}
+              />
+
+              {/* Disclaimer */}
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-xs text-yellow-800">
+                  <strong>Disclaimer:</strong> This AI assistant provides educational information only and is not legal or financial advice. 
+                  For personalized guidance, please consult with an attorney or financial advisor.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
