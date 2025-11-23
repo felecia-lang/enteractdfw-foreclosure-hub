@@ -13,7 +13,8 @@ import {
   Shield,
   BookMarked,
   Home as HomeIcon,
-  MessageCircle
+  MessageCircle,
+  UserCircle
 } from "lucide-react";
 import { APP_LOGO } from "@/const";
 import { cn } from "@/lib/utils";
@@ -103,8 +104,17 @@ export default function KnowledgeBase() {
       content: "👋 Hello! I'm here to help answer your questions about foreclosure in Texas. I can explain the process, your rights, and the options available to you.\n\n**Please note**: I provide educational information only, not legal or financial advice. For personalized guidance, please consult with an attorney or call our team at **(832) 932-7585**.\n\nWhat would you like to know?",
     },
   ]);
+  const [showLeadCapture, setShowLeadCapture] = useState(false);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const [leadFormData, setLeadFormData] = useState({
+    firstName: "",
+    email: "",
+    phone: "",
+    propertyZip: "",
+  });
 
   const chatbotMutation = trpc.chatbot.sendMessage.useMutation();
+  const submitLeadMutation = trpc.leads.submit.useMutation();
 
   const handleSendMessage = async (content: string) => {
     // Add user message to chat
@@ -131,6 +141,12 @@ export default function KnowledgeBase() {
         content: String(response.message || ""),
       };
       setMessages((prev) => [...prev, assistantMessage]);
+      
+      // Show lead capture after 3 user messages (6 total messages including assistant responses)
+      const userMessageCount = messages.filter(msg => msg.role === "user").length + 1;
+      if (userMessageCount >= 3 && !leadSubmitted && !showLeadCapture) {
+        setShowLeadCapture(true);
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error("Failed to send message. Please try again.");
@@ -146,6 +162,34 @@ export default function KnowledgeBase() {
 
   const handleSuggestedQuestion = (question: string) => {
     handleSendMessage(question);
+  };
+
+  const handleLeadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      await submitLeadMutation.mutateAsync({
+        firstName: leadFormData.firstName,
+        email: leadFormData.email,
+        phone: leadFormData.phone,
+        propertyZip: leadFormData.propertyZip,
+        smsConsent: true, // Default to true since they're actively engaging
+      });
+      
+      setLeadSubmitted(true);
+      setShowLeadCapture(false);
+      toast.success("Thank you! We'll reach out within 24 hours to help with your situation.");
+      
+      // Add a system message to chat
+      const systemMessage: Message = {
+        role: "assistant",
+        content: "✅ **Thank you for sharing your information!** Our team will reach out within 24 hours to discuss your situation and explore your options. In the meantime, feel free to continue asking questions.",
+      };
+      setMessages((prev) => [...prev, systemMessage]);
+    } catch (error) {
+      console.error("Failed to submit lead:", error);
+      toast.error("Failed to submit your information. Please try again.");
+    }
   };
 
   return (
@@ -251,6 +295,101 @@ export default function KnowledgeBase() {
                 placeholder="Ask a question about foreclosure..."
                 height={500}
               />
+
+              {/* Lead Capture Card */}
+              {showLeadCapture && !leadSubmitted && (
+                <div className="mt-4 p-4 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 rounded-lg shadow-md">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="p-2 bg-teal-100 rounded-full">
+                      <UserCircle className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 mb-1">
+                        Get Personalized Help
+                      </h3>
+                      <p className="text-sm text-gray-700 mb-3">
+                        I can see you're exploring your options. Let our team provide personalized guidance for your specific situation. Share your contact info and we'll reach out within 24 hours.
+                      </p>
+                      <form onSubmit={handleLeadSubmit} className="space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-xs font-medium text-gray-700 mb-1 block">
+                              First Name *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={leadFormData.firstName}
+                              onChange={(e) => setLeadFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                              placeholder="John"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs font-medium text-gray-700 mb-1 block">
+                              Phone *
+                            </label>
+                            <input
+                              type="tel"
+                              required
+                              value={leadFormData.phone}
+                              onChange={(e) => setLeadFormData(prev => ({ ...prev, phone: e.target.value }))}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                              placeholder="(832) 932-7585"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-xs font-medium text-gray-700 mb-1 block">
+                              Email *
+                            </label>
+                            <input
+                              type="email"
+                              required
+                              value={leadFormData.email}
+                              onChange={(e) => setLeadFormData(prev => ({ ...prev, email: e.target.value }))}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                              placeholder="john@example.com"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs font-medium text-gray-700 mb-1 block">
+                              Property ZIP Code *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              pattern="[0-9]{5}"
+                              value={leadFormData.propertyZip}
+                              onChange={(e) => setLeadFormData(prev => ({ ...prev, propertyZip: e.target.value }))}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                              placeholder="75001"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            type="submit"
+                            disabled={submitLeadMutation.isPending}
+                            className="flex-1 bg-teal-600 hover:bg-teal-700 text-white"
+                          >
+                            {submitLeadMutation.isPending ? "Submitting..." : "Get Free Consultation"}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowLeadCapture(false)}
+                            className="text-gray-600"
+                          >
+                            Maybe Later
+                          </Button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Disclaimer */}
               <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">

@@ -381,3 +381,15 @@
 - [x] Integrate chatbot into Knowledge Base page layout
 - [x] Test chatbot with foreclosure-related questions (timeline question confirmed)
 - [x] Verify responses are accurate and helpful (4-5 month timeline confirmed)
+
+## Chatbot Lead Capture Feature
+- [x] Create lead capture card/modal component with form fields
+- [x] Add name, email, phone, property ZIP fields with validation
+- [x] Show lead capture prompt after 3 message exchanges
+- [x] Allow users to dismiss with "Maybe Later" button
+- [x] Submit lead data to existing leads.submit tRPC endpoint
+- [x] Show success toast message after lead submission
+- [x] Continue chat conversation after lead capture
+- [x] Add "Already submitted? Continue chatting" state management
+- [x] Test lead capture flow with various scenarios (confirmed working)
+- [x] Verify leads are saved to database correctly
