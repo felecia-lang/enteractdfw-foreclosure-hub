@@ -8,6 +8,8 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { generateAvoidingScamsPDF } from "../pdfGenerator";
+import { generateNoticeOfDefaultPDF } from "../pdfGeneratorNoticeOfDefault";
+import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -37,12 +39,38 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   
-  // PDF download route
+  // PDF download routes
   app.get("/api/pdf/avoiding-scams-guide", (req, res) => {
     try {
       const doc = generateAvoidingScamsPDF();
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'attachment; filename="Avoiding_Foreclosure_Scams_Guide.pdf"');
+      doc.pipe(res);
+      doc.end();
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  });
+  
+  app.get("/api/pdf/notice-of-default-checklist", (req, res) => {
+    try {
+      const doc = generateNoticeOfDefaultPDF();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="Notice_of_Default_Checklist.pdf"');
+      doc.pipe(res);
+      doc.end();
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  });
+  
+  app.get("/api/pdf/contacting-lender-guide", (req, res) => {
+    try {
+      const doc = generateContactingLenderPDF();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="Contacting_Your_Lender_Guide.pdf"');
       doc.pipe(res);
       doc.end();
     } catch (error) {

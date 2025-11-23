@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Phone, Download, AlertTriangle, Clock, CheckCircle2, FileText, Users, Home } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 const actionSteps = [
   {
@@ -168,6 +169,11 @@ const actionSteps = [
 ];
 
 export default function NoticeOfDefaultGuide() {
+  const downloadPDF = () => {
+    window.open('/api/pdf/notice-of-default-checklist', '_blank');
+    toast.success('PDF download started');
+  };
+  
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -212,9 +218,19 @@ export default function NoticeOfDefaultGuide() {
               <AlertTriangle className="h-8 w-8 text-destructive" />
             </div>
             <div className="flex-1">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                What to Do After Receiving a Notice of Default
-              </h1>
+              <div className="flex items-start justify-between mb-4">
+                <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+                  What to Do After Receiving a Notice of Default
+                </h1>
+                <Button 
+                  onClick={downloadPDF}
+                  variant="outline"
+                  className="flex items-center gap-2 border-[#00A6A6] text-[#00A6A6] hover:bg-[#00A6A6] hover:text-white ml-4 flex-shrink-0"
+                >
+                  <Download className="h-4 w-4" />
+                  Download PDF
+                </Button>
+              </div>
               <p className="text-lg text-muted-foreground">
                 A step-by-step action guide to help you respond quickly, understand your options, and protect your home. Time is critical—follow these steps immediately.
               </p>

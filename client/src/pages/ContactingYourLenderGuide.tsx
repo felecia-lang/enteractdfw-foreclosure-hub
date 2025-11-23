@@ -3,10 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Phone, FileText, CheckCircle2, AlertCircle, Download, Printer } from "lucide-react";
 import { APP_LOGO } from "@/const";
+import { toast } from "sonner";
 
 export default function ContactingYourLenderGuide() {
   const handlePrint = () => {
     window.print();
+  };
+  
+  const downloadPDF = () => {
+    window.open('/api/pdf/contacting-lender-guide', '_blank');
+    toast.success('PDF download started');
   };
 
   return (
@@ -67,6 +73,10 @@ export default function ContactingYourLenderGuide() {
           </div>
           
           <div className="flex justify-center gap-4 print:hidden">
+            <Button onClick={downloadPDF} size="lg" variant="outline" className="border-[#00A6A6] text-[#00A6A6] hover:bg-[#00A6A6] hover:text-white">
+              <Download className="h-5 w-5 mr-2" />
+              Download PDF
+            </Button>
             <Button onClick={handlePrint} size="lg" variant="outline">
               <Printer className="h-5 w-5 mr-2" />
               Print Guide

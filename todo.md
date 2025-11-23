@@ -178,4 +178,8 @@
 - [x] Add download PDF button to AvoidingScams.tsx page
 - [x] Style PDF with proper formatting and branding
 - [x] Test PDF download functionality
-- [ ] Consider adding PDF downloads for other guides (Notice of Default, Contacting Lender)
+- [x] Create PDF generator for Notice of Default checklist
+- [x] Create PDF generator for Contacting Your Lender guide
+- [x] Add download buttons to both guide pages
+- [x] Add Express routes for both PDF downloads
+- [x] Test both PDF downloads
