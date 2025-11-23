@@ -4,8 +4,9 @@ import { Link } from "wouter";
 import { Phone, Download, AlertTriangle, Clock, CheckCircle2, FileText, Users, Home } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
 
 const actionSteps = [
   {
@@ -205,6 +206,18 @@ export default function NoticeOfDefaultGuide() {
     toast.success('Checklist progress cleared');
   };
 
+  // Calculate progress
+  const { totalItems, completedItems, progressPercentage } = useMemo(() => {
+    const total = actionSteps.reduce((sum, step) => sum + step.actions.length, 0);
+    const completed = Object.values(checkedItems).filter(Boolean).length;
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return {
+      totalItems: total,
+      completedItems: completed,
+      progressPercentage: percentage
+    };
+  }, [checkedItems]);
+
   const downloadPDF = () => {
     window.open('/api/pdf/notice-of-default-checklist', '_blank');
     toast.success('PDF download started');
@@ -336,6 +349,32 @@ export default function NoticeOfDefaultGuide() {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* Progress Bar */}
+      <section className="py-8 bg-muted/30">
+        <div className="container max-w-4xl">
+          <Card>
+            <CardContent className="p-6">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground">Your Progress</h3>
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {completedItems} of {totalItems} items completed
+                  </span>
+                </div>
+                <Progress value={progressPercentage} className="h-3" />
+                <p className="text-sm text-muted-foreground">
+                  {progressPercentage === 100 
+                    ? "🎉 Congratulations! You've completed all action items." 
+                    : progressPercentage >= 50
+                    ? "Great progress! Keep going to complete your action plan."
+                    : "Check off items as you complete them to track your progress."}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
