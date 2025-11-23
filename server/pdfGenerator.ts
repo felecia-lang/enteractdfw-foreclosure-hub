@@ -535,3 +535,135 @@ export function generateForeclosureGuidePDF(): typeof PDFDocument.prototype {
 
   return doc;
 }
+
+
+interface TimelineMilestone {
+  id: string;
+  title: string;
+  date: Date;
+  daysFromNotice: number;
+  description: string;
+  actionItems: string[];
+  urgency: "critical" | "warning" | "safe";
+  status: "past" | "current" | "upcoming";
+}
+
+export async function generatePersonalizedTimelinePDF(
+  noticeDate: string,
+  milestones: TimelineMilestone[]
+): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({
+      size: 'LETTER',
+      margins: { top: 50, bottom: 50, left: 50, right: 50 }
+    });
+
+    const chunks: Buffer[] = [];
+    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+    doc.on('error', reject);
+
+    const primaryColor = '#0891B2'; // Teal
+    const criticalColor = '#DC2626'; // Red
+    const warningColor = '#EA580C'; // Orange
+    const safeColor = '#16A34A'; // Green
+
+    // Header
+    doc.fontSize(24).fillColor(primaryColor).text('Your Personalized', { align: 'center' });
+    doc.fontSize(28).text('Foreclosure Timeline', { align: 'center' });
+    doc.moveDown(0.5);
+    
+    doc.fontSize(12).fillColor('#666666')
+       .text(`Notice of Default Date: ${new Date(noticeDate).toLocaleDateString('en-US', { 
+         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+       })}`, { align: 'center' });
+    
+    doc.moveDown(1);
+
+    // Introduction
+    doc.fontSize(10).fillColor('#000000')
+       .text('This personalized timeline shows the key milestones in the Texas foreclosure process based on your Notice of Default date. Use this guide to understand your deadlines and take timely action to protect your rights.', {
+         align: 'left',
+         width: 500
+       });
+    
+    doc.moveDown(1.5);
+
+    // Milestones
+    milestones.forEach((milestone, index) => {
+      // Check if we need a new page
+      if (doc.y > 650) {
+        doc.addPage();
+      }
+
+      // Milestone header with color indicator
+      const urgencyColor = milestone.urgency === 'critical' ? criticalColor : 
+                          milestone.urgency === 'warning' ? warningColor : safeColor;
+      
+      // Draw colored bar
+      doc.rect(50, doc.y, 5, 20).fill(urgencyColor);
+      
+      // Milestone title and date
+      doc.fontSize(14).fillColor('#000000')
+         .text(milestone.title, 65, doc.y, { continued: false });
+      
+      doc.fontSize(10).fillColor('#666666')
+         .text(`Day ${milestone.daysFromNotice} • ${milestone.date.toLocaleDateString('en-US', { 
+           weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+         })}`, 65);
+      
+      doc.moveDown(0.5);
+
+      // Description
+      doc.fontSize(10).fillColor('#000000')
+         .text(milestone.description, 65, doc.y, { width: 480 });
+      
+      doc.moveDown(0.5);
+
+      // Action items
+      doc.fontSize(10).fillColor('#000000').text('Action Items:', 65);
+      doc.moveDown(0.3);
+      
+      milestone.actionItems.forEach((item) => {
+        doc.fontSize(9).fillColor('#333333')
+           .text(`• ${item}`, 75, doc.y, { width: 470 });
+        doc.moveDown(0.2);
+      });
+      
+      doc.moveDown(1);
+
+      // Add separator line (except for last milestone)
+      if (index < milestones.length - 1) {
+        doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke('#E5E7EB');
+        doc.moveDown(1);
+      }
+    });
+
+    // Footer section
+    doc.addPage();
+    doc.fontSize(18).fillColor(primaryColor)
+       .text('Need Help? Contact EnterActDFW', { align: 'center' });
+    doc.moveDown(1);
+
+    doc.fontSize(11).fillColor('#000000')
+       .text('EnterActDFW can provide a fair cash offer and close in as little as 7-10 days.', { align: 'center' });
+    doc.text('Let us help you avoid foreclosure and move forward with dignity.', { align: 'center' });
+    doc.moveDown(1.5);
+
+    doc.fontSize(12).fillColor('#000000')
+       .text('Phone: (832) 932-7585', { align: 'center' });
+    doc.text('Email: info@enteractdfw.com', { align: 'center' });
+    doc.text('Lewisville, Texas 75056', { align: 'center' });
+    
+    doc.moveDown(2);
+
+    // Legal disclaimer
+    doc.fontSize(8).fillColor('#666666')
+       .text('Legal Disclaimer: This timeline is for educational purposes only and is not legal advice. Foreclosure timelines can vary based on individual circumstances. For specific guidance, consult an attorney or HUD-approved housing counselor.', {
+         align: 'center',
+         width: 500
+       });
+
+    doc.end();
+  });
+}

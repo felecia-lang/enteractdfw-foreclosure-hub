@@ -7,7 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { generateAvoidingScamsPDF, generateForeclosureGuidePDF } from "../pdfGenerator";
+import { generateAvoidingScamsPDF, generateForeclosureGuidePDF, generatePersonalizedTimelinePDF } from "../pdfGenerator";
 import { generateNoticeOfDefaultPDF } from "../pdfGeneratorNoticeOfDefault";
 import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
 
@@ -91,6 +91,31 @@ async function startServer() {
       res.status(500).json({ error: 'Failed to generate PDF' });
     }
   });
+  
+  app.post("/api/pdf/personalized-timeline", async (req, res) => {
+    try {
+      const { noticeDate, milestones } = req.body;
+      
+      if (!noticeDate || !milestones || !Array.isArray(milestones)) {
+        return res.status(400).json({ error: 'Invalid request: noticeDate and milestones are required' });
+      }
+      
+      // Convert date strings back to Date objects
+      const milestonesWithDates = milestones.map((m: any) => ({
+        ...m,
+        date: new Date(m.date)
+      }));
+      
+      const pdfBuffer = await generatePersonalizedTimelinePDF(noticeDate, milestonesWithDates);
+      
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="My_Foreclosure_Timeline.pdf"');
+      res.send(pdfBuffer);
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  })
   
   // tRPC API
   app.use(

@@ -344,3 +344,14 @@
 - [x] Include "Contact Us" CTA for urgent situations
 - [x] Make timeline responsive for mobile devices
 - [x] Test calculator with various dates and scenarios (confirmed working)
+
+## Timeline PDF Export Feature
+- [x] Create backend PDF generation endpoint for personalized timeline
+- [x] Generate PDF with all 7 milestones and calculated dates
+- [x] Include action items for each milestone in PDF
+- [x] Add urgency indicators (color-coded sections) in PDF
+- [x] Include EnterActDFW branding and contact information
+- [x] Add "Download Timeline PDF" button to calculator results
+- [x] Pass timeline data from frontend to PDF endpoint
+- [x] Test PDF generation with various dates (confirmed working)
+- [x] Ensure PDF is properly formatted and readable (3-page PDF verified)

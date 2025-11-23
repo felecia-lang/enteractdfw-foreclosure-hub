@@ -186,6 +186,40 @@ export default function TimelineCalculator() {
     setDaysUntilSale(null);
   };
 
+  const handleDownloadPDF = async () => {
+    if (!timeline || !noticeDate) return;
+
+    try {
+      const response = await fetch('/api/pdf/personalized-timeline', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          noticeDate,
+          milestones: timeline
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'My_Foreclosure_Timeline.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Failed to download PDF. Please try again.');
+    }
+  };
+
   const getUrgencyColor = (urgency: "critical" | "warning" | "safe") => {
     switch (urgency) {
       case "critical":
@@ -310,9 +344,14 @@ export default function TimelineCalculator() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                   {timeline && (
-                    <Button type="button" variant="outline" onClick={handleReset}>
-                      Reset
-                    </Button>
+                    <>
+                      <Button type="button" variant="outline" onClick={handleDownloadPDF}>
+                        <Download className="h-4 w-4" />
+                      </Button>
+                      <Button type="button" variant="outline" onClick={handleReset}>
+                        Reset
+                      </Button>
+                    </>
                   )}
                 </div>
               </form>
