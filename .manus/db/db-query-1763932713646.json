@@ -1,0 +1,24 @@
+{
+  "query": "SELECT * FROM testimonials ORDER BY createdAt DESC LIMIT 1",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user tYQ9sMJ3YyJbnfU.ac4291f19fa3 --database LjpDYh45TKLXumuEiGDadw --execute SELECT * FROM testimonials ORDER BY createdAt DESC LIMIT 1",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Test User",
+      "location": "Dallas, TX",
+      "situation": "Job Loss",
+      "story": "I was facing foreclosure after losing my job during the pandemic. I didn't know where to turn and was overwhelmed with stress and uncertainty about my family's future.",
+      "outcome": "EnterActDFW gave me a fair cash offer and closed quickly. I avoided foreclosure and was able to move forward with my life.",
+      "permissionToPublish": "yes",
+      "email": "NULL",
+      "phone": "NULL",
+      "status": "pending",
+      "createdAt": "2025-11-23 21:18:03",
+      "updatedAt": "2025-11-23 21:18:03"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tlocation\tsituation\tstory\toutcome\tpermissionToPublish\temail\tphone\tstatus\tcreatedAt\tupdatedAt\n1\tTest User\tDallas, TX\tJob Loss\tI was facing foreclosure after losing my job during the pandemic. I didn't know where to turn and was overwhelmed with stress and uncertainty about my family's future.\tEnterActDFW gave me a fair cash offer and closed quickly. I avoided foreclosure and was able to move forward with my life.\tyes\tNULL\tNULL\tpending\t2025-11-23 21:18:03\t2025-11-23 21:18:03\n",
+  "stderr": "",
+  "execution_time_ms": 392
+}

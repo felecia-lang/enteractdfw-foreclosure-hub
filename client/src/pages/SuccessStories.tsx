@@ -1,8 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Link } from "wouter";
-import { Phone, CheckCircle, ArrowRight, Quote, Home, Heart, Briefcase, TrendingUp } from "lucide-react";
+import { Phone, CheckCircle, ArrowRight, Quote, Home, Heart, Briefcase, TrendingUp, Send } from "lucide-react";
 import { APP_TITLE } from "@/const";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+import { useState } from "react";
 
 const successStories = [
   {
@@ -189,6 +196,42 @@ const stats = [
 ];
 
 export default function SuccessStories() {
+  const [formData, setFormData] = useState({
+    name: "",
+    location: "",
+    situation: "",
+    story: "",
+    outcome: "",
+    permissionToPublish: "no" as "yes" | "no",
+    email: "",
+    phone: "",
+  });
+
+  const submitTestimonial = trpc.testimonials.submit.useMutation({
+    onSuccess: () => {
+      toast.success("Thank you for sharing your story! We'll review it and may feature it on this page.");
+      // Reset form
+      setFormData({
+        name: "",
+        location: "",
+        situation: "",
+        story: "",
+        outcome: "",
+        permissionToPublish: "no",
+        email: "",
+        phone: "",
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit testimonial. Please try again.");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitTestimonial.mutate(formData);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -355,6 +398,152 @@ export default function SuccessStories() {
                 </a>
               </Button>
             </div>
+          </div>
+        </section>
+
+        {/* Share Your Story Form */}
+        <section className="py-16 bg-gradient-to-br from-primary/5 to-primary/10">
+          <div className="container max-w-3xl">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold mb-4">Share Your Success Story</h2>
+              <p className="text-lg text-muted-foreground">
+                Did EnterActDFW help you avoid foreclosure? We'd love to hear about your experience.
+                Your story could inspire and help other homeowners facing similar challenges.
+              </p>
+            </div>
+
+            <Card className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Your Name *</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="e.g., John D."
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Location *</Label>
+                    <Input
+                      id="location"
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      placeholder="e.g., Dallas, TX"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="situation">Your Situation *</Label>
+                  <Input
+                    id="situation"
+                    value={formData.situation}
+                    onChange={(e) => setFormData({ ...formData, situation: e.target.value })}
+                    placeholder="e.g., Job Loss, Medical Emergency, Divorce"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="story">Your Story *</Label>
+                  <Textarea
+                    id="story"
+                    value={formData.story}
+                    onChange={(e) => setFormData({ ...formData, story: e.target.value })}
+                    placeholder="Tell us about your situation before working with EnterActDFW. What challenges were you facing? How did you feel?"
+                    rows={6}
+                    required
+                    minLength={50}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Minimum 50 characters. Share details about your challenges and how you found us.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="outcome">The Outcome *</Label>
+                  <Textarea
+                    id="outcome"
+                    value={formData.outcome}
+                    onChange={(e) => setFormData({ ...formData, outcome: e.target.value })}
+                    placeholder="How did EnterActDFW help you? What was the result? How do you feel now?"
+                    rows={4}
+                    required
+                    minLength={20}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Minimum 20 characters. Describe the solution and how your life changed.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email (Optional)</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="your@email.com"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone (Optional)</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label>Permission to Publish *</Label>
+                  <RadioGroup
+                    value={formData.permissionToPublish}
+                    onValueChange={(value) => setFormData({ ...formData, permissionToPublish: value as "yes" | "no" })}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="permission-yes" />
+                      <Label htmlFor="permission-yes" className="font-normal cursor-pointer">
+                        Yes, you may publish my story on this website (we may edit for length/clarity)
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="permission-no" />
+                      <Label htmlFor="permission-no" className="font-normal cursor-pointer">
+                        No, this is for internal feedback only
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div className="pt-4">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={submitTestimonial.isPending}
+                  >
+                    <Send className="mr-2 h-5 w-5" />
+                    {submitTestimonial.isPending ? "Submitting..." : "Submit Your Story"}
+                  </Button>
+                </div>
+
+                <p className="text-xs text-muted-foreground text-center">
+                  By submitting this form, you acknowledge that your information will be reviewed by EnterActDFW.
+                  We respect your privacy and will only publish stories with explicit permission.
+                </p>
+              </form>
+            </Card>
           </div>
         </section>
 

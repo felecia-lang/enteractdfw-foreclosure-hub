@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, getAllLeads, getLeadById, getLeadNotes, updateLeadNotes, updateLeadStatus } from "./db";
+import { createLead, createLeadNote, createTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, updateLeadNotes, updateLeadStatus } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -303,6 +303,61 @@ Email: info@enteractdfw.com
           count: leadsToExport.length,
         };
       }),
+  }),
+
+  // Testimonial submission
+  testimonials: router({  
+    // Public procedure for submitting testimonials
+    submit: publicProcedure
+      .input(
+        z.object({
+          name: z.string().min(1, "Name is required"),
+          location: z.string().min(1, "Location is required"),
+          situation: z.string().min(1, "Situation is required"),
+          story: z.string().min(50, "Please share at least 50 characters about your experience"),
+          outcome: z.string().min(20, "Please describe the outcome"),
+          permissionToPublish: z.enum(["yes", "no"]),
+          email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
+          phone: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          // Create testimonial in database
+          await createTestimonial({
+            name: input.name,
+            location: input.location,
+            situation: input.situation,
+            story: input.story,
+            outcome: input.outcome,
+            permissionToPublish: input.permissionToPublish,
+            email: input.email || null,
+            phone: input.phone || null,
+            status: "pending",
+          });
+
+          // Notify owner of new testimonial submission
+          await notifyOwner({
+            title: "New Testimonial Submission",
+            content: `New testimonial from ${input.name} (${input.location})\n\nSituation: ${input.situation}\n\nPermission to publish: ${input.permissionToPublish}`,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("Failed to create testimonial:", error);
+          throw new Error("Failed to submit testimonial. Please try again.");
+        }
+      }),
+
+    // Admin-only procedure to list all testimonials
+    list: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    }).query(async () => {
+      return await getAllTestimonials();
+    }),
   }),
 });
 

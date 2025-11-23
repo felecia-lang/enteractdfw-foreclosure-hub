@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLead, InsertLeadNote, InsertUser, leadNotes, leads, users } from "../drizzle/schema";
+import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -197,6 +197,53 @@ export async function getLeadNotes(leadId: number) {
     return await db.select().from(leadNotes).where(eq(leadNotes.leadId, leadId)).orderBy(desc(leadNotes.createdAt));
   } catch (error) {
     console.error("[Database] Failed to get notes:", error);
+    return [];
+  }
+}
+
+// Testimonial management functions
+export async function createTestimonial(testimonial: InsertTestimonial) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create testimonial: database not available");
+    return undefined;
+  }
+
+  try {
+    const result = await db.insert(testimonials).values(testimonial);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create testimonial:", error);
+    throw error;
+  }
+}
+
+export async function getAllTestimonials() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get testimonials: database not available");
+    return [];
+  }
+
+  try {
+    return await db.select().from(testimonials).orderBy(desc(testimonials.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get testimonials:", error);
+    return [];
+  }
+}
+
+export async function getApprovedTestimonials() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get testimonials: database not available");
+    return [];
+  }
+
+  try {
+    return await db.select().from(testimonials).where(eq(testimonials.status, "approved")).orderBy(desc(testimonials.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get approved testimonials:", error);
     return [];
   }
 }

@@ -232,3 +232,13 @@
 - [x] Add route to App.tsx
 - [x] Add link to main navigation (homepage header)
 - [x] Test page layout and responsiveness
+
+## Share Your Story Form
+- [x] Create testimonials database table in schema.ts
+- [x] Add database helper functions in db.ts
+- [x] Create tRPC mutation for testimonial submission
+- [x] Send notification to owner when new testimonial submitted
+- [x] Add Share Your Story form section to Success Stories page
+- [x] Include fields: name, location, situation, story, outcome, permission to publish, email, phone
+- [x] Add form validation and success/error handling
+- [x] Test form submission and data persistence

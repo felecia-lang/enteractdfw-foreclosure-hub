@@ -60,3 +60,25 @@ export const leadNotes = mysqlTable("leadNotes", {
 
 export type LeadNote = typeof leadNotes.$inferSelect;
 export type InsertLeadNote = typeof leadNotes.$inferInsert;
+
+/**
+ * Testimonials table for storing user-submitted success stories.
+ * Captures homeowner experiences and outcomes for social proof.
+ */
+export const testimonials = mysqlTable("testimonials", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  location: varchar("location", { length: 100 }).notNull(),
+  situation: varchar("situation", { length: 200 }).notNull(),
+  story: text("story").notNull(),
+  outcome: text("outcome").notNull(),
+  permissionToPublish: mysqlEnum("permissionToPublish", ["yes", "no"]).default("no").notNull(),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 20 }),
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
+export type InsertTestimonial = typeof testimonials.$inferInsert;
