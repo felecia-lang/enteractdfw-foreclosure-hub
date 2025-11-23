@@ -304,3 +304,18 @@
 - [x] Update Privacy Policy link in landing page form
 - [x] Add Privacy Policy link to footer navigation
 - [x] Test all links and page layout
+
+## Terms of Service Page
+- [x] Create comprehensive Terms of Service page at /terms-of-service
+- [x] Include acceptance of terms and service description
+- [x] Add user responsibilities and prohibited uses
+- [x] Include disclaimers and "as-is" service provisions
+- [x] Add limitation of liability and indemnification clauses
+- [x] Include intellectual property rights section
+- [x] Add dispute resolution and governing law provisions
+- [x] Include termination and modification of terms
+- [x] Add severability and entire agreement clauses
+- [x] Include contact information for legal inquiries
+- [x] Add Terms of Service link to footer navigation
+- [x] Update Terms of Service link in Privacy Policy footer
+- [x] Test all links and page layout
