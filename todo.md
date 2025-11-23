@@ -272,3 +272,20 @@
 - [x] Test theme filter functionality
 - [ ] Optionally add theme filtering to public Success Stories page
 - [x] Test theme categorization workflow (theme saves to database and displays in edit modal)
+
+## A2P Compliance Review
+- [x] Review landing page phone number collection forms
+- [x] Add SMS/text messaging consent language
+- [x] Add TCPA compliance disclosure (automated technology/prerecorded messages)
+- [x] Include opt-out instructions (STOP to unsubscribe, HELP for help)
+- [x] Add message frequency disclosure ("Message frequency varies")
+- [x] Add message & data rates may apply notice
+- [x] Review privacy policy link placement
+- [x] Ensure consent is explicit and not pre-checked (required checkbox)
+- [x] Add carrier liability disclaimer ("Consent is not a condition of purchase")
+- [x] Test all compliance disclosures
+- [x] Add smsConsent field to database schema
+- [x] Update backend API to save SMS consent status
+- [x] Create comprehensive test suite for A2P compliance (9 tests)
+- [x] Verify consent data is saved correctly ("yes" or "no")
+- [x] Test form submission with and without consent

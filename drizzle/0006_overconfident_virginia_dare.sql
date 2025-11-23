@@ -1,0 +1,1 @@
+ALTER TABLE `leads` ADD `smsConsent` enum('yes','no') DEFAULT 'no' NOT NULL;

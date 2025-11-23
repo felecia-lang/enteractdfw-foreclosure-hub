@@ -27,6 +27,7 @@ export default function Home() {
     email: "",
     phone: "",
     propertyZip: "",
+    smsConsent: false,
   });
   const [submitted, setSubmitted] = useState(false);
 
@@ -40,6 +41,7 @@ export default function Home() {
         email: "",
         phone: "",
         propertyZip: "",
+        smsConsent: false,
       });
     },
     onError: (error) => {
@@ -194,16 +196,32 @@ export default function Home() {
                         required
                       />
                     </div>
+                    
+                    {/* A2P Compliance: SMS Consent */}
+                    <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-md border">
+                      <input
+                        type="checkbox"
+                        id="smsConsent"
+                        checked={formData.smsConsent}
+                        onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
+                        required
+                        className="mt-1 h-4 w-4 rounded border-gray-300"
+                      />
+                      <label htmlFor="smsConsent" className="text-xs text-muted-foreground leading-tight">
+                        By checking this box and providing my phone number, I consent to receive calls and text messages (including via automated technology and/or prerecorded messages) from EnterActDFW at the number provided about foreclosure assistance services. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. View our <a href="/privacy-policy" className="underline">Privacy Policy</a>.
+                      </label>
+                    </div>
+                    
                     <Button 
                       type="submit" 
                       className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" 
                       size="lg"
-                      disabled={submitLead.isPending}
+                      disabled={submitLead.isPending || !formData.smsConsent}
                     >
                       {submitLead.isPending ? "Submitting..." : "Download Free Guide Now →"}
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">
-                      ✓ No spam ✓ Unsubscribe anytime ✓ 100% free
+                      ✓ 100% Free ✓ No Obligation ✓ Secure & Confidential
                     </p>
                   </form>
                 )}

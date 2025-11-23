@@ -87,6 +87,7 @@ Email: info@enteractdfw.com
           email: z.string().email("Valid email is required"),
           phone: z.string().min(10, "Valid phone number is required"),
           propertyZip: z.string().min(5, "Valid ZIP code is required"),
+          smsConsent: z.boolean(),
         })
       )
       .mutation(async ({ input }) => {
@@ -97,6 +98,7 @@ Email: info@enteractdfw.com
             email: input.email,
             phone: input.phone,
             propertyZip: input.propertyZip,
+            smsConsent: input.smsConsent ? "yes" : "no",
             source: "landing_page",
             status: "new",
           });

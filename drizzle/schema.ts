@@ -35,6 +35,7 @@ export const leads = mysqlTable("leads", {
   email: varchar("email", { length: 320 }).notNull(),
   phone: varchar("phone", { length: 20 }).notNull(),
   propertyZip: varchar("propertyZip", { length: 10 }).notNull(),
+  smsConsent: mysqlEnum("smsConsent", ["yes", "no"]).default("no").notNull(),
   source: varchar("source", { length: 50 }).default("landing_page").notNull(),
   status: mysqlEnum("status", ["new", "contacted", "qualified", "closed"]).default("new").notNull(),
   notes: text("notes"),
