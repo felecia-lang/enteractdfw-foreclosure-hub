@@ -331,3 +331,16 @@
 - [x] Style PDF with EnterActDFW branding (PDFKit with professional layout)
 - [x] Integrate guide download with lead form submission (automatic download)
 - [x] Test PDF generation and download functionality (5-page PDF confirmed)
+
+## Foreclosure Timeline Calculator
+- [x] Create /timeline-calculator page route
+- [x] Build date input form for Notice of Default date
+- [x] Calculate key milestone dates (Notice of Sale, Foreclosure Sale, etc.)
+- [x] Display personalized timeline with visual progress indicator
+- [x] Add urgency indicators (critical, warning, safe zones)
+- [x] Include specific action items for each milestone
+- [x] Add countdown timers for critical deadlines (days until sale)
+- [x] Show recommended next steps based on timeline position
+- [x] Include "Contact Us" CTA for urgent situations
+- [x] Make timeline responsive for mobile devices
+- [x] Test calculator with various dates and scenarios (confirmed working)
