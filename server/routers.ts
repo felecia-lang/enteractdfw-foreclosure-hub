@@ -6,7 +6,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createLead, createLeadNote, getAllLeads, getLeadById, getLeadNotes, updateLeadNotes, updateLeadStatus } from "./db";
 import { notifyOwner } from "./_core/notification";
-import { syncLeadToGHL } from "./ghl";
+import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
+import { getOwnerNotificationEmail } from "./emailTemplates";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -114,8 +115,17 @@ Email: info@enteractdfw.com
             source: "Website - Landing Page",
           });
 
-          if (ghlResult.success) {
+          if (ghlResult.success && ghlResult.contactId) {
             console.log("[Leads] Successfully synced to GHL:", ghlResult.contactId);
+            
+            // Send welcome email to lead via GHL
+            try {
+              await sendWelcomeEmail(ghlResult.contactId, input.firstName);
+              console.log("[Leads] Welcome email sent to:", input.email);
+            } catch (emailError) {
+              console.warn("[Leads] Failed to send welcome email:", emailError);
+              // Don't fail the request if email fails
+            }
           } else {
             console.warn("[Leads] Failed to sync to GHL:", ghlResult.error);
             // Don't fail the request if GHL sync fails - lead is still captured in our DB

@@ -398,3 +398,142 @@ export async function trackGuideDownload(
     }
   );
 }
+
+/**
+ * Trigger an email workflow/campaign in GHL
+ * This adds the contact to a workflow which will send automated emails
+ */
+export async function triggerGHLWorkflow(
+  contactId: string,
+  workflowId: string
+): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  console.log("[GHL] Triggering workflow:", workflowId, "for contact:", contactId);
+
+  const result = await makeGHLRequest(
+    `/contacts/${contactId}/workflow/${workflowId}/subscribe`,
+    "POST",
+    {}
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Send a single email via GHL
+ * This sends an immediate email (not part of a workflow)
+ */
+export async function sendGHLEmail(
+  contactId: string,
+  emailData: {
+    subject: string;
+    body: string;
+    from?: string;
+    replyTo?: string;
+  }
+): Promise<{
+  success: boolean;
+  messageId?: string;
+  error?: string;
+}> {
+  console.log("[GHL] Sending email to contact:", contactId);
+
+  const result = await makeGHLRequest(
+    `/conversations/messages/email`,
+    "POST",
+    {
+      type: "Email",
+      contactId,
+      subject: emailData.subject,
+      html: emailData.body,
+      emailFrom: emailData.from,
+      replyTo: emailData.replyTo,
+    }
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  return { success: true, messageId: result.data?.messageId };
+}
+
+/**
+ * Send immediate welcome email to new lead
+ */
+export async function sendWelcomeEmail(
+  contactId: string,
+  firstName: string
+): Promise<void> {
+  const emailBody = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: 'Open Sans', Arial, sans-serif; line-height: 1.6; color: #333333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #0A2342; color: white; padding: 30px; text-align: center; }
+        .content { background-color: #F5F5F5; padding: 30px; }
+        .cta-button { display: inline-block; background-color: #00A6A6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Your Foreclosure Survival Guide</h1>
+        </div>
+        <div class="content">
+          <p>Hi ${firstName},</p>
+          
+          <p>Thank you for requesting your FREE Foreclosure Survival Guide from EnterActDFW.</p>
+          
+          <p>I understand that facing foreclosure can be overwhelming and stressful. You're not alone, and you have options.</p>
+          
+          <p><strong>Here's what you'll find in your guide:</strong></p>
+          <ul>
+            <li>Understanding the Texas foreclosure timeline</li>
+            <li>Your legal rights and protections</li>
+            <li>Options to avoid foreclosure</li>
+            <li>Step-by-step action plans</li>
+            <li>How to contact your lender effectively</li>
+          </ul>
+          
+          <p>Over the next few days, I'll send you additional resources to help you navigate this situation with confidence.</p>
+          
+          <p><strong>Need immediate help?</strong> I'm here to answer your questions and discuss your specific situation—with no pressure and no judgment.</p>
+          
+          <a href="tel:832-932-7585" class="cta-button">Call Me: 832-932-7585</a>
+          
+          <p>Best regards,<br>
+          <strong>Felecia Fair</strong><br>
+          Licensed Texas Real Estate Broker<br>
+          EnterActDFW<br>
+          832-932-7585<br>
+          info@enteractdfw.com</p>
+        </div>
+        <div class="footer">
+          <p>EnterActDFW | 4400 State Hwy 121, Suite 300, Lewisville, TX 75056</p>
+          <p>This is educational information only and not legal advice.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  await sendGHLEmail(contactId, {
+    subject: "Your FREE Foreclosure Survival Guide - EnterActDFW",
+    body: emailBody,
+    from: "info@enteractdfw.com",
+    replyTo: "info@enteractdfw.com",
+  });
+
+  // Track the email send
+  await trackEmailInteraction(contactId, "sent", "Your FREE Foreclosure Survival Guide - EnterActDFW");
+}
