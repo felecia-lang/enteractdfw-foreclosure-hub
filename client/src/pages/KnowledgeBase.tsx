@@ -72,7 +72,6 @@ const knowledgeBaseCategories = [
     description: "Warning signs, red flags, and how to protect yourself from predatory companies.",
     href: "/knowledge-base/avoiding-scams",
     color: "text-red-600",
-    comingSoon: true,
   },
   {
     icon: BookMarked,
@@ -154,11 +153,6 @@ export default function KnowledgeBase() {
                   key={index} 
                   className="hover:shadow-lg transition-shadow cursor-pointer group relative"
                 >
-                  {category.comingSoon && (
-                    <div className="absolute top-3 right-3 bg-amber-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-                      Coming Soon
-                    </div>
-                  )}
                   <Link href={category.href}>
                     <a className="block">
                       <CardHeader>

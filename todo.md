@@ -24,8 +24,17 @@
 - [x] Action Guide: Contacting Your Lender
 - [x] Resources & Support Directory
 - [x] FAQ page with search functionality
-- [ ] Avoiding Scams guide
+- [x] Avoiding Scams guide
 - [x] Glossary with alphabetical navigation
+
+## Avoiding Foreclosure Scams Guide
+- [x] Create comprehensive scams guide page at /avoiding-scams
+- [x] Document common scam types (upfront fees, deed transfer fraud, phantom help, etc.)
+- [x] Add red flags and warning signs section
+- [x] Include verification tips for legitimate counselors
+- [x] Add fraud reporting resources (FTC, CFPB, state attorney general)
+- [x] Update Knowledge Base hub to link to scams guide
+- [x] Remove "Coming Soon" badge from Knowledge Base navigation
 
 ## Interactive Features
 - [x] Interactive foreclosure timeline visualization (card-based)
