@@ -4,6 +4,8 @@ import { Link } from "wouter";
 import { Phone, Download, AlertTriangle, Clock, CheckCircle2, FileText, Users, Home } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { useState, useEffect } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const actionSteps = [
   {
@@ -169,6 +171,40 @@ const actionSteps = [
 ];
 
 export default function NoticeOfDefaultGuide() {
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+
+  // Load checked items from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('notice-of-default-checklist');
+    if (saved) {
+      try {
+        setCheckedItems(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to load checklist progress:', e);
+      }
+    }
+  }, []);
+
+  // Save to localStorage whenever checkedItems changes
+  useEffect(() => {
+    if (Object.keys(checkedItems).length > 0) {
+      localStorage.setItem('notice-of-default-checklist', JSON.stringify(checkedItems));
+    }
+  }, [checkedItems]);
+
+  const handleCheckItem = (itemKey: string, checked: boolean) => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [itemKey]: checked
+    }));
+  };
+
+  const clearProgress = () => {
+    setCheckedItems({});
+    localStorage.removeItem('notice-of-default-checklist');
+    toast.success('Checklist progress cleared');
+  };
+
   const downloadPDF = () => {
     window.open('/api/pdf/notice-of-default-checklist', '_blank');
     toast.success('PDF download started');
@@ -222,14 +258,23 @@ export default function NoticeOfDefaultGuide() {
                 <h1 className="text-4xl md:text-5xl font-bold text-foreground">
                   What to Do After Receiving a Notice of Default
                 </h1>
-                <Button 
-                  onClick={downloadPDF}
-                  variant="outline"
-                  className="flex items-center gap-2 border-[#00A6A6] text-[#00A6A6] hover:bg-[#00A6A6] hover:text-white ml-4 flex-shrink-0"
-                >
-                  <Download className="h-4 w-4" />
-                  Download PDF
-                </Button>
+                <div className="flex gap-2 ml-4 flex-shrink-0">
+                  <Button 
+                    onClick={downloadPDF}
+                    variant="outline"
+                    className="flex items-center gap-2 border-[#00A6A6] text-[#00A6A6] hover:bg-[#00A6A6] hover:text-white"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download PDF
+                  </Button>
+                  <Button 
+                    onClick={clearProgress}
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    Clear Progress
+                  </Button>
+                </div>
               </div>
               <p className="text-lg text-muted-foreground">
                 A step-by-step action guide to help you respond quickly, understand your options, and protect your home. Time is critical—follow these steps immediately.
@@ -319,13 +364,27 @@ export default function NoticeOfDefaultGuide() {
                   </CardHeader>
                   <CardContent className="p-6">
                     <h4 className="font-semibold text-foreground mb-3">Action Items:</h4>
-                    <ul className="space-y-2">
-                      {step.actions.map((action, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                          <span className="text-muted-foreground">{action}</span>
-                        </li>
-                      ))}
+                    <ul className="space-y-3">
+                      {step.actions.map((action, index) => {
+                        const itemKey = `step-${step.step}-action-${index}`;
+                        const isChecked = checkedItems[itemKey] || false;
+                        return (
+                          <li key={index} className="flex items-start gap-3">
+                            <Checkbox 
+                              id={itemKey}
+                              checked={isChecked}
+                              onCheckedChange={(checked) => handleCheckItem(itemKey, checked as boolean)}
+                              className="mt-0.5"
+                            />
+                            <label 
+                              htmlFor={itemKey}
+                              className={`text-muted-foreground cursor-pointer flex-1 ${isChecked ? 'line-through opacity-60' : ''}`}
+                            >
+                              {action}
+                            </label>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </CardContent>
                 </Card>
