@@ -197,3 +197,11 @@
 - [x] Add Contacting Lender guide to homepage action guide section
 - [x] Make all guide cards on homepage clickable with proper links
 - [x] Test navigation flow from homepage to all guides
+
+## Interactive Note-Taking Feature
+- [x] Create interactive call log component with localStorage persistence
+- [x] Add save/clear functionality for call notes
+- [x] Add visual feedback when notes are saved
+- [x] Make call log template interactive and editable
+- [x] Test note persistence across page refreshes
+- [ ] Add export notes functionality (optional)

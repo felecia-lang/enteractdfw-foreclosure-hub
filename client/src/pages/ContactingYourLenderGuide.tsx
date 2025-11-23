@@ -1,11 +1,83 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Phone, FileText, CheckCircle2, AlertCircle, Download, Printer } from "lucide-react";
+import { Phone, FileText, CheckCircle2, AlertCircle, Download, Printer, Save, Trash2 } from "lucide-react";
 import { APP_LOGO } from "@/const";
 import { toast } from "sonner";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
+interface CallLogData {
+  dateOfCall: string;
+  time: string;
+  representativeName: string;
+  employeeId: string;
+  department: string;
+  referenceNumber: string;
+  summaryOfDiscussion: string;
+  optionsDiscussed: string;
+  documentsRequested: string;
+  submissionDeadline: string;
+  followUpDate: string;
+  nextSteps: string;
+}
 
 export default function ContactingYourLenderGuide() {
+  const [callLog, setCallLog] = useState<CallLogData>({
+    dateOfCall: '',
+    time: '',
+    representativeName: '',
+    employeeId: '',
+    department: '',
+    referenceNumber: '',
+    summaryOfDiscussion: '',
+    optionsDiscussed: '',
+    documentsRequested: '',
+    submissionDeadline: '',
+    followUpDate: '',
+    nextSteps: '',
+  });
+
+  // Load saved notes from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('lender-call-log');
+    if (saved) {
+      try {
+        setCallLog(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to load saved call log:', e);
+      }
+    }
+  }, []);
+
+  const handleSave = () => {
+    localStorage.setItem('lender-call-log', JSON.stringify(callLog));
+    toast.success('Call log saved successfully!');
+  };
+
+  const handleClear = () => {
+    if (confirm('Are you sure you want to clear all saved notes? This cannot be undone.')) {
+      const emptyLog: CallLogData = {
+        dateOfCall: '',
+        time: '',
+        representativeName: '',
+        employeeId: '',
+        department: '',
+        referenceNumber: '',
+        summaryOfDiscussion: '',
+        optionsDiscussed: '',
+        documentsRequested: '',
+        submissionDeadline: '',
+        followUpDate: '',
+        nextSteps: '',
+      };
+      setCallLog(emptyLog);
+      localStorage.removeItem('lender-call-log');
+      toast.success('Call log cleared');
+    }
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -415,100 +487,171 @@ export default function ContactingYourLenderGuide() {
             </CardContent>
           </Card>
 
-          {/* Call Log Template */}
+          {/* Interactive Call Log */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <FileText className="h-6 w-6 text-primary" />
-                Call Log Template (Print & Use)
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-3">
+                  <FileText className="h-6 w-6 text-primary" />
+                  Interactive Call Log
+                </CardTitle>
+                <div className="flex gap-2 print:hidden">
+                  <Button onClick={handleSave} size="sm" variant="default">
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Notes
+                  </Button>
+                  <Button onClick={handleClear} size="sm" variant="outline">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear
+                  </Button>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">
+                Your notes are saved automatically to your browser and will persist across sessions.
+              </p>
             </CardHeader>
             <CardContent>
-              <div className="p-6 bg-muted/30 rounded-lg border-2 border-dashed space-y-4">
+              <div className="p-6 bg-muted/30 rounded-lg border space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-semibold mb-1">Date of Call:</p>
-                    <div className="border-b-2 border-muted-foreground/30 pb-1">_________________</div>
+                    <label className="text-sm font-semibold mb-2 block">Date of Call:</label>
+                    <Input
+                      type="date"
+                      value={callLog.dateOfCall}
+                      onChange={(e) => setCallLog({ ...callLog, dateOfCall: e.target.value })}
+                      className="print:border-0 print:p-0"
+                    />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold mb-1">Time:</p>
-                    <div className="border-b-2 border-muted-foreground/30 pb-1">_________________</div>
+                    <label className="text-sm font-semibold mb-2 block">Time:</label>
+                    <Input
+                      type="time"
+                      value={callLog.time}
+                      onChange={(e) => setCallLog({ ...callLog, time: e.target.value })}
+                      className="print:border-0 print:p-0"
+                    />
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold mb-1">Representative Name:</p>
-                  <div className="border-b-2 border-muted-foreground/30 pb-1">_________________________________________________</div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-semibold mb-1">Employee/ID Number:</p>
-                    <div className="border-b-2 border-muted-foreground/30 pb-1">_________________</div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold mb-1">Department:</p>
-                    <div className="border-b-2 border-muted-foreground/30 pb-1">_________________</div>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold mb-1">Reference/Case Number:</p>
-                  <div className="border-b-2 border-muted-foreground/30 pb-1">_________________________________________________</div>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold mb-2">Summary of Discussion:</p>
-                  <div className="space-y-2">
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold mb-2">Options Discussed:</p>
-                  <div className="space-y-2">
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold mb-2">Documents Requested:</p>
-                  <div className="space-y-2">
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                  </div>
+                  <label className="text-sm font-semibold mb-2 block">Representative Name:</label>
+                  <Input
+                    type="text"
+                    value={callLog.representativeName}
+                    onChange={(e) => setCallLog({ ...callLog, representativeName: e.target.value })}
+                    placeholder="Enter representative's name"
+                    className="print:border-0 print:p-0"
+                  />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-semibold mb-1">Submission Deadline:</p>
-                    <div className="border-b-2 border-muted-foreground/30 pb-1">_________________</div>
+                    <label className="text-sm font-semibold mb-2 block">Employee/ID Number:</label>
+                    <Input
+                      type="text"
+                      value={callLog.employeeId}
+                      onChange={(e) => setCallLog({ ...callLog, employeeId: e.target.value })}
+                      placeholder="Enter employee ID"
+                      className="print:border-0 print:p-0"
+                    />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold mb-1">Follow-up Date:</p>
-                    <div className="border-b-2 border-muted-foreground/30 pb-1">_________________</div>
+                    <label className="text-sm font-semibold mb-2 block">Department:</label>
+                    <Input
+                      type="text"
+                      value={callLog.department}
+                      onChange={(e) => setCallLog({ ...callLog, department: e.target.value })}
+                      placeholder="e.g., Loss Mitigation"
+                      className="print:border-0 print:p-0"
+                    />
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold mb-2">Next Steps:</p>
-                  <div className="space-y-2">
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
-                    <div className="border-b border-muted-foreground/30 pb-1">_________________________________________________</div>
+                  <label className="text-sm font-semibold mb-2 block">Reference/Case Number:</label>
+                  <Input
+                    type="text"
+                    value={callLog.referenceNumber}
+                    onChange={(e) => setCallLog({ ...callLog, referenceNumber: e.target.value })}
+                    placeholder="Enter reference or case number"
+                    className="print:border-0 print:p-0"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-semibold mb-2 block">Summary of Discussion:</label>
+                  <Textarea
+                    value={callLog.summaryOfDiscussion}
+                    onChange={(e) => setCallLog({ ...callLog, summaryOfDiscussion: e.target.value })}
+                    placeholder="Document what was discussed during the call..."
+                    rows={5}
+                    className="print:border-0 print:p-0 resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-semibold mb-2 block">Options Discussed:</label>
+                  <Textarea
+                    value={callLog.optionsDiscussed}
+                    onChange={(e) => setCallLog({ ...callLog, optionsDiscussed: e.target.value })}
+                    placeholder="List the options or solutions discussed..."
+                    rows={3}
+                    className="print:border-0 print:p-0 resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-semibold mb-2 block">Documents Requested:</label>
+                  <Textarea
+                    value={callLog.documentsRequested}
+                    onChange={(e) => setCallLog({ ...callLog, documentsRequested: e.target.value })}
+                    placeholder="List any documents you need to submit..."
+                    rows={2}
+                    className="print:border-0 print:p-0 resize-none"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold mb-2 block">Submission Deadline:</label>
+                    <Input
+                      type="date"
+                      value={callLog.submissionDeadline}
+                      onChange={(e) => setCallLog({ ...callLog, submissionDeadline: e.target.value })}
+                      className="print:border-0 print:p-0"
+                    />
                   </div>
+                  <div>
+                    <label className="text-sm font-semibold mb-2 block">Follow-up Date:</label>
+                    <Input
+                      type="date"
+                      value={callLog.followUpDate}
+                      onChange={(e) => setCallLog({ ...callLog, followUpDate: e.target.value })}
+                      className="print:border-0 print:p-0"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-semibold mb-2 block">Next Steps:</label>
+                  <Textarea
+                    value={callLog.nextSteps}
+                    onChange={(e) => setCallLog({ ...callLog, nextSteps: e.target.value })}
+                    placeholder="Document your next steps and action items..."
+                    rows={3}
+                    className="print:border-0 print:p-0 resize-none"
+                  />
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-center print:hidden">
+              <div className="mt-4 flex justify-center gap-3 print:hidden">
+                <Button onClick={handleSave} variant="default">
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Notes
+                </Button>
                 <Button onClick={handlePrint} variant="outline">
                   <Printer className="h-4 w-4 mr-2" />
-                  Print Call Log Template
+                  Print Call Log
                 </Button>
               </div>
             </CardContent>
