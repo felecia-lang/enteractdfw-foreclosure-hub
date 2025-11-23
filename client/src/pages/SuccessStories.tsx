@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,62 @@ import { APP_TITLE } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useState } from "react";
+
+// Component to display approved user-submitted testimonials
+function UserTestimonials() {
+  const { data: approvedTestimonials = [] } = trpc.testimonials.list.useQuery({ status: "approved" });
+
+  if (approvedTestimonials.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="py-16 bg-background">
+      <div className="container">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">More Success Stories from Our Community</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Real homeowners who avoided foreclosure and moved forward with their lives.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {approvedTestimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="flex flex-col">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-lg">{testimonial.name}</CardTitle>
+                    <CardDescription className="flex items-center gap-1 mt-1">
+                      <span>{testimonial.location}</span>
+                    </CardDescription>
+                  </div>
+                  <Quote className="h-8 w-8 text-primary/20" />
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col">
+                <div className="space-y-3 flex-1">
+                  <div>
+                    <p className="text-sm font-semibold text-primary">{testimonial.situation}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground italic line-clamp-4">
+                      "{testimonial.story}"
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t">
+                    <p className="text-sm font-medium">Outcome:</p>
+                    <p className="text-sm text-muted-foreground line-clamp-3">{testimonial.outcome}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const successStories = [
   {
@@ -402,6 +458,9 @@ export default function SuccessStories() {
         </section>
 
         {/* Share Your Story Form */}
+        {/* User-Submitted Testimonials */}
+        <UserTestimonials />
+
         <section className="py-16 bg-gradient-to-br from-primary/5 to-primary/10">
           <div className="container max-w-3xl">
             <div className="text-center mb-10">

@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, updateLeadNotes, updateLeadStatus } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -355,9 +355,58 @@ Email: info@enteractdfw.com
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
       }
       return next({ ctx });
-    }).query(async () => {
-      return await getAllTestimonials();
-    }),
+    })
+      .input(z.object({ status: z.enum(["pending", "approved", "rejected"]).optional() }).optional())
+      .query(async ({ input }) => {
+        return await getTestimonialsByStatus(input?.status);
+      }),
+
+    // Admin-only procedure to approve/reject testimonials
+    updateStatus: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["pending", "approved", "rejected"]),
+      }))
+      .mutation(async ({ input }) => {
+        return await updateTestimonialStatus(input.id, input.status);
+      }),
+
+    // Admin-only procedure to edit testimonial content
+    update: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({
+        id: z.number(),
+        name: z.string().optional(),
+        location: z.string().optional(),
+        situation: z.string().optional(),
+        story: z.string().optional(),
+        outcome: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        return await updateTestimonial(id, data);
+      }),
+
+    // Admin-only procedure to delete testimonials
+    delete: protectedProcedure.use(({ ctx, next }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+      }
+      return next({ ctx });
+    })
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        return await deleteTestimonial(input.id);
+      }),
   }),
 });
 

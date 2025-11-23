@@ -247,3 +247,73 @@ export async function getApprovedTestimonials() {
     return [];
   }
 }
+
+export async function updateTestimonialStatus(id: number, status: "pending" | "approved" | "rejected") {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update testimonial: database not available");
+    return undefined;
+  }
+
+  try {
+    const updateData: any = { status, updatedAt: new Date() };
+    if (status === "approved") {
+      updateData.publishedAt = new Date();
+    }
+    await db.update(testimonials).set(updateData).where(eq(testimonials.id, id));
+    return { success: true };
+  } catch (error) {
+    console.error("[Database] Failed to update testimonial status:", error);
+    throw error;
+  }
+}
+
+export async function updateTestimonial(id: number, data: Partial<InsertTestimonial>) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update testimonial: database not available");
+    return undefined;
+  }
+
+  try {
+    await db.update(testimonials).set({ ...data, updatedAt: new Date() }).where(eq(testimonials.id, id));
+    return { success: true };
+  } catch (error) {
+    console.error("[Database] Failed to update testimonial:", error);
+    throw error;
+  }
+}
+
+export async function deleteTestimonial(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot delete testimonial: database not available");
+    return undefined;
+  }
+
+  try {
+    await db.delete(testimonials).where(eq(testimonials.id, id));
+    return { success: true };
+  } catch (error) {
+    console.error("[Database] Failed to delete testimonial:", error);
+    throw error;
+  }
+}
+
+export async function getTestimonialsByStatus(status?: "pending" | "approved" | "rejected") {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get testimonials: database not available");
+    return [];
+  }
+
+  try {
+    if (status) {
+      return await db.select().from(testimonials).where(eq(testimonials.status, status)).orderBy(desc(testimonials.createdAt));
+    }
+    return await db.select().from(testimonials).orderBy(desc(testimonials.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get testimonials:", error);
+    return [];
+  }
+}

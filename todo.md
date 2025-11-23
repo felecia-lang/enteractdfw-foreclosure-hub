@@ -242,3 +242,20 @@
 - [x] Include fields: name, location, situation, story, outcome, permission to publish, email, phone
 - [x] Add form validation and success/error handling
 - [x] Test form submission and data persistence
+
+## Admin Testimonial Management
+- [x] Add status field to testimonials table (pending/approved/rejected)
+- [x] Add publishedAt timestamp field to testimonials table
+- [x] Create backend API to list all testimonials with filtering by status
+- [x] Create backend API to approve/reject testimonials
+- [x] Create backend API to edit testimonial content
+- [x] Create backend API to delete testimonials
+- [x] Build admin testimonials management page at /admin/testimonials
+- [x] Add testimonials table with status badges and actions
+- [x] Add approve/reject buttons for pending testimonials
+- [x] Add edit modal for testimonial content
+- [x] Add delete confirmation dialog
+- [x] Filter testimonials by status (all/pending/approved/rejected)
+- [x] Add link to testimonials management from admin dashboard
+- [x] Update Success Stories page to only show approved testimonials
+- [x] Test full testimonial workflow (submit → review → approve → publish)
