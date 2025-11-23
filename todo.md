@@ -319,3 +319,15 @@
 - [x] Add Terms of Service link to footer navigation
 - [x] Update Terms of Service link in Privacy Policy footer
 - [x] Test all links and page layout
+
+## F## Foreclosure Survival Guide
+- [x] Create comprehensive guide content covering Texas foreclosure process
+- [x] Include homeowner rights and protections section
+- [x] Add options to avoid foreclosure (loan modification, short sale, cash sale)
+- [x] Include timeline and critical deadlines
+- [x] Add action steps and checklists
+- [x] Include contact information and resources
+- [x] Create PDF generation endpoint at /api/pdf/foreclosure-survival-guide
+- [x] Style PDF with EnterActDFW branding (PDFKit with professional layout)
+- [x] Integrate guide download with lead form submission (automatic download)
+- [x] Test PDF generation and download functionality (5-page PDF confirmed)

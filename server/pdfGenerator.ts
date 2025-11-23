@@ -1,4 +1,7 @@
 import PDFDocument from 'pdfkit';
+import { marked } from 'marked';
+import fs from 'fs/promises';
+import path from 'path';
 
 export function generateAvoidingScamsPDF(): typeof PDFDocument.prototype {
   const doc = new PDFDocument({
@@ -265,6 +268,270 @@ export function generateAvoidingScamsPDF(): typeof PDFDocument.prototype {
   // Note: Footer will be added when PDF is finalized
   // PDFKit doesn't support adding footers to all pages after content is added
   // in the current implementation
+
+  return doc;
+}
+
+
+export function generateForeclosureGuidePDF(): typeof PDFDocument.prototype {
+  const doc = new PDFDocument({
+    size: 'LETTER',
+    margins: { top: 50, bottom: 50, left: 50, right: 50 },
+    info: {
+      Title: 'Texas Foreclosure Survival Guide - EnterActDFW',
+      Author: 'EnterActDFW Real Estate Brokerage',
+      Subject: 'Foreclosure Prevention and Options Guide',
+    }
+  });
+
+  // Brand colors
+  const primaryColor = '#0A2342';
+  const accentColor = '#00A6A6';
+  const warningColor = '#DC2626';
+
+  // Helper functions
+  const addSectionHeader = (text: string, color: string = primaryColor) => {
+    doc.fontSize(18).fillColor(color).font('Helvetica-Bold').text(text, { align: 'left' });
+    doc.moveDown(0.5);
+  };
+
+  const addSubsectionHeader = (text: string) => {
+    doc.fontSize(14).fillColor(primaryColor).font('Helvetica-Bold').text(text, { align: 'left' });
+    doc.moveDown(0.3);
+  };
+
+  const addBodyText = (text: string) => {
+    doc.fontSize(10).fillColor('#000000').font('Helvetica').text(text, { align: 'left', lineGap: 2 });
+    doc.moveDown(0.5);
+  };
+
+  const addBullet = (text: string, symbol: string = '•') => {
+    const x = doc.x;
+    doc.fontSize(10).fillColor('#000000').font('Helvetica').text(symbol, x, doc.y);
+    doc.text(text, x + 15, doc.y - 10, { width: doc.page.width - doc.page.margins.left - doc.page.margins.right - 15 });
+    doc.moveDown(0.3);
+  };
+
+  // Title Page
+  doc.fontSize(24).fillColor(primaryColor).font('Helvetica-Bold')
+    .text('Texas Foreclosure Survival Guide', { align: 'center' });
+  doc.moveDown(0.5);
+  
+  doc.fontSize(14).fillColor(accentColor).font('Helvetica')
+    .text('Your Complete Resource for Understanding Your Rights and Options', { align: 'center' });
+  doc.moveDown(2);
+
+  // Introduction
+  addBodyText('Facing foreclosure can feel overwhelming and isolating. This guide was created to help Texas homeowners understand the foreclosure process, know their rights, and explore all available options. Whether you\'ve just received your first notice or are weeks away from a foreclosure sale, you have options—and you\'re not alone.');
+  doc.moveDown(1);
+
+  // Understanding Foreclosure in Texas
+  addSectionHeader('Understanding Foreclosure in Texas', primaryColor);
+  addBodyText('Foreclosure is the legal process by which a lender takes possession of a property when the homeowner fails to make mortgage payments. In Texas, most foreclosures are non-judicial, meaning they do not require court involvement and can proceed relatively quickly compared to other states.');
+  doc.moveDown(1);
+
+  addSubsectionHeader('Texas Foreclosure Timeline');
+  addBodyText('The typical foreclosure process in Texas follows these stages:');
+  doc.moveDown(0.5);
+
+  const timelineSteps = [
+    'Missed Payment (Day 1): First payment is missed',
+    'Notice of Default (30-60 days): Lender notifies you of default',
+    'Notice of Acceleration (60-90 days): Entire loan balance becomes due',
+    'Notice of Sale Posted (90-120 days): Property posted for auction (21 days\' notice)',
+    'Foreclosure Sale (120+ days): Property sold at courthouse auction',
+    'Eviction (130+ days): New owner takes possession'
+  ];
+
+  timelineSteps.forEach(step => addBullet(step));
+  doc.moveDown(1);
+
+  // Add page break
+  doc.addPage();
+
+  // Your Rights
+  addSectionHeader('Your Rights as a Texas Homeowner', accentColor);
+  addBodyText('Even when facing foreclosure, you have important legal rights and protections under federal and Texas state law.');
+  doc.moveDown(0.5);
+
+  addSubsectionHeader('Federal Protections');
+  const federalProtections = [
+    'Servicemembers Civil Relief Act (SCRA): Special protections for active-duty military',
+    'Fair Debt Collection Practices Act (FDCPA): Protection from abusive collection practices',
+    'Real Estate Settlement Procedures Act (RESPA): Servicer must respond to written requests',
+    'Homeowner Assistance Fund (HAF): Potential federal/state assistance programs'
+  ];
+  federalProtections.forEach(protection => addBullet(protection));
+  doc.moveDown(0.5);
+
+  addSubsectionHeader('Texas-Specific Protections');
+  const texasProtections = [
+    'Right to Reinstate: Cure default by paying past-due amounts until day before sale',
+    'Notice Requirements: Lenders must provide specific notices at specific times',
+    'Homestead Exemption: Strong protections for primary residence',
+    'Deficiency Judgment Limitations: Limits on when lenders can pursue deficiency',
+    'Limited Right of Redemption: Available for property tax foreclosures only'
+  ];
+  texasProtections.forEach(protection => addBullet(protection));
+  doc.moveDown(1);
+
+  // Options to Avoid Foreclosure
+  addSectionHeader('Options to Avoid Foreclosure', primaryColor);
+  addBodyText('You have several options to avoid foreclosure, even if you are already behind on payments. The best option depends on your financial situation, your goals, and how much time you have.');
+  doc.moveDown(1);
+
+  // Option 1: Loan Modification
+  addSubsectionHeader('1. Loan Modification');
+  addBodyText('A loan modification changes the terms of your existing mortgage to make your payments more affordable.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Who it\'s for: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Homeowners who want to keep their home and can afford modified payments.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Pros: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Allows you to keep your home, can significantly reduce monthly payments, stops foreclosure if approved.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Cons: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Not guaranteed, requires proof of hardship, may extend loan life and increase total interest.');
+  doc.moveDown(1);
+
+  // Option 2: Forbearance
+  addSubsectionHeader('2. Forbearance Agreement');
+  addBodyText('A forbearance agreement temporarily reduces or suspends your mortgage payments for a specific period (typically 3-12 months) while you recover from a financial hardship.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Who it\'s for: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Homeowners experiencing a temporary financial setback who expect to recover within a few months.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Pros: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Provides immediate relief, stops foreclosure during forbearance period, doesn\'t require selling home.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Cons: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Payments only postponed not forgiven, must have plan to repay missed amounts after forbearance ends.');
+  doc.moveDown(1);
+
+  // Add page break
+  doc.addPage();
+
+  // Option 3: Short Sale
+  addSubsectionHeader('3. Short Sale');
+  addBodyText('A short sale occurs when you sell your home for less than the amount you owe on the mortgage, and the lender agrees to accept the sale proceeds as full or partial satisfaction of the debt.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Who it\'s for: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Homeowners who can no longer afford their home, owe more than the home is worth, and want to avoid foreclosure.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Pros: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Avoids foreclosure and its credit impact, may avoid deficiency judgment, allows you to move on with less damage.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Cons: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('You lose your home, lender must approve sale price, can be lengthy and uncertain process.');
+  doc.moveDown(1);
+
+  // Option 4: Cash Sale
+  addSubsectionHeader('4. Sell Your Home for Cash (Fast Sale)');
+  addBodyText('If you need to sell quickly to avoid foreclosure, selling your home to a cash buyer (such as a real estate investor or iBuyer) can provide a fast solution.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Who it\'s for: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Homeowners who need to sell immediately, have some equity, and want to avoid the lengthy short sale process.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Timeline: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Cash sales can close in as little as 7-10 days.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Pros: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Very fast, no need for lender approval (if you have equity), avoids foreclosure and credit damage, you may receive cash from your equity.');
+  doc.moveDown(0.3);
+  doc.fontSize(10).fillColor(primaryColor).font('Helvetica-Bold').text('Cons: ', { continued: true });
+  doc.font('Helvetica').fillColor('#000000').text('Cash offers typically below market value, you lose your home, only works if you have equity or can cover the difference.');
+  doc.moveDown(0.5);
+
+  // Highlight EnterActDFW
+  doc.rect(doc.x - 10, doc.y, doc.page.width - 100, 40)
+    .fillAndStroke('#EFF6FF', accentColor);
+  doc.fillColor(accentColor).fontSize(11).font('Helvetica-Bold')
+    .text('EnterActDFW specializes in fast, fair cash offers for homeowners facing foreclosure.', doc.x, doc.y + 10, { width: doc.page.width - 120 });
+  doc.fillColor('#000000').fontSize(10).font('Helvetica')
+    .text('We can close in as little as 7 days and help you move forward with dignity.', doc.x, doc.y + 5, { width: doc.page.width - 120 });
+  doc.moveDown(2);
+
+  // Immediate Action Steps
+  addSectionHeader('Immediate Action Steps', warningColor);
+  addBodyText('If you are facing foreclosure, time is critical. Follow these steps immediately to protect your rights and explore your options:');
+  doc.moveDown(0.5);
+
+  const actionSteps = [
+    { title: 'Step 1: Open and Read All Mail', text: 'Do not ignore letters from your mortgage servicer. These notices contain critical information about deadlines and your rights.' },
+    { title: 'Step 2: Contact Your Mortgage Servicer', text: 'Call your servicer as soon as you know you will have trouble making payments. Ask about forbearance, repayment plans, and loan modification programs.' },
+    { title: 'Step 3: Gather Financial Documents', text: 'Collect recent pay stubs, bank statements, tax returns, and create a hardship letter explaining your situation.' },
+    { title: 'Step 4: Seek Professional Help', text: 'Contact a HUD-approved housing counselor for free advice. Call 1-800-569-4287 or visit consumerfinance.gov/find-a-housing-counselor.' },
+    { title: 'Step 5: Explore All Your Options', text: 'Review the options in this guide and determine which ones fit your situation. Don\'t wait until the last minute.' }
+  ];
+
+  actionSteps.forEach(step => {
+    doc.fontSize(11).fillColor(primaryColor).font('Helvetica-Bold').text(step.title);
+    doc.fontSize(10).fillColor('#000000').font('Helvetica').text(step.text);
+    doc.moveDown(0.5);
+  });
+
+  // Add page break
+  doc.addPage();
+
+  // Common Mistakes
+  addSectionHeader('Common Mistakes to Avoid', warningColor);
+  addBodyText('When facing foreclosure, avoid these common mistakes that can make your situation worse:');
+  doc.moveDown(0.5);
+
+  const mistakes = [
+    'Ignoring the Problem: Ignoring notices will not make the problem go away. Act immediately.',
+    'Paying Foreclosure "Rescue" Scams: Beware of companies that promise to stop foreclosure for upfront fees or ask you to sign over your deed.',
+    'Not Documenting Everything: Keep copies of all letters, emails, and notices. Document every phone call.',
+    'Missing Deadlines: Foreclosure involves strict deadlines. Missing one can eliminate your options.',
+    'Assuming You Have No Options: Even weeks away from sale, you may still have options. Contact a professional immediately.',
+    'Draining Savings or Retirement: Consult a financial advisor before using retirement funds to catch up on payments.'
+  ];
+
+  mistakes.forEach(mistake => addBullet(mistake, '✗'));
+  doc.moveDown(1);
+
+  // How EnterActDFW Can Help
+  addSectionHeader('How EnterActDFW Can Help', accentColor);
+  addBodyText('EnterActDFW Real Estate Brokerage specializes in helping Texas homeowners facing foreclosure. We understand that every situation is unique, and we work with you to find the best solution for your circumstances.');
+  doc.moveDown(0.5);
+
+  addSubsectionHeader('Our Services');
+  const services = [
+    'Free Consultation: No-obligation assessment of your situation',
+    'Fair Cash Offers: Transparent pricing with no hidden fees',
+    'Fast Closings: Close in as little as 7-10 days',
+    'No Repairs, No Fees, No Commissions: We buy homes in any condition',
+    'Local DFW Team: Licensed Texas real estate brokerage serving DFW since 2015',
+    'Compassionate Service: We treat you with dignity and respect'
+  ];
+  services.forEach(service => addBullet(service, '✓'));
+  doc.moveDown(1);
+
+  // Contact Information
+  doc.rect(doc.x - 10, doc.y, doc.page.width - 100, 80)
+    .fillAndStroke('#EFF6FF', accentColor);
+  doc.fillColor(accentColor).fontSize(14).font('Helvetica-Bold')
+    .text('Contact Us Today', doc.x, doc.y + 10);
+  doc.fillColor('#000000').fontSize(11).font('Helvetica')
+    .text('Phone: (832) 932-7585', doc.x, doc.y + 10)
+    .text('Email: info@enteractdfw.com', doc.x, doc.y + 5)
+    .text('Address: 4400 State Hwy 121, Suite 300, Lewisville, Texas 75056', doc.x, doc.y + 5, { width: doc.page.width - 120 });
+  doc.moveDown(2);
+
+  // Additional Resources
+  addSectionHeader('Additional Resources', primaryColor);
+  addBodyText('HUD-Approved Housing Counselors: 1-800-569-4287 or www.consumerfinance.gov/find-a-housing-counselor');
+  addBodyText('Texas Legal Services: www.texaslegalservices.org');
+  addBodyText('Consumer Financial Protection Bureau (CFPB): www.consumerfinance.gov');
+  addBodyText('Texas Department of Housing and Community Affairs: www.tdhca.state.tx.us');
+  doc.moveDown(2);
+
+  // Legal Disclaimer
+  doc.rect(doc.x - 10, doc.y, doc.page.width - 100, 60)
+    .fillAndStroke('#F3F4F6', '#9CA3AF');
+  doc.fillColor('#374151').fontSize(8).font('Helvetica-Oblique')
+    .text('Legal Disclaimer: This guide is for educational purposes only and does not constitute legal, financial, or professional advice. Every foreclosure situation is unique. For guidance specific to your circumstances, consult with a licensed attorney, HUD-approved housing counselor, or financial advisor. EnterActDFW Real Estate Brokerage is a licensed Texas real estate brokerage and is not a law firm.',
+      doc.x, doc.y + 10, { width: doc.page.width - 120, align: 'justify' });
 
   return doc;
 }

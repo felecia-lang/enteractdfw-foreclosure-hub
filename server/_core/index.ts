@@ -7,7 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { generateAvoidingScamsPDF } from "../pdfGenerator";
+import { generateAvoidingScamsPDF, generateForeclosureGuidePDF } from "../pdfGenerator";
 import { generateNoticeOfDefaultPDF } from "../pdfGeneratorNoticeOfDefault";
 import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
 
@@ -71,6 +71,19 @@ async function startServer() {
       const doc = generateContactingLenderPDF();
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'attachment; filename="Contacting_Your_Lender_Guide.pdf"');
+      doc.pipe(res);
+      doc.end();
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  });
+  
+  app.get("/api/pdf/foreclosure-survival-guide", (req, res) => {
+    try {
+      const doc = generateForeclosureGuidePDF();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="Texas_Foreclosure_Survival_Guide.pdf"');
       doc.pipe(res);
       doc.end();
     } catch (error) {

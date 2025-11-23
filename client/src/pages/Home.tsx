@@ -34,7 +34,16 @@ export default function Home() {
   const submitLead = trpc.leads.submit.useMutation({
     onSuccess: () => {
       setSubmitted(true);
-      toast.success("Thank you! We'll be in touch soon.");
+      toast.success("Thank you! Check your email for the guide. We'll also reach out within 24 hours to answer any questions.");
+      
+      // Trigger PDF download
+      const link = document.createElement('a');
+      link.href = '/api/pdf/foreclosure-survival-guide';
+      link.download = 'Texas_Foreclosure_Survival_Guide.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
       // Reset form
       setFormData({
         firstName: "",
