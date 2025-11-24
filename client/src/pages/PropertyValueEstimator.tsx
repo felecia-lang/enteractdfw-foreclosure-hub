@@ -12,10 +12,13 @@ import {
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar, MessageSquare } from "lucide-react";
+import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar, MessageSquare, Save } from "lucide-react";
 import { APP_TITLE } from "@/const";
 import { EmailCaptureDialog } from "@/components/EmailCaptureDialog";
 import SmsCaptureDialog from "@/components/SmsCaptureDialog";
+import SaveResumeDialog from "@/components/SaveResumeDialog";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 
 export default function PropertyValueEstimator() {
   const [formData, setFormData] = useState({
@@ -33,11 +36,43 @@ export default function PropertyValueEstimator() {
   const [comparison, setComparison] = useState<any>(null);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [showSmsDialog, setShowSmsDialog] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [isPreFilled, setIsPreFilled] = useState(false);
+
+  const [location] = useLocation();
 
   const calculateMutation = trpc.propertyValuation.calculate.useMutation();
   const compareOptionsMutation = trpc.propertyValuation.compareOptions.useMutation();
   const emailComparisonMutation = trpc.propertyValuation.emailComparison.useMutation();
   const smsComparisonMutation = trpc.propertyValuation.smsComparison.useMutation();
+  const saveCalculationMutation = trpc.propertyValuation.saveCalculation.useMutation();
+
+  // Check for resume token in URL on mount
+  const resumeToken = new URLSearchParams(window.location.search).get("resume");
+  const getCalculationQuery = trpc.propertyValuation.getCalculation.useQuery(
+    { token: resumeToken || "" },
+    { enabled: !!resumeToken }
+  );
+
+  // Pre-fill form from saved calculation
+  useEffect(() => {
+    if (getCalculationQuery.data) {
+      const calc = getCalculationQuery.data;
+      setFormData({
+        zipCode: calc.zipCode,
+        propertyType: calc.propertyType as any,
+        squareFeet: calc.squareFeet.toString(),
+        bedrooms: calc.bedrooms.toString(),
+        bathrooms: calc.bathrooms.toString(),
+        condition: calc.condition as any,
+        mortgageBalance: calc.mortgageBalance.toString(),
+      });
+      setIsPreFilled(true);
+      toast.success("Calculation restored!", {
+        description: "Your previously saved data has been loaded.",
+      });
+    }
+  }, [getCalculationQuery.data]);
 
   const handleEmailReport = async (email: string) => {
     if (!result || !comparison) return;
@@ -91,6 +126,31 @@ export default function PropertyValueEstimator() {
       });
     } catch (error) {
       toast.error("Failed to send SMS", {
+        description: "Please try again or contact us directly.",
+      });
+      throw error;
+    }
+  };
+
+  const handleSaveCalculation = async (email: string) => {
+    try {
+      await saveCalculationMutation.mutateAsync({
+        email,
+        zipCode: formData.zipCode,
+        propertyType: formData.propertyType,
+        squareFeet: parseFloat(formData.squareFeet),
+        bedrooms: parseFloat(formData.bedrooms),
+        bathrooms: parseFloat(formData.bathrooms),
+        condition: formData.condition,
+        mortgageBalance: parseFloat(formData.mortgageBalance) || 0,
+        estimatedValue: result?.estimatedValue,
+      });
+
+      toast.success("Calculation saved!", {
+        description: `We've emailed a resume link to ${email}`,
+      });
+    } catch (error) {
+      toast.error("Failed to save calculation", {
         description: "Please try again or contact us directly.",
       });
       throw error;
@@ -324,7 +384,25 @@ export default function PropertyValueEstimator() {
                   >
                     {calculateMutation.isPending ? "Calculating..." : "Calculate Value"}
                   </Button>
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowSaveDialog(true)}
+                    disabled={!formData.zipCode || !formData.squareFeet}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    Save & Resume Later
+                  </Button>
                 </div>
+
+                {isPreFilled && (
+                  <div className="mt-4 p-3 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <p className="text-sm text-green-900 dark:text-green-200 text-center">
+                      ✅ <strong>Calculation Restored</strong> - Your previously saved data has been loaded.
+                    </p>
+                  </div>
+                )}
               </form>
 
               <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
@@ -749,6 +827,13 @@ export default function PropertyValueEstimator() {
         onSubmit={handleSmsReport}
         title="Text Me This Report"
         description="Get a concise comparison summary sent directly to your phone with a link to schedule a call."
+      />
+
+      {/* Save & Resume Dialog */}
+      <SaveResumeDialog
+        open={showSaveDialog}
+        onOpenChange={setShowSaveDialog}
+        onSubmit={handleSaveCalculation}
       />
     </div>
   );

@@ -143,3 +143,35 @@ export const emailDeliveryLog = mysqlTable("emailDeliveryLog", {
 
 export type EmailDeliveryLog = typeof emailDeliveryLog.$inferSelect;
 export type InsertEmailDeliveryLog = typeof emailDeliveryLog.$inferInsert;
+
+/**
+ * Saved calculations table for Save & Resume feature.
+ * Stores property valuation form data with unique tokens for retrieval.
+ */
+export const savedCalculations = mysqlTable("savedCalculations", {
+  id: int("id").autoincrement().primaryKey(),
+  token: varchar("token", { length: 64 }).notNull().unique(), // Unique token for resume link
+  email: varchar("email", { length: 320 }).notNull(),
+  
+  // Property details
+  zipCode: varchar("zipCode", { length: 10 }).notNull(),
+  propertyType: varchar("propertyType", { length: 50 }).notNull(),
+  squareFeet: int("squareFeet").notNull(),
+  bedrooms: int("bedrooms").notNull(),
+  bathrooms: int("bathrooms").notNull(),
+  condition: varchar("condition", { length: 50 }).notNull(),
+  mortgageBalance: int("mortgageBalance").notNull(),
+  
+  // Calculation results (optional, stored if calculation was completed)
+  estimatedValue: int("estimatedValue"),
+  
+  // Tracking
+  resumedCount: int("resumedCount").default(0).notNull(), // How many times the link was used
+  lastResumedAt: timestamp("lastResumedAt"),
+  expiresAt: timestamp("expiresAt").notNull(), // 30 days from creation
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SavedCalculation = typeof savedCalculations.$inferSelect;
+export type InsertSavedCalculation = typeof savedCalculations.$inferInsert;

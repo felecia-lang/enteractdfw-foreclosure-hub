@@ -1,0 +1,20 @@
+CREATE TABLE `savedCalculations` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`token` varchar(64) NOT NULL,
+	`email` varchar(320) NOT NULL,
+	`zipCode` varchar(10) NOT NULL,
+	`propertyType` varchar(50) NOT NULL,
+	`squareFeet` int NOT NULL,
+	`bedrooms` int NOT NULL,
+	`bathrooms` int NOT NULL,
+	`condition` varchar(50) NOT NULL,
+	`mortgageBalance` int NOT NULL,
+	`estimatedValue` int,
+	`resumedCount` int NOT NULL DEFAULT 0,
+	`lastResumedAt` timestamp,
+	`expiresAt` timestamp NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `savedCalculations_id` PRIMARY KEY(`id`),
+	CONSTRAINT `savedCalculations_token_unique` UNIQUE(`token`)
+);

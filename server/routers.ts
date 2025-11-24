@@ -773,6 +773,104 @@ Email: info@enteractdfw.com
           });
         }
       }),
+
+    saveCalculation: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        zipCode: z.string(),
+        propertyType: z.string(),
+        squareFeet: z.number(),
+        bedrooms: z.number(),
+        bathrooms: z.number(),
+        condition: z.string(),
+        mortgageBalance: z.number(),
+        estimatedValue: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const { saveCalculation } = await import("./savedCalculationsDb");
+          const { sendResumeEmail } = await import("./saveResumeEmailService");
+          const { createLead } = await import("./db");
+          const { notifyOwner } = await import("./_core/notification");
+
+          // Save calculation and get token
+          const token = await saveCalculation({
+            email: input.email,
+            zipCode: input.zipCode,
+            propertyType: input.propertyType,
+            squareFeet: input.squareFeet,
+            bedrooms: input.bedrooms,
+            bathrooms: input.bathrooms,
+            condition: input.condition,
+            mortgageBalance: input.mortgageBalance,
+            estimatedValue: input.estimatedValue,
+          });
+
+          // Send resume email
+          await sendResumeEmail({
+            to: input.email,
+            token,
+            propertyDetails: {
+              zipCode: input.zipCode,
+              propertyType: input.propertyType,
+              squareFeet: input.squareFeet,
+            },
+          });
+
+          // Track as lead
+          await createLead({
+            firstName: "",
+            email: input.email,
+            phone: "",
+            propertyZip: input.zipCode,
+            source: "save_resume",
+          });
+
+          // Notify owner
+          await notifyOwner({
+            title: "New Save & Resume Request",
+            content: `Email: ${input.email}\nProperty: ${input.squareFeet}sqft ${input.propertyType} in ${input.zipCode}`,
+          });
+
+          return { success: true, token };
+        } catch (error) {
+          console.error("[PropertyValuation] Failed to save calculation:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to save calculation. Please try again.",
+          });
+        }
+      }),
+
+    getCalculation: publicProcedure
+      .input(z.object({
+        token: z.string(),
+      }))
+      .query(async ({ input }) => {
+        try {
+          const { getCalculationByToken } = await import("./savedCalculationsDb");
+          
+          const calculation = await getCalculationByToken(input.token);
+          
+          if (!calculation) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Calculation not found or expired.",
+            });
+          }
+
+          return calculation;
+        } catch (error) {
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          console.error("[PropertyValuation] Failed to retrieve calculation:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve calculation.",
+          });
+        }
+      }),
   }),
 
   // AI Chatbot functionality

@@ -482,3 +482,18 @@
 - [x] Send owner notification when SMS is requested
 - [x] Test SMS delivery with various phone numbers
 - [x] Test SMS dialog UI and validation
+
+## Save & Resume Feature
+- [x] Create database table for saved calculations (savedCalculations)
+- [x] Add unique token generation for saved calculation links
+- [x] Create backend tRPC procedure to save calculation data
+- [x] Create backend tRPC procedure to retrieve calculation by token
+- [x] Build email service to send resume link
+- [x] Add "Save & Resume Later" button to calculator form
+- [x] Create save dialog component with email capture
+- [x] Implement URL parameter parsing to pre-fill form data
+- [x] Add visual indicator when form is pre-filled from saved link
+- [x] Track saved calculation usage (created, resumed, converted)
+- [x] Add expiration logic for saved calculations (30 days)
+- [x] Test save and resume flow end-to-end
+- [x] Test email delivery with resume links
