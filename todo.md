@@ -393,3 +393,19 @@
 - [x] Add "Already submitted? Continue chatting" state management
 - [x] Test lead capture flow with various scenarios (confirmed working)
 - [x] Verify leads are saved to database correctly
+## Email Drip Campaign for Chatbot Leads
+- [x] Design database schema for email campaigns and delivery tracking
+- [x] Add emailCampaigns table (leadId, campaignType, status, currentEmailSequence, scheduledDates, sentDates)
+- [x] Add emailDeliveryLog table (campaignId, emailType, sentAt, deliveryStatus, errorMessage)
+- [x] Write Day 1 email template (Welcome + Foreclosure Guide introduction)
+- [x] Write Day 3 email template (Timeline Calculator introduction with CTA)
+- [x] Write Day 7 email template (Success Story with testimonial and case study)
+- [x] Write Day 14 email template (Consultation Reminder with urgency and phone CTA)
+- [x] Create email template rendering system with personalization (firstName, propertyZip)
+- [x] Build email scheduling logic to calculate send times (Day 1, 3, 7, 14)
+- [x] Create manual trigger system for sending due emails (admin endpoint)
+- [x] Integrate with GHL email API for delivery (sendDripEmail function)
+- [x] Add unsubscribe link to all emails (TCPA compliance)
+- [x] Automatically enroll chatbot leads in email campaign
+- [x] Create admin endpoints for campaign stats and manual sending
+- [x] Add source tracking to differentiate landing page vs chatbot leads

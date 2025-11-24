@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -88,20 +88,34 @@ Email: info@enteractdfw.com
           phone: z.string().min(10, "Valid phone number is required"),
           propertyZip: z.string().min(5, "Valid ZIP code is required"),
           smsConsent: z.boolean(),
+          source: z.string().optional(), // "landing_page" or "chatbot"
         })
       )
       .mutation(async ({ input }) => {
         try {
           // Create lead in database
-          await createLead({
+          const leadResult = await createLead({
             firstName: input.firstName,
             email: input.email,
             phone: input.phone,
             propertyZip: input.propertyZip,
             smsConsent: input.smsConsent ? "yes" : "no",
-            source: "landing_page",
+            source: input.source || "landing_page",
             status: "new",
           });
+
+          const leadId = leadResult?.[0]?.insertId;
+
+          // If lead is from chatbot, enroll in email drip campaign
+          if (input.source === "chatbot" && leadId) {
+            try {
+              await createEmailCampaign(leadId);
+              console.log(`[Leads] Enrolled lead ${leadId} in email drip campaign`);
+            } catch (campaignError) {
+              console.warn("[Leads] Failed to enroll in email campaign:", campaignError);
+              // Don't fail the request if campaign enrollment fails
+            }
+          }
 
           // Notify owner of new lead
           await notifyOwner({
@@ -480,6 +494,60 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to send timeline email. Please try again.",
+          });
+        }
+      }),
+  }),
+
+  // Email Campaign Management (Admin only)
+  emailCampaign: router({    sendDueEmails: protectedProcedure
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+        }
+        return next({ ctx });
+      })
+      .mutation(async () => {
+        try {
+          const { processDueEmails } = await import("./emailCampaignService");
+          const result = await processDueEmails();
+          
+          return {
+            success: result.success,
+            emailsSent: result.emailsSent,
+            errors: result.errors,
+          };
+        } catch (error) {
+          console.error("[EmailCampaign] Failed to process due emails:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to send due emails. Please try again.",
+          });
+        }
+      }),
+
+    getStats: protectedProcedure
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin access required" });
+        }
+        return next({ ctx });
+      })
+      .query(async () => {
+        try {
+          const stats = await getEmailCampaignStats();
+          return stats || {
+            totalCampaigns: 0,
+            activeCampaigns: 0,
+            completedCampaigns: 0,
+            unsubscribed: 0,
+            totalEmailsSent: 0,
+          };
+        } catch (error) {
+          console.error("[EmailCampaign] Failed to get stats:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve campaign statistics.",
           });
         }
       }),

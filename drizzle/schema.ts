@@ -96,3 +96,50 @@ export const testimonials = mysqlTable("testimonials", {
 
 export type Testimonial = typeof testimonials.$inferSelect;
 export type InsertTestimonial = typeof testimonials.$inferInsert;
+/**
+ * Email campaigns table for tracking drip campaign enrollment and progress.
+ * Each lead can have one active campaign with scheduled email send times.
+ */
+export const emailCampaigns = mysqlTable("emailCampaigns", {
+  id: int("id").autoincrement().primaryKey(),
+  leadId: int("leadId").notNull(),
+  campaignType: varchar("campaignType", { length: 50 }).default("chatbot_nurture").notNull(),
+  status: mysqlEnum("status", ["active", "paused", "completed", "unsubscribed"]).default("active").notNull(),
+  currentEmailSequence: int("currentEmailSequence").default(0).notNull(), // 0 = not started, 1-4 = email number
+  email1ScheduledAt: timestamp("email1ScheduledAt"),
+  email1SentAt: timestamp("email1SentAt"),
+  email2ScheduledAt: timestamp("email2ScheduledAt"),
+  email2SentAt: timestamp("email2SentAt"),
+  email3ScheduledAt: timestamp("email3ScheduledAt"),
+  email3SentAt: timestamp("email3SentAt"),
+  email4ScheduledAt: timestamp("email4ScheduledAt"),
+  email4SentAt: timestamp("email4SentAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmailCampaign = typeof emailCampaigns.$inferSelect;
+export type InsertEmailCampaign = typeof emailCampaigns.$inferInsert;
+
+/**
+ * Email delivery log table for tracking individual email sends and engagement.
+ * Records delivery status, opens, and clicks for analytics.
+ */
+export const emailDeliveryLog = mysqlTable("emailDeliveryLog", {
+  id: int("id").autoincrement().primaryKey(),
+  campaignId: int("campaignId").notNull(),
+  leadId: int("leadId").notNull(),
+  emailSequence: int("emailSequence").notNull(), // 1, 2, 3, or 4
+  emailType: varchar("emailType", { length: 100 }).notNull(), // "welcome_guide", "timeline_calculator", "success_story", "consultation_reminder"
+  recipientEmail: varchar("recipientEmail", { length: 320 }).notNull(),
+  subject: varchar("subject", { length: 200 }).notNull(),
+  deliveryStatus: mysqlEnum("deliveryStatus", ["pending", "sent", "failed", "bounced"]).default("pending").notNull(),
+  errorMessage: text("errorMessage"),
+  sentAt: timestamp("sentAt"),
+  openedAt: timestamp("openedAt"),
+  clickedAt: timestamp("clickedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EmailDeliveryLog = typeof emailDeliveryLog.$inferSelect;
+export type InsertEmailDeliveryLog = typeof emailDeliveryLog.$inferInsert;

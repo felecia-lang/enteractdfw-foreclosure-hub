@@ -174,6 +174,7 @@ export default function KnowledgeBase() {
         phone: leadFormData.phone,
         propertyZip: leadFormData.propertyZip,
         smsConsent: true, // Default to true since they're actively engaging
+        source: "chatbot", // Mark as chatbot lead for email drip campaign
       });
       
       setLeadSubmitted(true);
