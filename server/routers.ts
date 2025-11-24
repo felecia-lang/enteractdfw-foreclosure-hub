@@ -553,6 +553,33 @@ Email: info@enteractdfw.com
       }),
   }),
 
+  // Property Valuation Calculator
+  propertyValuation: router({
+    calculate: publicProcedure
+      .input(z.object({
+        zipCode: z.string().regex(/^\d{5}$/, "ZIP code must be 5 digits"),
+        propertyType: z.enum(["single_family", "condo", "townhouse", "multi_family"]),
+        squareFeet: z.number().min(300).max(10000),
+        bedrooms: z.number().min(1).max(10),
+        bathrooms: z.number().min(1).max(10),
+        condition: z.enum(["excellent", "good", "fair", "poor"]),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const { calculatePropertyValue } = await import("./propertyValuation");
+          const result = calculatePropertyValue(input);
+          
+          return result;
+        } catch (error) {
+          console.error("[PropertyValuation] Failed to calculate value:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to calculate property value. Please try again.",
+          });
+        }
+      }),
+  }),
+
   // AI Chatbot functionality
   chatbot: router({
     sendMessage: publicProcedure

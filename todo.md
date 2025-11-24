@@ -414,3 +414,16 @@
 - [x] Update EnterActDFW contact info on Resources & Support Directory page
 - [x] Change email to info@enteractdfw.com
 - [x] Verify phone number displays as (832) 932-7585
+
+## Property Valuation Calculator
+- [x] Create /property-value-estimator page route
+- [x] Build form with property detail inputs (ZIP, type, sqft, beds, baths, condition)
+- [x] Create valuation algorithm based on DFW market data (35 ZIP codes)
+- [x] Add ZIP code-based price per square foot lookup ($200-$600/sqft)
+- [x] Include property type multipliers (single-family, condo, townhouse, multi-family)
+- [x] Add condition adjustments (excellent +15%, good 0%, fair -10%, poor -25%)
+- [x] Calculate estimated market value range (low -20%, mid, high +20%)
+- [x] Display results with breakdown of calculation factors
+- [x] Add disclaimer about estimate accuracy (yellow warning box)
+- [x] Include CTA to schedule professional appraisal (blue button)
+- [x] Test calculator with various property scenarios (75205, 2000sqft confirmed)
