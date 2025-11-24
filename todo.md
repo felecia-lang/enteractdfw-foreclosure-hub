@@ -427,3 +427,16 @@
 - [x] Add disclaimer about estimate accuracy (yellow warning box)
 - [x] Include CTA to schedule professional appraisal (blue button)
 - [x] Test calculator with various property scenarios (75205, 2000sqft confirmed)
+
+## Equity Calculator Extension
+- [x] Add mortgage balance input field to property valuation form
+- [x] Calculate equity (property value - mortgage balance)
+- [x] Calculate equity percentage (equity / property value * 100)
+- [x] Display equity amount and percentage in results
+- [x] Show sale recommendation based on equity position
+- [x] Add "Traditional Sale" recommendation for positive equity (>20%)
+- [x] Add "Short Sale" recommendation for negative/low equity (<5%)
+- [x] Include estimated closing costs in equity calculation (7%)
+- [x] Display net proceeds after sale (equity - closing costs)
+- [x] Add visual indicator (green for positive equity, red for negative)
+- [x] Test calculator with various mortgage balance scenarios ($300k confirmed)

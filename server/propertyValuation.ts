@@ -80,6 +80,7 @@ export interface PropertyDetails {
   bedrooms: number;
   bathrooms: number;
   condition: "excellent" | "good" | "fair" | "poor";
+  mortgageBalance?: number;
 }
 
 export interface ValuationResult {
@@ -99,6 +100,15 @@ export interface ValuationResult {
   };
   confidence: "high" | "medium" | "low";
   zipCodeFound: boolean;
+  equityAnalysis?: {
+    mortgageBalance: number;
+    equity: number;
+    equityPercentage: number;
+    closingCosts: number;
+    netProceeds: number;
+    saleRecommendation: "traditional" | "short_sale" | "consult";
+    recommendationMessage: string;
+  } | null;
 }
 
 /**
@@ -112,6 +122,7 @@ export function calculatePropertyValue(details: PropertyDetails): ValuationResul
     bedrooms,
     bathrooms,
     condition,
+    mortgageBalance,
   } = details;
 
   // Get base price per square foot for ZIP code
@@ -161,6 +172,42 @@ export function calculatePropertyValue(details: PropertyDetails): ValuationResul
     confidence = "low";
   }
 
+  // Calculate equity if mortgage balance is provided
+  let equityAnalysis = null;
+  if (mortgageBalance !== undefined && mortgageBalance >= 0) {
+    const equity = estimatedValue - mortgageBalance;
+    const equityPercentage = (equity / estimatedValue) * 100;
+    
+    // Estimate closing costs (6-8% of property value)
+    const closingCosts = Math.round(estimatedValue * 0.07); // 7% average
+    const netProceeds = equity - closingCosts;
+    
+    // Determine sale recommendation
+    let saleRecommendation: "traditional" | "short_sale" | "consult";
+    let recommendationMessage: string;
+    
+    if (equity > closingCosts * 1.5) {
+      saleRecommendation = "traditional";
+      recommendationMessage = "You have positive equity! A traditional sale is recommended.";
+    } else if (equity < 0) {
+      saleRecommendation = "short_sale";
+      recommendationMessage = "You may need a short sale. Contact us for assistance.";
+    } else {
+      saleRecommendation = "consult";
+      recommendationMessage = "Your equity is limited. Let's discuss your best options.";
+    }
+    
+    equityAnalysis = {
+      mortgageBalance,
+      equity,
+      equityPercentage: Math.round(equityPercentage * 10) / 10, // Round to 1 decimal
+      closingCosts,
+      netProceeds,
+      saleRecommendation,
+      recommendationMessage,
+    };
+  }
+
   return {
     estimatedValue,
     valuationRange,
@@ -174,5 +221,6 @@ export function calculatePropertyValue(details: PropertyDetails): ValuationResul
     },
     confidence,
     zipCodeFound,
+    equityAnalysis,
   };
 }

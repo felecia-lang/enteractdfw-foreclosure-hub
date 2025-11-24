@@ -23,6 +23,7 @@ export default function PropertyValueEstimator() {
     bedrooms: "",
     bathrooms: "",
     condition: "good" as "excellent" | "good" | "fair" | "poor",
+    mortgageBalance: "",
   });
 
   const [result, setResult] = useState<any>(null);
@@ -41,6 +42,7 @@ export default function PropertyValueEstimator() {
         bedrooms: parseInt(formData.bedrooms),
         bathrooms: parseFloat(formData.bathrooms),
         condition: formData.condition,
+        mortgageBalance: formData.mortgageBalance ? parseFloat(formData.mortgageBalance) : undefined,
       };
 
       const calculationResult = await calculateMutation.mutateAsync(data);
@@ -59,6 +61,7 @@ export default function PropertyValueEstimator() {
       bedrooms: "",
       bathrooms: "",
       condition: "good",
+      mortgageBalance: "",
     });
     setResult(null);
     setShowResults(false);
@@ -212,6 +215,22 @@ export default function PropertyValueEstimator() {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* Mortgage Balance */}
+                  <div className="space-y-2">
+                    <Label htmlFor="mortgageBalance">Current Mortgage Balance (Optional)</Label>
+                    <Input
+                      id="mortgageBalance"
+                      type="number"
+                      placeholder="250000"
+                      value={formData.mortgageBalance}
+                      onChange={(e) => setFormData({ ...formData, mortgageBalance: e.target.value })}
+                      min="0"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Include this to see your equity position and sale options
+                    </p>
+                  </div>
                 </div>
 
                 <div className="flex gap-4 pt-4">
@@ -316,6 +335,58 @@ export default function PropertyValueEstimator() {
                     )}
                   </div>
                 </div>
+
+                {/* Equity Analysis */}
+                {result.equityAnalysis && (
+                  <div className="mb-8 p-6 rounded-lg border-2" style={{
+                    borderColor: result.equityAnalysis.saleRecommendation === 'traditional' ? 'rgb(34, 197, 94)' : 
+                                result.equityAnalysis.saleRecommendation === 'short_sale' ? 'rgb(239, 68, 68)' : 
+                                'rgb(251, 146, 60)',
+                    backgroundColor: result.equityAnalysis.saleRecommendation === 'traditional' ? 'rgb(240, 253, 244)' : 
+                                    result.equityAnalysis.saleRecommendation === 'short_sale' ? 'rgb(254, 242, 242)' : 
+                                    'rgb(255, 247, 237)'
+                  }}>
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Your Equity Position</h3>
+                    <div className="space-y-3 mb-4">
+                      <div className="flex justify-between items-center py-2 border-b border-border/50">
+                        <span className="text-muted-foreground">Property Value</span>
+                        <span className="font-semibold text-foreground">{formatCurrency(result.estimatedValue)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-border/50">
+                        <span className="text-muted-foreground">Mortgage Balance</span>
+                        <span className="font-semibold text-foreground">-{formatCurrency(result.equityAnalysis.mortgageBalance)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-border/50">
+                        <span className="font-semibold text-foreground">Your Equity</span>
+                        <span className={`font-bold text-lg ${result.equityAnalysis.equity >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {formatCurrency(result.equityAnalysis.equity)} ({result.equityAnalysis.equityPercentage.toFixed(1)}%)
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-border/50">
+                        <span className="text-muted-foreground">Est. Closing Costs (7%)</span>
+                        <span className="font-semibold text-foreground">-{formatCurrency(result.equityAnalysis.closingCosts)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 bg-white/50 dark:bg-black/20 rounded px-3">
+                        <span className="font-bold text-foreground">Net Proceeds After Sale</span>
+                        <span className={`font-bold text-xl ${result.equityAnalysis.netProceeds >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {formatCurrency(result.equityAnalysis.netProceeds)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-4 rounded-lg" style={{
+                      backgroundColor: result.equityAnalysis.saleRecommendation === 'traditional' ? 'rgb(220, 252, 231)' : 
+                                      result.equityAnalysis.saleRecommendation === 'short_sale' ? 'rgb(254, 226, 226)' : 
+                                      'rgb(254, 243, 199)'
+                    }}>
+                      <p className="font-semibold text-foreground mb-2">
+                        {result.equityAnalysis.saleRecommendation === 'traditional' ? '✅ Traditional Sale Recommended' :
+                         result.equityAnalysis.saleRecommendation === 'short_sale' ? '⚠️ Short Sale May Be Needed' :
+                         '💡 Consultation Recommended'}
+                      </p>
+                      <p className="text-sm text-muted-foreground">{result.equityAnalysis.recommendationMessage}</p>
+                    </div>
+                  </div>
+                )}
 
                 {!result.zipCodeFound && (
                   <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">

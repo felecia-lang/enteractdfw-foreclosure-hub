@@ -563,6 +563,7 @@ Email: info@enteractdfw.com
         bedrooms: z.number().min(1).max(10),
         bathrooms: z.number().min(1).max(10),
         condition: z.enum(["excellent", "good", "fair", "poor"]),
+        mortgageBalance: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
         try {
