@@ -579,6 +579,26 @@ Email: info@enteractdfw.com
           });
         }
       }),
+
+    compareOptions: publicProcedure
+      .input(z.object({
+        propertyValue: z.number().min(10000),
+        mortgageBalance: z.number().min(0),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const { calculateSaleOptions } = await import("./saleOptionsComparison");
+          const result = calculateSaleOptions(input.propertyValue, input.mortgageBalance);
+          
+          return result;
+        } catch (error) {
+          console.error("[PropertyValuation] Failed to compare options:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to compare sale options. Please try again.",
+          });
+        }
+      }),
   }),
 
   // AI Chatbot functionality

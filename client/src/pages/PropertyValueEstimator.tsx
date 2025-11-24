@@ -28,8 +28,10 @@ export default function PropertyValueEstimator() {
 
   const [result, setResult] = useState<any>(null);
   const [showResults, setShowResults] = useState(false);
+  const [comparison, setComparison] = useState<any>(null);
 
   const calculateMutation = trpc.propertyValuation.calculate.useMutation();
+  const compareOptionsMutation = trpc.propertyValuation.compareOptions.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +50,22 @@ export default function PropertyValueEstimator() {
       const calculationResult = await calculateMutation.mutateAsync(data);
       setResult(calculationResult);
       setShowResults(true);
+
+      // If mortgage balance is provided, also get sale options comparison
+      if (data.mortgageBalance && data.mortgageBalance > 0) {
+        try {
+          const comparisonResult = await compareOptionsMutation.mutateAsync({
+            propertyValue: calculationResult.estimatedValue,
+            mortgageBalance: data.mortgageBalance,
+          });
+          setComparison(comparisonResult);
+        } catch (compError) {
+          console.error("Failed to load comparison:", compError);
+          // Don't show error to user, comparison is optional
+        }
+      } else {
+        setComparison(null);
+      }
     } catch (error) {
       toast.error("Failed to calculate property value. Please check your inputs and try again.");
     }
@@ -65,6 +83,7 @@ export default function PropertyValueEstimator() {
     });
     setResult(null);
     setShowResults(false);
+    setComparison(null);
   };
 
   const formatCurrency = (value: number) => {
@@ -384,6 +403,140 @@ export default function PropertyValueEstimator() {
                          '💡 Consultation Recommended'}
                       </p>
                       <p className="text-sm text-muted-foreground">{result.equityAnalysis.recommendationMessage}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sale Options Comparison */}
+                {comparison && (
+                  <div className="mb-8">
+                    <h3 className="text-2xl font-bold text-foreground mb-2 text-center">Compare Your Sale Options</h3>
+                    <p className="text-center text-muted-foreground mb-6">
+                      See how different sale methods compare in timeline, costs, and net proceeds
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {comparison.options.map((option: any) => (
+                        <Card key={option.type} className={`p-6 relative ${
+                          option.recommended ? 'border-2 border-primary shadow-lg' : 'border border-border'
+                        }`}>
+                          {option.recommended && (
+                            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary text-primary-foreground">
+                                ⭐ Recommended
+                              </span>
+                            </div>
+                          )}
+                          
+                          <div className="text-center mb-4">
+                            <h4 className="text-xl font-bold text-foreground mb-1">{option.name}</h4>
+                            <p className="text-sm text-muted-foreground">{option.description}</p>
+                          </div>
+
+                          {/* Timeline */}
+                          <div className="mb-4 p-3 bg-muted/50 rounded-lg text-center">
+                            <p className="text-xs text-muted-foreground mb-1">Timeline to Close</p>
+                            <p className="text-lg font-bold text-foreground">{option.timeline}</p>
+                          </div>
+
+                          {/* Costs Breakdown */}
+                          <div className="mb-4">
+                            <p className="text-sm font-semibold text-foreground mb-2">Costs Breakdown</p>
+                            <div className="space-y-1 text-sm">
+                              {option.costs.agentCommission > 0 && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Agent Commission</span>
+                                  <span className="text-foreground">-{formatCurrency(option.costs.agentCommission)}</span>
+                                </div>
+                              )}
+                              {option.costs.closingCosts > 0 && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Closing Costs</span>
+                                  <span className="text-foreground">-{formatCurrency(option.costs.closingCosts)}</span>
+                                </div>
+                              )}
+                              {option.costs.repairs > 0 && (
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Repairs/Staging</span>
+                                  <span className="text-foreground">-{formatCurrency(option.costs.repairs)}</span>
+                                </div>
+                              )}
+                              <div className="flex justify-between pt-2 border-t border-border font-semibold">
+                                <span className="text-foreground">Total Costs</span>
+                                <span className="text-red-600">-{formatCurrency(option.costs.total)}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Net Proceeds */}
+                          <div className="mb-4 p-4 bg-primary/10 rounded-lg text-center">
+                            <p className="text-xs text-muted-foreground mb-1">Your Net Proceeds</p>
+                            <p className={`text-2xl font-bold ${
+                              option.netProceeds >= 0 ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                              {formatCurrency(option.netProceeds)}
+                            </p>
+                          </div>
+
+                          {/* Pros */}
+                          <div className="mb-3">
+                            <p className="text-sm font-semibold text-green-600 mb-2">✓ Pros</p>
+                            <ul className="space-y-1">
+                              {option.pros.slice(0, 3).map((pro: string, idx: number) => (
+                                <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1">
+                                  <span className="text-green-600 mt-0.5">•</span>
+                                  <span>{pro}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Cons */}
+                          <div className="mb-4">
+                            <p className="text-sm font-semibold text-red-600 mb-2">✗ Cons</p>
+                            <ul className="space-y-1">
+                              {option.cons.slice(0, 2).map((con: string, idx: number) => (
+                                <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1">
+                                  <span className="text-red-600 mt-0.5">•</span>
+                                  <span>{con}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* CTA Button */}
+                          {option.type === 'cash_offer' && (
+                            <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
+                              <a href="tel:832-932-7585">
+                                <Phone className="h-4 w-4 mr-2" />
+                                Get Cash Offer
+                              </a>
+                            </Button>
+                          )}
+                          {option.type === 'traditional' && (
+                            <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
+                              <a href="tel:832-932-7585">
+                                <Phone className="h-4 w-4 mr-2" />
+                                List with Agent
+                              </a>
+                            </Button>
+                          )}
+                          {option.type === 'short_sale' && (
+                            <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
+                              <a href="tel:832-932-7585">
+                                <Phone className="h-4 w-4 mr-2" />
+                                Discuss Options
+                              </a>
+                            </Button>
+                          )}
+                        </Card>
+                      ))}
+                    </div>
+
+                    {/* Comparison Note */}
+                    <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <p className="text-sm text-blue-900 dark:text-blue-200">
+                        <strong>Need help deciding?</strong> Every situation is unique. Call us at <a href="tel:832-932-7585" className="underline font-semibold">832-932-7585</a> for a free consultation to discuss which option is best for your specific circumstances.
+                      </p>
                     </div>
                   </div>
                 )}

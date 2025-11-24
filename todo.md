@@ -440,3 +440,19 @@
 - [x] Display net proceeds after sale (equity - closing costs)
 - [x] Add visual indicator (green for positive equity, red for negative)
 - [x] Test calculator with various mortgage balance scenarios ($300k confirmed)
+
+## Sale Options Comparison Feature
+- [x] Create comparison calculation logic for Traditional Sale option
+- [x] Create comparison calculation logic for Cash Offer option (EnterActDFW)
+- [x] Create comparison calculation logic for Short Sale option
+- [x] Calculate timeline for each option (days to close)
+- [x] Calculate costs breakdown (agent fees, closing costs, repairs)
+- [x] Calculate net proceeds for each option
+- [x] Build side-by-side comparison UI with 3 cards
+- [x] Add visual indicators (recommended badge, pros/cons)
+- [x] Include timeline comparison (Traditional: 60-90 days, Cash: 7-10 days, Short Sale: 90-180 days)
+- [x] Show cost differences between options
+- [x] Highlight best option based on equity position
+- [x] Add "Get This Option" CTA buttons for each card
+- [x] Test comparison with various property values and equity positions
+- [x] Create comprehensive vitest test suite for sale options comparison (13 tests passing)
