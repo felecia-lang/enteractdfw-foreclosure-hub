@@ -409,3 +409,8 @@
 - [x] Automatically enroll chatbot leads in email campaign
 - [x] Create admin endpoints for campaign stats and manual sending
 - [x] Add source tracking to differentiate landing page vs chatbot leads
+
+## Contact Information Update
+- [x] Update EnterActDFW contact info on Resources & Support Directory page
+- [x] Change email to info@enteractdfw.com
+- [x] Verify phone number displays as (832) 932-7585

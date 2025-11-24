@@ -228,8 +228,8 @@ export default function Resources() {
               <Mail className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Email</p>
-                <a href="mailto:help@enteractdfw.com" className="font-semibold text-foreground hover:text-primary">
-                  help@enteractdfw.com
+                <a href="mailto:info@enteractdfw.com" className="font-semibold text-foreground hover:text-primary">
+                  info@enteractdfw.com
                 </a>
               </div>
             </div>
