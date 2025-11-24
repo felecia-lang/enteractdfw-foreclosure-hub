@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Calculator, Home, TrendingUp, AlertCircle, Phone } from "lucide-react";
+import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar } from "lucide-react";
 import { APP_TITLE } from "@/const";
+import { EmailCaptureDialog } from "@/components/EmailCaptureDialog";
 
 export default function PropertyValueEstimator() {
   const [formData, setFormData] = useState({
@@ -29,9 +30,40 @@ export default function PropertyValueEstimator() {
   const [result, setResult] = useState<any>(null);
   const [showResults, setShowResults] = useState(false);
   const [comparison, setComparison] = useState<any>(null);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
 
   const calculateMutation = trpc.propertyValuation.calculate.useMutation();
   const compareOptionsMutation = trpc.propertyValuation.compareOptions.useMutation();
+  const emailComparisonMutation = trpc.propertyValuation.emailComparison.useMutation();
+
+  const handleEmailReport = async (email: string) => {
+    if (!result || !comparison) return;
+
+    try {
+      await emailComparisonMutation.mutateAsync({
+        email,
+        propertyValue: result.estimatedValue,
+        mortgageBalance: parseFloat(formData.mortgageBalance) || 0,
+        propertyDetails: {
+          zipCode: formData.zipCode,
+          propertyType: formData.propertyType,
+          squareFeet: parseFloat(formData.squareFeet),
+          bedrooms: parseFloat(formData.bedrooms),
+          bathrooms: parseFloat(formData.bathrooms),
+          condition: formData.condition,
+        },
+      });
+
+      toast.success("Report sent!", {
+        description: `We've sent the detailed comparison report to ${email}`,
+      });
+    } catch (error) {
+      toast.error("Failed to send report", {
+        description: "Please try again or contact us directly.",
+      });
+      throw error;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -532,11 +564,67 @@ export default function PropertyValueEstimator() {
                       ))}
                     </div>
 
-                    {/* Comparison Note */}
-                    <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                      <p className="text-sm text-blue-900 dark:text-blue-200">
-                        <strong>Need help deciding?</strong> Every situation is unique. Call us at <a href="tel:832-932-7585" className="underline font-semibold">832-932-7585</a> for a free consultation to discuss which option is best for your specific circumstances.
-                      </p>
+                    {/* Action Buttons */}
+                    <div className="mt-8 space-y-4">
+                      {/* Primary CTA - Schedule Valuation Call */}
+                      <div className="p-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-lg">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                          <div className="text-center md:text-left">
+                            <h3 className="text-xl font-bold mb-2">Ready to Discuss Your Options?</h3>
+                            <p className="text-blue-100">
+                              Schedule a free consultation with our licensed broker to get personalized advice
+                            </p>
+                          </div>
+                          <Button
+                            asChild
+                            size="lg"
+                            className="bg-white text-blue-600 hover:bg-blue-50 font-bold whitespace-nowrap"
+                          >
+                            <a href="tel:832-932-7585">
+                              <Calendar className="h-5 w-5 mr-2" />
+                              Schedule Free Call
+                            </a>
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Secondary CTAs - Download & Email */}
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          className="w-full"
+                          onClick={() => {
+                            toast.info("PDF download coming soon!", {
+                              description: "For now, use the Email option to receive your report.",
+                            });
+                          }}
+                        >
+                          <Download className="h-5 w-5 mr-2" />
+                          Download PDF Report
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          className="w-full"
+                          onClick={() => setShowEmailDialog(true)}
+                        >
+                          <Mail className="h-5 w-5 mr-2" />
+                          Email Me This Report
+                        </Button>
+                      </div>
+
+                      {/* Help Note */}
+                      <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                        <p className="text-sm text-blue-900 dark:text-blue-200 text-center">
+                          <strong>Questions?</strong> Call us at{" "}
+                          <a href="tel:832-932-7585" className="underline font-semibold">
+                            832-932-7585
+                          </a>{" "}
+                          for immediate assistance
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -602,6 +690,15 @@ export default function PropertyValueEstimator() {
           </div>
         </div>
       </footer>
+
+      {/* Email Capture Dialog */}
+      <EmailCaptureDialog
+        open={showEmailDialog}
+        onOpenChange={setShowEmailDialog}
+        onSubmit={handleEmailReport}
+        title="Email Me This Comparison Report"
+        description="Get a detailed PDF comparison of all three sale options sent directly to your inbox."
+      />
     </div>
   );
 }

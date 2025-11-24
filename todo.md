@@ -456,3 +456,16 @@
 - [x] Add "Get This Option" CTA buttons for each card
 - [x] Test comparison with various property values and equity positions
 - [x] Create comprehensive vitest test suite for sale options comparison (13 tests passing)
+
+## Sale Options Comparison Enhancements
+- [x] Create PDF generation service for comparison reports
+- [x] Add backend tRPC procedure to generate comparison PDF
+- [x] Create email capture dialog component for comparison section
+- [x] Add backend API to email comparison report to homeowners
+- [x] Store comparison email requests in database for lead tracking
+- [x] Add "Download Comparison Report" button to comparison section
+- [x] Add "Email Me This Report" button to comparison section
+- [x] Add "Schedule Valuation Call" CTA button prominently in comparison section
+- [x] Test PDF generation with various property scenarios
+- [x] Test email delivery of comparison reports
+- [x] Test all CTAs and conversion tracking

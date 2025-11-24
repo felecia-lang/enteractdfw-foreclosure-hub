@@ -599,6 +599,116 @@ Email: info@enteractdfw.com
           });
         }
       }),
+
+    downloadComparisonPDF: publicProcedure
+      .input(z.object({
+        propertyValue: z.number().min(10000),
+        mortgageBalance: z.number().min(0),
+        propertyDetails: z.object({
+          zipCode: z.string(),
+          propertyType: z.string(),
+          squareFeet: z.number(),
+          bedrooms: z.number(),
+          bathrooms: z.number(),
+          condition: z.string(),
+        }),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          const { calculateSaleOptions } = await import("./saleOptionsComparison");
+          const { generateComparisonPDF } = await import("./comparisonPdfGenerator");
+          
+          const comparison = calculateSaleOptions(input.propertyValue, input.mortgageBalance);
+          
+          const pdfBuffer = await generateComparisonPDF({
+            propertyValue: input.propertyValue,
+            propertyDetails: input.propertyDetails,
+            comparison,
+            generatedAt: new Date(),
+          });
+
+          // Set response headers for PDF download
+          ctx.res.setHeader("Content-Type", "application/pdf");
+          ctx.res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="sale-options-comparison-${Date.now()}.pdf"`
+          );
+          ctx.res.setHeader("Content-Length", pdfBuffer.length);
+
+          // Send PDF buffer
+          ctx.res.end(pdfBuffer);
+
+          return { success: true };
+        } catch (error) {
+          console.error("[PropertyValuation] Failed to generate PDF:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to generate PDF. Please try again.",
+          });
+        }
+      }),
+
+    emailComparison: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        propertyValue: z.number().min(10000),
+        mortgageBalance: z.number().min(0),
+        propertyDetails: z.object({
+          zipCode: z.string(),
+          propertyType: z.string(),
+          squareFeet: z.number(),
+          bedrooms: z.number(),
+          bathrooms: z.number(),
+          condition: z.string(),
+        }),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const { calculateSaleOptions } = await import("./saleOptionsComparison");
+          const { generateComparisonPDF } = await import("./comparisonPdfGenerator");
+          const { sendComparisonEmail } = await import("./comparisonEmailService");
+          
+          const comparison = calculateSaleOptions(input.propertyValue, input.mortgageBalance);
+          
+          const pdfBuffer = await generateComparisonPDF({
+            propertyValue: input.propertyValue,
+            propertyDetails: input.propertyDetails,
+            comparison,
+            generatedAt: new Date(),
+          });
+
+          // Send email with PDF attachment
+          await sendComparisonEmail({
+            to: input.email,
+            propertyValue: input.propertyValue,
+            comparison,
+            pdfBuffer,
+          });
+
+          // Track this as a lead in the database
+          await createLead({
+            firstName: "",
+            email: input.email,
+            phone: "",
+            propertyZip: input.propertyDetails.zipCode,
+            source: "comparison_email",
+          });
+
+          // Notify owner
+          await notifyOwner({
+            title: "New Comparison Report Request",
+            content: `Email: ${input.email}\nProperty: ${input.propertyDetails.squareFeet}sqft ${input.propertyDetails.propertyType} in ${input.propertyDetails.zipCode}\nValue: $${input.propertyValue.toLocaleString()}`,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("[PropertyValuation] Failed to email comparison:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to send email. Please try again.",
+          });
+        }
+      }),
   }),
 
   // AI Chatbot functionality
