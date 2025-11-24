@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar } from "lucide-react";
+import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar, MessageSquare } from "lucide-react";
 import { APP_TITLE } from "@/const";
 import { EmailCaptureDialog } from "@/components/EmailCaptureDialog";
+import SmsCaptureDialog from "@/components/SmsCaptureDialog";
 
 export default function PropertyValueEstimator() {
   const [formData, setFormData] = useState({
@@ -31,10 +32,12 @@ export default function PropertyValueEstimator() {
   const [showResults, setShowResults] = useState(false);
   const [comparison, setComparison] = useState<any>(null);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
+  const [showSmsDialog, setShowSmsDialog] = useState(false);
 
   const calculateMutation = trpc.propertyValuation.calculate.useMutation();
   const compareOptionsMutation = trpc.propertyValuation.compareOptions.useMutation();
   const emailComparisonMutation = trpc.propertyValuation.emailComparison.useMutation();
+  const smsComparisonMutation = trpc.propertyValuation.smsComparison.useMutation();
 
   const handleEmailReport = async (email: string) => {
     if (!result || !comparison) return;
@@ -59,6 +62,35 @@ export default function PropertyValueEstimator() {
       });
     } catch (error) {
       toast.error("Failed to send report", {
+        description: "Please try again or contact us directly.",
+      });
+      throw error;
+    }
+  };
+
+  const handleSmsReport = async (phone: string) => {
+    if (!result || !comparison) return;
+
+    try {
+      await smsComparisonMutation.mutateAsync({
+        phone,
+        propertyValue: result.estimatedValue,
+        mortgageBalance: parseFloat(formData.mortgageBalance) || 0,
+        propertyDetails: {
+          zipCode: formData.zipCode,
+          propertyType: formData.propertyType,
+          squareFeet: parseFloat(formData.squareFeet),
+          bedrooms: parseFloat(formData.bedrooms),
+          bathrooms: parseFloat(formData.bathrooms),
+          condition: formData.condition,
+        },
+      });
+
+      toast.success("SMS sent!", {
+        description: `We've sent the comparison summary to ${phone}`,
+      });
+    } catch (error) {
+      toast.error("Failed to send SMS", {
         description: "Please try again or contact us directly.",
       });
       throw error;
@@ -588,20 +620,20 @@ export default function PropertyValueEstimator() {
                         </div>
                       </div>
 
-                      {/* Secondary CTAs - Download & Email */}
-                      <div className="grid md:grid-cols-2 gap-4">
+                      {/* Secondary CTAs - Download, Email & SMS */}
+                      <div className="grid md:grid-cols-3 gap-4">
                         <Button
                           variant="outline"
                           size="lg"
                           className="w-full"
                           onClick={() => {
                             toast.info("PDF download coming soon!", {
-                              description: "For now, use the Email option to receive your report.",
+                              description: "For now, use the Email or SMS option to receive your report.",
                             });
                           }}
                         >
                           <Download className="h-5 w-5 mr-2" />
-                          Download PDF Report
+                          Download PDF
                         </Button>
 
                         <Button
@@ -611,7 +643,17 @@ export default function PropertyValueEstimator() {
                           onClick={() => setShowEmailDialog(true)}
                         >
                           <Mail className="h-5 w-5 mr-2" />
-                          Email Me This Report
+                          Email Report
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          className="w-full"
+                          onClick={() => setShowSmsDialog(true)}
+                        >
+                          <MessageSquare className="h-5 w-5 mr-2" />
+                          Text Me
                         </Button>
                       </div>
 
@@ -698,6 +740,15 @@ export default function PropertyValueEstimator() {
         onSubmit={handleEmailReport}
         title="Email Me This Comparison Report"
         description="Get a detailed PDF comparison of all three sale options sent directly to your inbox."
+      />
+
+      {/* SMS Capture Dialog */}
+      <SmsCaptureDialog
+        open={showSmsDialog}
+        onOpenChange={setShowSmsDialog}
+        onSubmit={handleSmsReport}
+        title="Text Me This Report"
+        description="Get a concise comparison summary sent directly to your phone with a link to schedule a call."
       />
     </div>
   );

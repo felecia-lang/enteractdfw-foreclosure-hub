@@ -469,3 +469,16 @@
 - [x] Test PDF generation with various property scenarios
 - [x] Test email delivery of comparison reports
 - [x] Test all CTAs and conversion tracking
+
+## SMS Notification Feature
+- [x] Create SMS service module for sending comparison summaries
+- [x] Add backend tRPC procedure for SMS notification
+- [x] Create SMS capture dialog component with phone input
+- [x] Add phone number validation and formatting
+- [x] Generate concise SMS message with comparison summary
+- [x] Include scheduling link in SMS message
+- [x] Add "Text Me This Report" button to comparison section
+- [x] Track SMS requests as leads in database
+- [x] Send owner notification when SMS is requested
+- [x] Test SMS delivery with various phone numbers
+- [x] Test SMS dialog UI and validation

@@ -709,6 +709,70 @@ Email: info@enteractdfw.com
           });
         }
       }),
+
+    smsComparison: publicProcedure
+      .input(z.object({
+        phone: z.string().min(10, "Phone number is required"),
+        propertyValue: z.number().min(10000),
+        mortgageBalance: z.number().min(0),
+        propertyDetails: z.object({
+          zipCode: z.string(),
+          propertyType: z.string(),
+          squareFeet: z.number(),
+          bedrooms: z.number(),
+          bathrooms: z.number(),
+          condition: z.string(),
+        }),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const { calculateSaleOptions } = await import("./saleOptionsComparison");
+          const { sendComparisonSms, isValidPhoneNumber } = await import("./comparisonSmsService");
+          
+          // Validate phone number
+          if (!isValidPhoneNumber(input.phone)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Invalid phone number. Please enter a valid US phone number.",
+            });
+          }
+
+          const comparison = calculateSaleOptions(input.propertyValue, input.mortgageBalance);
+          
+          // Send SMS with comparison summary
+          await sendComparisonSms({
+            phone: input.phone,
+            propertyValue: input.propertyValue,
+            comparison,
+          });
+
+          // Track this as a lead in the database
+          await createLead({
+            firstName: "",
+            email: "",
+            phone: input.phone,
+            propertyZip: input.propertyDetails.zipCode,
+            source: "comparison_sms",
+          });
+
+          // Notify owner
+          await notifyOwner({
+            title: "New SMS Comparison Request",
+            content: `Phone: ${input.phone}\nProperty: ${input.propertyDetails.squareFeet}sqft ${input.propertyDetails.propertyType} in ${input.propertyDetails.zipCode}\nValue: $${input.propertyValue.toLocaleString()}`,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("[PropertyValuation] Failed to send SMS comparison:", error);
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to send SMS. Please try again.",
+          });
+        }
+      }),
   }),
 
   // AI Chatbot functionality
