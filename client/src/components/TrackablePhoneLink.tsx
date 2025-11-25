@@ -1,6 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { Phone } from "lucide-react";
 import { useLocation } from "wouter";
+import { getAttributionUTM } from "@/lib/utm";
 
 interface TrackablePhoneLinkProps {
   phoneNumber: string;
@@ -37,11 +38,15 @@ export default function TrackablePhoneLink({
   const display = children || displayText || phoneNumber;
 
   const handleClick = () => {
+    // Get UTM attribution parameters
+    const utm = getAttributionUTM();
+
     // Track the click asynchronously (don't block the call)
     trackCallMutation.mutate({
       phoneNumber,
       pagePath: location,
       pageTitle: document.title,
+      ...utm,
     });
   };
 

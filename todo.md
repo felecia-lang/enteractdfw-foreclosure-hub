@@ -744,3 +744,24 @@
 - [ ] Add route to App.tsx and navigation link in Admin page
 - [ ] Test funnel tracking with sample data
 - [ ] Write comprehensive tests for funnel endpoints
+
+## UTM Parameter Tracking & Marketing Attribution
+- [x] Add UTM fields to pageViews table (utmSource, utmMedium, utmCampaign, utmTerm, utmContent)
+- [x] Add UTM fields to phoneCallTracking table for call attribution
+- [x] Add UTM fields to bookingConfirmations table for booking attribution
+- [x] Push database schema changes (pnpm db:push)
+- [x] Update PageViewTracker component to extract and store UTM parameters from URL
+- [x] Create UTM session persistence (store first-touch UTM in sessionStorage)
+- [x] Create shared UTM utility functions (lib/utm.ts)
+- [x] Update TrackablePhoneLink to include UTM parameters in tracking
+- [x] Create tRPC endpoints for UTM analytics:
+  - [x] utm.getChannelPerformance - conversion rates by utm_source
+  - [x] utm.getCampaignPerformance - conversion rates by utm_campaign
+  - [x] utm.getMediumPerformance - conversion rates by utm_medium
+  - [ ] utm.getAttributionReport - full UTM breakdown with funnel metrics
+- [ ] Create MarketingAttribution.tsx admin page at /admin/attribution
+- [ ] Build channel performance table with conversion rates
+- [ ] Build campaign performance comparison chart
+- [ ] Add UTM filter to existing analytics dashboards
+- [ ] Write comprehensive tests for UTM tracking
+- [ ] Test with sample UTM URLs

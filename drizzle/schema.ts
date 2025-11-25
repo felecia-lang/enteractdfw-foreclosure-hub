@@ -205,6 +205,11 @@ export const phoneCallTracking = mysqlTable("phoneCallTracking", {
   userEmail: varchar("userEmail", { length: 320 }), // Email if user is logged in
   ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
   userAgent: text("userAgent"),
+  utmSource: varchar("utmSource", { length: 255 }), // Marketing source attribution
+  utmMedium: varchar("utmMedium", { length: 255 }), // Marketing medium attribution
+  utmCampaign: varchar("utmCampaign", { length: 255 }), // Campaign attribution
+  utmTerm: varchar("utmTerm", { length: 255 }), // Keyword attribution
+  utmContent: varchar("utmContent", { length: 255 }), // Content variant attribution
   clickedAt: timestamp("clickedAt").defaultNow().notNull(),
 });
 
@@ -232,6 +237,13 @@ export const bookingConfirmations = mysqlTable("bookingConfirmations", {
   ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
   userAgent: text("userAgent"),
   
+  // UTM Attribution
+  utmSource: varchar("utmSource", { length: 255 }), // Marketing source attribution
+  utmMedium: varchar("utmMedium", { length: 255 }), // Marketing medium attribution
+  utmCampaign: varchar("utmCampaign", { length: 255 }), // Campaign attribution
+  utmTerm: varchar("utmTerm", { length: 255 }), // Keyword attribution
+  utmContent: varchar("utmContent", { length: 255 }), // Content variant attribution
+  
   // Webhook metadata
   webhookPayload: text("webhookPayload"), // Store full GHL webhook payload as JSON for debugging
   
@@ -254,6 +266,11 @@ export const pageViews = mysqlTable("pageViews", {
   ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
   userAgent: text("userAgent"),
   referrer: varchar("referrer", { length: 500 }), // Where visitor came from
+  utmSource: varchar("utmSource", { length: 255 }), // Marketing source (e.g., google, facebook)
+  utmMedium: varchar("utmMedium", { length: 255 }), // Marketing medium (e.g., cpc, email, social)
+  utmCampaign: varchar("utmCampaign", { length: 255 }), // Campaign name
+  utmTerm: varchar("utmTerm", { length: 255 }), // Paid search keywords
+  utmContent: varchar("utmContent", { length: 255 }), // Ad content variant
   viewedAt: timestamp("viewedAt").defaultNow().notNull(),
 });
 

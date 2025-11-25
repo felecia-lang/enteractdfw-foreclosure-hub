@@ -5,6 +5,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage } from "./db";
+import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -1279,6 +1280,90 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to retrieve funnel metrics by page",
+          });
+        }
+      }),
+  }),
+
+  // UTM Attribution Analytics - measure marketing channel performance
+  utm: router({
+    // Get channel performance (conversion rates by utm_source)
+    getChannelPerformance: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+        return next({ ctx });
+      })
+      .query(async ({ input }) => {
+        try {
+          return await getChannelPerformance(input);
+        } catch (error) {
+          console.error("[UTM] Failed to get channel performance:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve channel performance",
+          });
+        }
+      }),
+
+    // Get campaign performance (conversion rates by utm_campaign)
+    getCampaignPerformance: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+        return next({ ctx });
+      })
+      .query(async ({ input }) => {
+        try {
+          return await getCampaignPerformance(input);
+        } catch (error) {
+          console.error("[UTM] Failed to get campaign performance:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve campaign performance",
+          });
+        }
+      }),
+
+    // Get medium performance (conversion rates by utm_medium)
+    getMediumPerformance: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+        return next({ ctx });
+      })
+      .query(async ({ input }) => {
+        try {
+          return await getMediumPerformance(input);
+        } catch (error) {
+          console.error("[UTM] Failed to get medium performance:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve medium performance",
           });
         }
       }),

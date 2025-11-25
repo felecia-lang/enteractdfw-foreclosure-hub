@@ -99,6 +99,13 @@
       "when": 1764079260772,
       "tag": "0013_high_absorbing_man",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1764081043550,
+      "tag": "0014_closed_namorita",
+      "breakpoints": true
     }
   ]
 }
