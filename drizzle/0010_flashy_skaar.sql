@@ -1,0 +1,1 @@
+ALTER TABLE `leads` MODIFY COLUMN `source` varchar(255) NOT NULL DEFAULT 'landing_page';

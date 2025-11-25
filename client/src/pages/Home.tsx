@@ -21,6 +21,7 @@ import {
   Download
 } from "lucide-react";
 import { toast } from "sonner";
+import { ResourceLeadCaptureDialog } from "@/components/ResourceLeadCaptureDialog";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -31,6 +32,8 @@ export default function Home() {
     smsConsent: false,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [showResourceDialog, setShowResourceDialog] = useState(false);
+  const [selectedResource, setSelectedResource] = useState<{name: string; file: string}>({name: "", file: ""});
 
   const submitLead = trpc.leads.submit.useMutation({
     onSuccess: () => {
@@ -511,12 +514,20 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="/pdfs/Texas_Foreclosure_Survival_Guide.pdf" download>
-                  <Button className="w-full" size="lg">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download PDF
-                  </Button>
-                </a>
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => {
+                    setSelectedResource({
+                      name: "Texas Foreclosure Survival Guide",
+                      file: "Texas_Foreclosure_Survival_Guide.pdf"
+                    });
+                    setShowResourceDialog(true);
+                  }}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
+                </Button>
               </CardContent>
             </Card>
 
@@ -534,12 +545,20 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="/pdfs/ActionGuideContactingYourLender.pdf" download>
-                  <Button className="w-full" size="lg">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download PDF
-                  </Button>
-                </a>
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => {
+                    setSelectedResource({
+                      name: "Action Guide: Contacting Your Lender",
+                      file: "ActionGuideContactingYourLender.pdf"
+                    });
+                    setShowResourceDialog(true);
+                  }}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
+                </Button>
               </CardContent>
             </Card>
 
@@ -557,12 +576,20 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="/pdfs/ActionGuideNoticeofDefault.pdf" download>
-                  <Button className="w-full" size="lg">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download PDF
-                  </Button>
-                </a>
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => {
+                    setSelectedResource({
+                      name: "Action Guide: Notice of Default",
+                      file: "ActionGuideNoticeofDefault.pdf"
+                    });
+                    setShowResourceDialog(true);
+                  }}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
+                </Button>
               </CardContent>
             </Card>
 
@@ -580,12 +607,20 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="/pdfs/Avoiding_Foreclosure_Scams_Guide.pdf" download>
-                  <Button className="w-full" size="lg">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download PDF
-                  </Button>
-                </a>
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => {
+                    setSelectedResource({
+                      name: "Avoiding Foreclosure Scams Guide",
+                      file: "Avoiding_Foreclosure_Scams_Guide.pdf"
+                    });
+                    setShowResourceDialog(true);
+                  }}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -631,6 +666,14 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Resource Lead Capture Dialog */}
+      <ResourceLeadCaptureDialog
+        open={showResourceDialog}
+        onOpenChange={setShowResourceDialog}
+        resourceName={selectedResource.name}
+        resourceFile={selectedResource.file}
+      />
     </div>
   );
 }

@@ -36,7 +36,7 @@ export const leads = mysqlTable("leads", {
   phone: varchar("phone", { length: 20 }).notNull(),
   propertyZip: varchar("propertyZip", { length: 10 }).notNull(),
   smsConsent: mysqlEnum("smsConsent", ["yes", "no"]).default("no").notNull(),
-  source: varchar("source", { length: 50 }).default("landing_page").notNull(),
+  source: varchar("source", { length: 255 }).default("landing_page").notNull(),
   status: mysqlEnum("status", ["new", "contacted", "qualified", "closed"]).default("new").notNull(),
   notes: text("notes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -175,3 +175,21 @@ export const savedCalculations = mysqlTable("savedCalculations", {
 
 export type SavedCalculation = typeof savedCalculations.$inferSelect;
 export type InsertSavedCalculation = typeof savedCalculations.$inferInsert;
+
+/**
+ * Resource downloads table for tracking PDF guide downloads with lead capture.
+ * Records contact information and which resource was downloaded for follow-up.
+ */
+export const resourceDownloads = mysqlTable("resourceDownloads", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  resourceName: varchar("resourceName", { length: 200 }).notNull(), // e.g., "Texas Foreclosure Survival Guide"
+  resourceFile: varchar("resourceFile", { length: 200 }).notNull(), // e.g., "Texas_Foreclosure_Survival_Guide.pdf"
+  ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
+  userAgent: text("userAgent"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ResourceDownload = typeof resourceDownloads.$inferSelect;
+export type InsertResourceDownload = typeof resourceDownloads.$inferInsert;

@@ -64,6 +64,20 @@
       "when": 1764008382612,
       "tag": "0008_sour_moira_mactaggert",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1764052616095,
+      "tag": "0009_simple_sally_floyd",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1764053098996,
+      "tag": "0010_flashy_skaar",
+      "breakpoints": true
     }
   ]
 }

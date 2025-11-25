@@ -531,3 +531,18 @@
 - [x] Update backend endpoints to serve new PDF files
 - [x] Test all 4 PDF downloads
 - [x] Verify responsive layout with 4-column grid
+
+## Resources Lead Capture
+- [x] Create database table for resource downloads (resourceDownloads)
+- [x] Add fields: name, email, resourceName, downloadedAt, ipAddress
+- [x] Create backend tRPC procedure to capture lead and track download
+- [x] Send email with PDF attachment after form submission
+- [x] Create lead in GHL system when resource is downloaded
+- [x] Build ResourceLeadCaptureDialog component with name and email fields
+- [x] Add form validation for name and email
+- [x] Update Resources section to show dialog instead of direct download
+- [x] Track which resource was requested in dialog state
+- [x] Send owner notification when resource is downloaded
+- [x] Test lead capture flow for all 4 PDFs
+- [x] Verify email delivery with PDF attachment
+- [x] Test GHL lead creation integration

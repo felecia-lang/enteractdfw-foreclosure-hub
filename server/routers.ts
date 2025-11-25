@@ -925,6 +925,87 @@ Email: info@enteractdfw.com
         }
       }),
   }),
+
+  // Resources download with lead capture
+  resources: router({
+    downloadWithCapture: publicProcedure
+      .input(z.object({
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email("Valid email is required"),
+        resourceName: z.string(),
+        resourceFile: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const { name, email, resourceName, resourceFile } = input;
+
+        try {
+          // Import dependencies
+          const { createResourceDownload } = await import("./resourceDownloadsDb");
+          const { sendResourceEmail } = await import("./resourceEmailService");
+          const { createLead } = await import("./db");
+
+          // Get IP address from request
+          const ipAddress = ctx.req.headers["x-forwarded-for"] as string || ctx.req.socket.remoteAddress || "";
+          const userAgent = ctx.req.headers["user-agent"] || "";
+
+          // Track download in database
+          await createResourceDownload({
+            name,
+            email,
+            resourceName,
+            resourceFile,
+            ipAddress,
+            userAgent,
+          });
+
+          // Create lead in database (extract first name if full name provided)
+          const firstName = name.split(" ")[0] || name;
+          try {
+            await createLead({
+              firstName,
+              email,
+              phone: "(000) 000-0000", // Placeholder since we only capture name/email
+              propertyZip: "00000", // Placeholder
+              smsConsent: "no",
+              source: `resource_download_${resourceFile}`,
+              status: "new",
+              notes: `Downloaded resource: ${resourceName}`,
+            });
+          } catch (leadError) {
+            // Lead creation might fail if email already exists, that's okay
+            console.log("[Resources] Lead creation skipped (may already exist):", leadError);
+          }
+
+          // Send email with PDF attachment
+          const emailSent = await sendResourceEmail({
+            recipientName: name,
+            recipientEmail: email,
+            resourceName,
+            resourceFile,
+          });
+
+          // Notify owner
+          await notifyOwner({
+            title: `New Resource Download: ${resourceName}`,
+            content: `${name} (${email}) downloaded ${resourceName}`,
+          });
+
+          return {
+            success: true,
+            emailSent,
+            message: emailSent 
+              ? "Check your email! We've sent you the PDF guide."
+              : "Download captured! We'll send you the guide shortly.",
+          };
+        } catch (error) {
+          console.error("[Resources] Failed to process download:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to process your request. Please try again.",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
