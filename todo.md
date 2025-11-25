@@ -508,3 +508,15 @@
 - [x] Add hover effects and visual polish to tool cards
 - [x] Test navigation to both tools from homepage
 - [x] Verify CTAs are clear and compelling
+
+## Homepage Resources Section
+- [x] Create "Free Foreclosure Survival Resources" section on homepage
+- [x] Add section header and description
+- [x] Create resource card for "Texas Foreclosure Survival Guide.pdf"
+- [x] Create resource card for "Action Guide Contacting Your Lender.pdf"
+- [x] Create resource card for "Action Guide Notice of Default.pdf"
+- [x] Add download buttons with EnterActDFW branding
+- [x] Position section above footer, after service offerings
+- [x] Ensure mobile-friendly responsive design
+- [x] Add PDF file icons to resource cards
+- [x] Test all download buttons and PDF delivery

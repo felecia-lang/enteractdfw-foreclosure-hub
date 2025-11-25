@@ -17,7 +17,8 @@ import {
   AlertCircle,
   Home as HomeIcon,
   Users,
-  Scale
+  Scale,
+  Download
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -480,6 +481,90 @@ export default function Home() {
                 <p className="text-sm text-muted-foreground">Serving Dallas-Fort Worth since 2015</p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Free Foreclosure Survival Resources */}
+      <section className="py-16 bg-background">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Free Foreclosure Survival Resources
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Download our comprehensive guides to understand your rights, communicate effectively, and take action.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Texas Foreclosure Survival Guide */}
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <FileText className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg">Texas Foreclosure Survival Guide</CardTitle>
+                <CardDescription className="text-sm">
+                  Comprehensive overview of the Texas foreclosure process, homeowner rights, and options to avoid foreclosure.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <a href="/api/pdf/foreclosure-survival-guide" download>
+                  <Button className="w-full" size="lg">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </a>
+              </CardContent>
+            </Card>
+
+            {/* Action Guide: Contacting Your Lender */}
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <Phone className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg">Action Guide: Contacting Your Lender</CardTitle>
+                <CardDescription className="text-sm">
+                  Scripts, templates, and strategies for effective communication with mortgage servicers.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <a href="/api/pdf/contacting-lender-guide" download>
+                  <Button className="w-full" size="lg">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </a>
+              </CardContent>
+            </Card>
+
+            {/* Action Guide: Notice of Default */}
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <AlertCircle className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg">Action Guide: Notice of Default</CardTitle>
+                <CardDescription className="text-sm">
+                  Step‑by‑step plan for homeowners after receiving a Notice of Default, including timelines and call scripts.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <a href="/api/pdf/notice-of-default-checklist" download>
+                  <Button className="w-full" size="lg">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </a>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
