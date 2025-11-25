@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { ResourceLeadCaptureDialog } from "@/components/ResourceLeadCaptureDialog";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -103,10 +104,9 @@ export default function Home() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                 Call Now
-              </a>
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>

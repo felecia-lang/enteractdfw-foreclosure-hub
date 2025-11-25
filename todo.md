@@ -604,3 +604,49 @@
 - [x] Update phone number in all components and pages
 - [x] Verify phone number format consistency (with/without parentheses, dashes)
 - [x] Test all phone number links (tel: links)
+
+## Fix Nested Anchor Tag Error
+- [x] Locate nested `<a>` tags in Resources page
+- [x] Fix Button component wrapping anchor tags
+- [x] Test Resources page to verify error is resolved
+
+## Click-to-Call Tracking
+- [ ] Create database table for call tracking (phoneCallTracking)
+- [ ] Add backend API to log click-to-call events
+- [ ] Wrap all phone number links with tracking component
+- [ ] Track page source, timestamp, and user info for each call
+- [ ] Create analytics dashboard to view call conversion by page
+
+## Contact Us Page
+- [ ] Create Contact Us page component at /contact route
+- [ ] Add phone, email, and contact form options
+- [ ] Display office hours and service area information
+- [ ] Integrate Google Maps showing DFW service area
+- [ ] Add contact form with name, email, phone, message fields
+- [ ] Send form submissions to GHL and owner email
+- [ ] Add page to main navigation menu
+
+## SMS Opt-In Checkbox
+- [ ] Add smsOptIn field to all lead capture forms
+- [ ] Update database schema to store SMS consent
+- [ ] Add checkbox to ResourceLeadCaptureDialog
+- [ ] Add checkbox to EmailCaptureDialog
+- [ ] Add checkbox to SaveResumeDialog
+- [ ] Add checkbox to ExitIntentPopup
+- [ ] Update backend APIs to save SMS consent preference
+- [ ] Display SMS opt-in status in admin/leads dashboard
+
+## Click-to-Call Tracking System
+- [x] Create phoneCallTracking database table in schema.ts
+- [x] Add trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls helper functions in db.ts
+- [x] Create tRPC tracking router with three endpoints:
+  - [x] tracking.trackPhoneCall (public) - logs phone number clicks with page context
+  - [x] tracking.getCallStats (admin) - returns call counts grouped by page
+  - [x] tracking.getRecentCalls (admin) - returns recent call log with limit
+- [x] Create TrackablePhoneLink component for frontend tracking
+- [x] Replace phone links in Home.tsx header with TrackablePhoneLink
+- [x] Replace phone links in KnowledgeBaseLayout.tsx header with TrackablePhoneLink
+- [x] Replace all 6 phone links in PropertyValueEstimator.tsx with TrackablePhoneLink
+- [x] Write comprehensive test suite (13 tests covering all scenarios)
+- [x] Test phone call tracking in browser
+- [x] Verify tracking captures: phone number, page path, page title, user email, IP address, user agent, timestamp

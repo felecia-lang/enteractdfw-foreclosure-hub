@@ -194,3 +194,19 @@ export const resourceDownloads = mysqlTable("resourceDownloads", {
 export type ResourceDownload = typeof resourceDownloads.$inferSelect;
 export type InsertResourceDownload = typeof resourceDownloads.$inferInsert;
 
+/**
+ * Phone call tracking table - tracks click-to-call events
+ */
+export const phoneCallTracking = mysqlTable("phoneCallTracking", {
+  id: int("id").autoincrement().primaryKey(),
+  phoneNumber: varchar("phoneNumber", { length: 20 }).notNull(), // Phone number clicked
+  pagePath: varchar("pagePath", { length: 255 }).notNull(), // Page where click occurred
+  pageTitle: varchar("pageTitle", { length: 255 }), // Title of the page
+  userEmail: varchar("userEmail", { length: 320 }), // Email if user is logged in
+  ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
+  userAgent: text("userAgent"),
+  clickedAt: timestamp("clickedAt").defaultNow().notNull(),
+});
+
+export type PhoneCallTracking = typeof phoneCallTracking.$inferSelect;
+export type InsertPhoneCallTracking = typeof phoneCallTracking.$inferInsert;

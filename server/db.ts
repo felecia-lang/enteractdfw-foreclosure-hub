@@ -493,3 +493,90 @@ export async function getEmailCampaignStats() {
     return null;
   }
 }
+
+// Phone call tracking functions
+export async function trackPhoneCall(data: {
+  phoneNumber: string;
+  pagePath: string;
+  pageTitle?: string;
+  userEmail?: string;
+  ipAddress?: string;
+  userAgent?: string;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot track phone call: database not available");
+    return undefined;
+  }
+
+  try {
+    const { phoneCallTracking } = await import("../drizzle/schema");
+    const result = await db.insert(phoneCallTracking).values({
+      phoneNumber: data.phoneNumber,
+      pagePath: data.pagePath,
+      pageTitle: data.pageTitle || null,
+      userEmail: data.userEmail || null,
+      ipAddress: data.ipAddress || null,
+      userAgent: data.userAgent || null,
+    });
+
+    console.log(`[PhoneCallTracking] Tracked call to ${data.phoneNumber} from ${data.pagePath}`);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to track phone call:", error);
+    throw error;
+  }
+}
+
+export async function getPhoneCallStats() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get phone call stats: database not available");
+    return [];
+  }
+
+  try {
+    const { phoneCallTracking } = await import("../drizzle/schema");
+    const { sql } = await import("drizzle-orm");
+    
+    // Get call counts grouped by page
+    const stats = await db
+      .select({
+        pagePath: phoneCallTracking.pagePath,
+        pageTitle: phoneCallTracking.pageTitle,
+        callCount: sql<number>`count(*)`,
+      })
+      .from(phoneCallTracking)
+      .groupBy(phoneCallTracking.pagePath, phoneCallTracking.pageTitle)
+      .orderBy(sql`count(*) DESC`);
+
+    return stats;
+  } catch (error) {
+    console.error("[Database] Failed to get phone call stats:", error);
+    throw error;
+  }
+}
+
+export async function getRecentPhoneCalls(limit: number = 50) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get recent phone calls: database not available");
+    return [];
+  }
+
+  try {
+    const { phoneCallTracking } = await import("../drizzle/schema");
+    const { desc } = await import("drizzle-orm");
+    
+    const calls = await db
+      .select()
+      .from(phoneCallTracking)
+      .orderBy(desc(phoneCallTracking.clickedAt))
+      .limit(limit);
+
+    return calls;
+  } catch (error) {
+    console.error("[Database] Failed to get recent phone calls:", error);
+    throw error;
+  }
+}

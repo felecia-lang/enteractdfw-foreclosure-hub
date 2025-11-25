@@ -20,6 +20,7 @@ import SaveResumeDialog from "@/components/SaveResumeDialog";
 import { ProgressBar } from "@/components/ProgressBar";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 export default function PropertyValueEstimator() {
   const [formData, setFormData] = useState({
@@ -679,26 +680,23 @@ export default function PropertyValueEstimator() {
                           {/* CTA Button */}
                           {option.type === 'cash_offer' && (
                             <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
-                              <a href="tel:832-932-7585">
-                                <Phone className="h-4 w-4 mr-2" />
+                              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                                 Get Cash Offer
-                              </a>
+                              </TrackablePhoneLink>
                             </Button>
                           )}
                           {option.type === 'traditional' && (
                             <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
-                              <a href="tel:832-932-7585">
-                                <Phone className="h-4 w-4 mr-2" />
+                              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                                 List with Agent
-                              </a>
+                              </TrackablePhoneLink>
                             </Button>
                           )}
                           {option.type === 'short_sale' && (
                             <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
-                              <a href="tel:832-932-7585">
-                                <Phone className="h-4 w-4 mr-2" />
+                              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                                 Discuss Options
-                              </a>
+                              </TrackablePhoneLink>
                             </Button>
                           )}
                         </Card>
@@ -721,10 +719,10 @@ export default function PropertyValueEstimator() {
                             size="lg"
                             className="bg-white text-blue-600 hover:bg-blue-50 font-bold whitespace-nowrap"
                           >
-                            <a href="tel:832-932-7585">
+                            <TrackablePhoneLink phoneNumber="832-932-7585" className="flex items-center">
                               <Calendar className="h-5 w-5 mr-2" />
                               Schedule Free Call
-                            </a>
+                            </TrackablePhoneLink>
                           </Button>
                         </div>
                       </div>
@@ -770,9 +768,9 @@ export default function PropertyValueEstimator() {
                       <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                         <p className="text-sm text-blue-900 dark:text-blue-200 text-center">
                           <strong>Questions?</strong> Call us at{" "}
-                          <a href="tel:832-932-7585" className="underline font-semibold">
+                          <TrackablePhoneLink phoneNumber="832-932-7585" className="underline font-semibold">
                             832-932-7585
-                          </a>{" "}
+                          </TrackablePhoneLink>{" "}
                           for immediate assistance
                         </p>
                       </div>
@@ -796,10 +794,9 @@ export default function PropertyValueEstimator() {
                     Calculate Another Property
                   </Button>
                   <Button asChild className="flex-1">
-                    <a href="tel:832-932-7585">
-                      <Phone className="h-4 w-4 mr-2" />
+                    <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                       Get Professional Appraisal
-                    </a>
+                    </TrackablePhoneLink>
                   </Button>
                 </div>
               </Card>

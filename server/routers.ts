@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -1002,6 +1002,91 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to process your request. Please try again.",
+          });
+        }
+      }),
+  }),
+
+  // Phone call tracking
+  tracking: router({
+    trackPhoneCall: publicProcedure
+      .input(z.object({
+        phoneNumber: z.string(),
+        pagePath: z.string(),
+        pageTitle: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Extract IP address and user agent from request
+          const ipAddress = ctx.req.headers['x-forwarded-for'] as string || 
+                           ctx.req.headers['x-real-ip'] as string || 
+                           ctx.req.socket?.remoteAddress || 
+                           undefined;
+          const userAgent = ctx.req.headers['user-agent'] || undefined;
+          
+          // Get user email if authenticated
+          const userEmail = ctx.user?.email || undefined;
+
+          await trackPhoneCall({
+            phoneNumber: input.phoneNumber,
+            pagePath: input.pagePath,
+            pageTitle: input.pageTitle,
+            userEmail,
+            ipAddress,
+            userAgent,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("[Tracking] Failed to track phone call:", error);
+          // Don't throw error - we don't want to block the user's call
+          return { success: false };
+        }
+      }),
+
+    getCallStats: protectedProcedure
+      .query(async ({ ctx }) => {
+        // Admin-only endpoint
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const stats = await getPhoneCallStats();
+          return stats;
+        } catch (error) {
+          console.error("[Tracking] Failed to get call stats:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve call statistics",
+          });
+        }
+      }),
+
+    getRecentCalls: protectedProcedure
+      .input(z.object({
+        limit: z.number().min(1).max(200).optional().default(50),
+      }))
+      .query(async ({ input, ctx }) => {
+        // Admin-only endpoint
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const calls = await getRecentPhoneCalls(input.limit);
+          return calls;
+        } catch (error) {
+          console.error("[Tracking] Failed to get recent calls:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve recent calls",
           });
         }
       }),

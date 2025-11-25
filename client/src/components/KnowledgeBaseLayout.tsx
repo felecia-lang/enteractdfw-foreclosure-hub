@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Home, Phone, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 const navigationItems = [
   {
@@ -65,10 +66,9 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
           </Link>
           <div className="flex items-center gap-4">
             <Button variant="outline" size="sm" asChild className="hidden sm:flex">
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                 Call Now
-              </a>
+              </TrackablePhoneLink>
             </Button>
             <Button
               variant="ghost"

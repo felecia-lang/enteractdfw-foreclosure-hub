@@ -159,16 +159,14 @@ export default function Resources() {
                     <CardTitle className="text-lg flex items-start justify-between gap-4">
                       <span>{resource.name}</span>
                       {resource.website && (
-                        <Button variant="ghost" size="sm" asChild>
-                          <a
-                            href={resource.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-shrink-0"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </a>
-                        </Button>
+                        <a
+                          href={resource.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-shrink-0 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
                       )}
                     </CardTitle>
                     <CardDescription className="space-y-2">
