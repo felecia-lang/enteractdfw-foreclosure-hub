@@ -219,8 +219,8 @@ export default function Resources() {
               <Phone className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Phone</p>
-                <a href="tel:+15551234567" className="font-semibold text-foreground hover:text-primary">
-                  (555) 123-4567
+                <a href="tel:+18329327585" className="font-semibold text-foreground hover:text-primary">
+                  (832) 932-7585
                 </a>
               </div>
             </div>
