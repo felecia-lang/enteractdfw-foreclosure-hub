@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 const glossaryTerms = [
   {
@@ -198,10 +199,8 @@ export default function Glossary() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
-                Call Now
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -303,10 +302,8 @@ export default function Glossary() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-5 w-5 mr-2" />
-                Call (832) 932-7585
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call (832) 932-7585
+              </TrackablePhoneLink>
             </Button>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 interface CallLogData {
   dateOfCall: string;
@@ -109,10 +110,8 @@ export default function ContactingYourLenderGuide() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
-                Call Now
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -154,10 +153,8 @@ export default function ContactingYourLenderGuide() {
               Print Guide
             </Button>
             <Button size="lg" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-5 w-5 mr-2" />
-                Get Help: (832) 932-7585
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Get Help: (832) 932-7585
+              </TrackablePhoneLink>
             </Button>
           </div>
         </div>
@@ -885,10 +882,8 @@ export default function ContactingYourLenderGuide() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-5 w-5 mr-2" />
-                Call: (832) 932-7585
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call: (832) 932-7585
+              </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/knowledge-base">
@@ -915,10 +910,8 @@ export default function ContactingYourLenderGuide() {
                 className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
                 asChild
               >
-                <a href="tel:+18329327585">
-                  <Phone className="h-5 w-5 mr-2" />
-                  Call Now: (832) 932-7585
-                </a>
+                <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now: (832) 932-7585
+                </TrackablePhoneLink>
               </Button>
               <Button 
                 size="lg" 

@@ -4,6 +4,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, AlertCircle, TrendingUp, Home, FileText, DollarSign, Scale, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 export default function OptionsToAvoidForeclosure() {
   return (
@@ -467,10 +468,8 @@ export default function OptionsToAvoidForeclosure() {
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <a href="tel:+18329327585">
-                      <Phone className="h-4 w-4 mr-2" />
-                      Call (832) 932-7585
-                    </a>
+                    <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call (832) 932-7585
+                    </TrackablePhoneLink>
                   </Button>
                 </div>
               </div>

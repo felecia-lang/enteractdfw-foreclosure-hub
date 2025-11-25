@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 export default function AvoidingScams() {
   const downloadPDF = () => {
@@ -635,10 +636,9 @@ export default function AvoidingScams() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <Button variant="secondary" size="lg" className="flex items-center gap-2" asChild>
-                  <a href="tel:8329327585">
-                    <Phone className="h-5 w-5" />
+                  <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                     Call (832) 932-7585
-                  </a>
+                  </TrackablePhoneLink>
                 </Button>
                 <Button variant="outline" size="lg" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border-white/30" asChild>
                   <a href="mailto:info@enteractdfw.com">
@@ -666,10 +666,8 @@ export default function AvoidingScams() {
                 className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
                 asChild
               >
-                <a href="tel:+18329327585">
-                  <Phone className="h-5 w-5 mr-2" />
-                  Call Now: (832) 932-7585
-                </a>
+                <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now: (832) 932-7585
+                </TrackablePhoneLink>
               </Button>
               <Button 
                 size="lg" 

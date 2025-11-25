@@ -650,3 +650,21 @@
 - [x] Write comprehensive test suite (13 tests covering all scenarios)
 - [x] Test phone call tracking in browser
 - [x] Verify tracking captures: phone number, page path, page title, user email, IP address, user agent, timestamp
+
+## Site-Wide Phone Link Replacement
+- [x] Replace phone links in TimelineCalculator.tsx (2 links)
+- [x] Replace phone links in ThankYou.tsx (2 links)
+- [x] Replace phone links in KnowledgeBase.tsx (4 links)
+- [x] Replace phone links in Resources.tsx (1 link)
+- [x] Replace phone links in About.tsx (3 links)
+- [x] Replace phone links in Glossary.tsx (batch updated)
+- [x] Replace phone links in NoticeOfDefaultGuide.tsx (batch updated)
+- [x] Replace phone links in NoticeOfDefaultChecklist.tsx (batch updated)
+- [x] Replace phone links in ContactingYourLenderGuide.tsx (batch updated)
+- [x] Replace phone links in OptionsToAvoidForeclosure.tsx (batch updated)
+- [x] Replace phone links in AvoidingScams.tsx (batch updated + 1 manual fix)
+- [x] Replace phone links in SuccessStories.tsx (batch updated + 2 manual fixes)
+- [x] Replace phone links in PrivacyPolicy.tsx (batch updated)
+- [x] Replace phone links in TermsOfService.tsx (batch updated)
+- [x] Verify all phone links are trackable (0 tel: links remaining)
+- [x] Test site-wide call tracking functionality in browser

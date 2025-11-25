@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Award, Users, Heart, Shield, Home as HomeIcon, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 export default function About() {
   return (
@@ -36,10 +37,9 @@ export default function About() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                 Call Now
-              </a>
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -61,10 +61,9 @@ export default function About() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" asChild>
-                  <a href="tel:+18329327585">
-                    <Phone className="h-5 w-5 mr-2" />
-                    Call (832) 932-7585
-                  </a>
+                  <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                    Call Felecia Today
+                  </TrackablePhoneLink>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <a href="mailto:info@enteractdfw.com">
@@ -246,10 +245,9 @@ export default function About() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-5 w-5 mr-2" />
-                Call (832) 932-7585
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                Schedule Your Free Consultation
+              </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/">

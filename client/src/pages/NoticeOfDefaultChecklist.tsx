@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 export default function NoticeOfDefaultChecklist() {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
@@ -92,10 +93,8 @@ export default function NoticeOfDefaultChecklist() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
-                Call Now
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -569,10 +568,8 @@ export default function NoticeOfDefaultChecklist() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-5 w-5 mr-2" />
-                Call (832) 932-7585
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call (832) 932-7585
+              </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/guides/notice-of-default">

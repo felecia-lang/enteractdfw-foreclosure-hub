@@ -2,6 +2,7 @@ import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Phone, Globe, Mail } from "lucide-react";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 const resourceCategories = [
   {
@@ -217,9 +218,9 @@ export default function Resources() {
               <Phone className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Phone</p>
-                <a href="tel:+18329327585" className="font-semibold text-foreground hover:text-primary">
+                <TrackablePhoneLink phoneNumber="832-932-7585" className="font-semibold text-foreground hover:text-primary">
                   (832) 932-7585
-                </a>
+                </TrackablePhoneLink>
               </div>
             </div>
             <div className="flex items-center gap-3">

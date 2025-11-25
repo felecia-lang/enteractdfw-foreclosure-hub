@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { APP_LOGO } from "@/const";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 const RESOURCE_TITLES: Record<string, string> = {
   "texas-foreclosure-survival-guide": "Texas Foreclosure Survival Guide",
@@ -25,11 +26,11 @@ export default function ThankYou() {
           <Link href="/">
             <img src={APP_LOGO} alt="EnterActDFW" className="h-10" />
           </Link>
-          <a href="tel:8329327585">
-            <Button variant="default">
+          <Button variant="default" asChild>
+            <TrackablePhoneLink phoneNumber="832-932-7585">
               Call Now
-            </Button>
-          </a>
+            </TrackablePhoneLink>
+          </Button>
         </div>
       </header>
 
@@ -99,11 +100,11 @@ export default function ThankYou() {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </a>
-                <a href="tel:8329327585">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border-white/20 text-white">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border-white/20 text-white" asChild>
+                  <TrackablePhoneLink phoneNumber="832-932-7585">
                     Call (832) 932-7585
-                  </Button>
-                </a>
+                  </TrackablePhoneLink>
+                </Button>
               </div>
             </div>
           </Card>

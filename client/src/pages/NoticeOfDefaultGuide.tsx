@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 const actionSteps = [
   {
@@ -250,10 +251,8 @@ export default function NoticeOfDefaultGuide() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
-                Call Now
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -506,10 +505,8 @@ export default function NoticeOfDefaultGuide() {
           </div>
           <div className="text-center mt-8">
             <Button size="lg" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-5 w-5 mr-2" />
-                Call Felecia Fair: (832) 932-7585
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Felecia Fair: (832) 932-7585
+              </TrackablePhoneLink>
             </Button>
           </div>
         </div>
@@ -579,10 +576,8 @@ export default function NoticeOfDefaultGuide() {
                 className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
                 asChild
               >
-                <a href="tel:+18329327585">
-                  <Phone className="h-5 w-5 mr-2" />
-                  Call Now: (832) 932-7585
-                </a>
+                <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now: (832) 932-7585
+                </TrackablePhoneLink>
               </Button>
               <Button 
                 size="lg" 

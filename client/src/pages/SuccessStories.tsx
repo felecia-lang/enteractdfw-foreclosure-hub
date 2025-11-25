@@ -10,6 +10,7 @@ import { APP_TITLE } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useState } from "react";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 // Component to display approved user-submitted testimonials
 function UserTestimonials() {
@@ -304,10 +305,9 @@ export default function SuccessStories() {
               <span className="text-sm font-medium hover:text-primary cursor-pointer transition-colors">Resources</span>
             </Link>
             <Button asChild variant="default">
-              <a href="tel:8329327585">
-                <Phone className="mr-2 h-4 w-4" />
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                 Call Now
-              </a>
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -448,10 +448,9 @@ export default function SuccessStories() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <a href="tel:8329327585">
-                  <Phone className="mr-2 h-5 w-5" />
+                <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                   Call (832) 932-7585
-                </a>
+                </TrackablePhoneLink>
               </Button>
             </div>
           </div>

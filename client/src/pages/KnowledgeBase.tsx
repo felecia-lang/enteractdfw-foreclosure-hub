@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { APP_LOGO } from "@/const";
 import { cn } from "@/lib/utils";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -215,10 +216,9 @@ export default function KnowledgeBase() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                 Call Now
-              </a>
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -235,10 +235,9 @@ export default function KnowledgeBase() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-5 w-5 mr-2" />
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                 Get Free Consultation
-              </a>
+              </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/">
@@ -466,7 +465,7 @@ export default function KnowledgeBase() {
                   Speak with Agent Felecia Fair
                 </p>
                 <Button variant="outline" className="w-full" asChild>
-                  <a href="tel:+18329327585">(832) 932-7585</a>
+                  <TrackablePhoneLink phoneNumber="832-932-7585">(832) 932-7585</TrackablePhoneLink>
                 </Button>
               </CardContent>
             </Card>
@@ -539,7 +538,7 @@ export default function KnowledgeBase() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: <a href="tel:+18329327585" className="hover:text-primary">(832) 932-7585</a></li>
+                <li>Phone: <TrackablePhoneLink phoneNumber="832-932-7585" className="hover:text-primary">(832) 932-7585</TrackablePhoneLink></li>
                 <li>Email: <a href="mailto:info@enteractdfw.com" className="hover:text-primary">info@enteractdfw.com</a></li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

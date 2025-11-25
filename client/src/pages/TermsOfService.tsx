@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Mail, MapPin } from "lucide-react";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 export default function TermsOfService() {
   return (
@@ -31,10 +32,8 @@ export default function TermsOfService() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
-                Call Now
-              </a>
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -442,9 +441,9 @@ export default function TermsOfService() {
                 <Phone className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="font-semibold">Phone</p>
-                  <a href="tel:+18329327585" className="text-primary hover:underline">
+                  <TrackablePhoneLink phoneNumber="832-932-7585" className="text-primary hover:underline">
                     (832) 932-7585
-                  </a>
+                  </TrackablePhoneLink>
                 </div>
               </div>
 

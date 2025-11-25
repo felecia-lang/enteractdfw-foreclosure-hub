@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 
 interface TimelineMilestone {
   id: string;
@@ -331,10 +332,9 @@ export default function TimelineCalculator() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <a href="tel:+18329327585">
-                <Phone className="h-4 w-4 mr-2" />
+              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                 Call Now
-              </a>
+              </TrackablePhoneLink>
             </Button>
           </nav>
         </div>
@@ -555,10 +555,9 @@ export default function TimelineCalculator() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="secondary" asChild>
-                  <a href="tel:+18329327585">
-                    <Phone className="mr-2 h-5 w-5" />
+                  <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
                     Call (832) 932-7585
-                  </a>
+                  </TrackablePhoneLink>
                 </Button>
                 <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
                   <Link href="/">
