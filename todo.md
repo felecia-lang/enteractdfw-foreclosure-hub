@@ -765,3 +765,31 @@
 - [ ] Add UTM filter to existing analytics dashboards
 - [ ] Write comprehensive tests for UTM tracking
 - [ ] Test with sample UTM URLs
+
+
+## Google Analytics 4 Integration
+- [ ] Request GA4 Measurement ID from user (format: G-XXXXXXXXXX)
+- [ ] Add GA4 tracking script to client/index.html
+- [ ] Configure GA4 custom events for conversion tracking:
+  - [ ] phone_call_click event (with page, phone_number, utm parameters)
+  - [ ] booking_modal_open event
+  - [ ] booking_completed event (from GHL webhook)
+- [ ] Set up GA4 Data API integration:
+  - [ ] Request GA4 API credentials from user (service account JSON)
+  - [ ] Install @google-analytics/data npm package
+  - [ ] Create GA4 API client wrapper in server/_core/ga4.ts
+- [ ] Create tRPC endpoints for GA4 data retrieval:
+  - [ ] ga4.getTrafficSources - UTM source/medium/campaign breakdown
+  - [ ] ga4.getConversions - conversion events with UTM attribution
+  - [ ] ga4.compareWithInternal - side-by-side comparison with internal tracking
+- [ ] Build unified analytics dashboard at /admin/ga4-validation
+- [ ] Add data validation alerts (flag discrepancies > 10% between internal and GA4)
+- [ ] Test GA4 tracking with sample events
+- [ ] Write comprehensive tests for GA4 integration
+
+
+## GHL Chat Widget Integration
+- [x] Add GHL chat widget script to client/index.html before closing </body> tag
+- [x] Test chat widget visibility on multiple pages (Home, Property Value Estimator)
+- [x] Verify chat widget functionality (visible with "Hi there! Have a question? Chat with us here.")
+- [x] Confirm widget appears on all pages site-wide
