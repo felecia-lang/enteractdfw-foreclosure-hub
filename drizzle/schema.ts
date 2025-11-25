@@ -193,3 +193,4 @@ export const resourceDownloads = mysqlTable("resourceDownloads", {
 
 export type ResourceDownload = typeof resourceDownloads.$inferSelect;
 export type InsertResourceDownload = typeof resourceDownloads.$inferInsert;
+

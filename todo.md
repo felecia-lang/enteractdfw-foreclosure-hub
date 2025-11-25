@@ -560,3 +560,40 @@
 - [x] Update ResourceLeadCaptureDialog to redirect to Thank You page after submission
 - [x] Test Thank You page with all 4 resources
 - [x] Ensure responsive design for mobile
+
+## Exit-Intent Popup Feature
+- [x] Create ExitIntentPopup component with mouse tracking
+- [x] Detect when user's mouse leaves viewport (exit intent)
+- [x] Show popup offering Texas Foreclosure Survival Guide
+- [x] Add lead capture form (name + email) in popup
+- [x] Prevent popup from showing more than once per session
+- [x] Add localStorage to track if user has seen popup
+- [x] Include compelling headline and benefit bullets
+- [x] Add close button and "No thanks" option
+- [x] Integrate with existing lead capture API
+- [x] Test exit-intent detection on homepage
+- [x] Ensure mobile-friendly design (show on scroll up instead)
+
+## Automated Email Drip Campaign
+- [x] Create database table for email campaign tracking (emailCampaigns)
+- [x] Add fields: recipientEmail, campaignType, dayNumber, sentAt, opened, clicked
+- [x] Create email template for Day 1 (Welcome + Guide Delivery)
+- [x] Create email template for Day 3 (Case Study)
+- [x] Create email template for Day 7 (Consultation Reminder)
+- [x] Build backend scheduler to check and send drip emails
+- [x] Add API endpoint to enroll users in drip campaign after download
+- [x] Track email opens and clicks for analytics
+- [x] Add unsubscribe link to all drip emails
+- [x] Test drip campaign enrollment after guide download
+- [x] Verify email delivery timing (Day 1, 3, 7)
+
+## Property Value Estimator Progress Bar
+- [x] Add progress state tracking to PropertyValueEstimator
+- [x] Create ProgressBar component showing "Step X of 3"
+- [x] Define 3 steps: Property Details, Mortgage Info, Results
+- [x] Display progress bar at top of form
+- [x] Update progress as user fills required fields
+- [x] Add visual indicators (checkmarks for completed steps)
+- [x] Ensure progress bar is sticky/visible while scrolling
+- [x] Test progress bar updates on all form interactions
+- [x] Verify mobile responsiveness of progress bar

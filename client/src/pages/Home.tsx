@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ResourceLeadCaptureDialog } from "@/components/ResourceLeadCaptureDialog";
+import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -674,6 +675,9 @@ export default function Home() {
         resourceName={selectedResource.name}
         resourceFile={selectedResource.file}
       />
+
+      {/* Exit Intent Popup */}
+      <ExitIntentPopup />
     </div>
   );
 }

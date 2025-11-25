@@ -17,6 +17,7 @@ import { APP_TITLE } from "@/const";
 import { EmailCaptureDialog } from "@/components/EmailCaptureDialog";
 import SmsCaptureDialog from "@/components/SmsCaptureDialog";
 import SaveResumeDialog from "@/components/SaveResumeDialog";
+import { ProgressBar } from "@/components/ProgressBar";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 
@@ -38,6 +39,7 @@ export default function PropertyValueEstimator() {
   const [showSmsDialog, setShowSmsDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [isPreFilled, setIsPreFilled] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [location] = useLocation();
 
@@ -73,6 +75,28 @@ export default function PropertyValueEstimator() {
       });
     }
   }, [getCalculationQuery.data]);
+
+  // Update progress based on form completion
+  useEffect(() => {
+    const { zipCode, squareFeet, mortgageBalance } = formData;
+    
+    // Step 1: Property Details (zipCode and squareFeet required)
+    if (!zipCode || !squareFeet) {
+      setCurrentStep(1);
+    }
+    // Step 2: Mortgage Info (mortgageBalance filled)
+    else if (zipCode && squareFeet && !mortgageBalance) {
+      setCurrentStep(2);
+    }
+    // Step 3: Results (all required fields filled and results shown)
+    else if (showResults) {
+      setCurrentStep(3);
+    }
+    // Step 2: Ready to calculate
+    else {
+      setCurrentStep(2);
+    }
+  }, [formData, showResults]);
 
   const handleEmailReport = async (email: string) => {
     if (!result || !comparison) return;
@@ -240,6 +264,13 @@ export default function PropertyValueEstimator() {
           </nav>
         </div>
       </header>
+
+      {/* Progress Bar */}
+      <ProgressBar
+        currentStep={currentStep}
+        totalSteps={3}
+        steps={["Property Details", "Mortgage Info", "Results"]}
+      />
 
       <main className="container mx-auto py-12 px-4">
         {/* Hero Section */}
