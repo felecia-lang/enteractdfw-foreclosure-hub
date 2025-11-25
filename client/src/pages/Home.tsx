@@ -496,7 +496,7 @@ export default function Home() {
               Download our comprehensive guides to understand your rights, communicate effectively, and take action.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {/* Texas Foreclosure Survival Guide */}
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
@@ -511,7 +511,7 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="/api/pdf/foreclosure-survival-guide" download>
+                <a href="/pdfs/Texas_Foreclosure_Survival_Guide.pdf" download>
                   <Button className="w-full" size="lg">
                     <Download className="h-4 w-4 mr-2" />
                     Download PDF
@@ -534,7 +534,7 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="/api/pdf/contacting-lender-guide" download>
+                <a href="/pdfs/ActionGuideContactingYourLender.pdf" download>
                   <Button className="w-full" size="lg">
                     <Download className="h-4 w-4 mr-2" />
                     Download PDF
@@ -557,7 +557,30 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <a href="/api/pdf/notice-of-default-checklist" download>
+                <a href="/pdfs/ActionGuideNoticeofDefault.pdf" download>
+                  <Button className="w-full" size="lg">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </a>
+              </CardContent>
+            </Card>
+
+            {/* Avoiding Foreclosure Scams Guide */}
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <Shield className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg">Avoiding Foreclosure Scams Guide</CardTitle>
+                <CardDescription className="text-sm">
+                  Protect yourself from predatory companies and scams targeting homeowners facing foreclosure.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <a href="/pdfs/Avoiding_Foreclosure_Scams_Guide.pdf" download>
                   <Button className="w-full" size="lg">
                     <Download className="h-4 w-4 mr-2" />
                     Download PDF

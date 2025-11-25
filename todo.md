@@ -520,3 +520,14 @@
 - [x] Ensure mobile-friendly responsive design
 - [x] Add PDF file icons to resource cards
 - [x] Test all download buttons and PDF delivery
+
+## PDF Guides Replacement
+- [x] Move uploaded PDF files to public directory
+- [x] Update Texas Foreclosure Survival Guide with new version
+- [x] Add Avoiding Foreclosure Scams Guide (new)
+- [x] Update Action Guide: Notice of Default with new version
+- [x] Update Action Guide: Contacting Your Lender with new version
+- [x] Update Resources section to display 4 guides instead of 3
+- [x] Update backend endpoints to serve new PDF files
+- [x] Test all 4 PDF downloads
+- [x] Verify responsive layout with 4-column grid
