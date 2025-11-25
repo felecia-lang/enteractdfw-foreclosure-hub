@@ -688,3 +688,12 @@
 - [x] Test dashboard with real data (15 calls tracked)
 - [x] Verify filters work correctly
 - [x] Add CSV export functionality
+
+## GHL Calendar Booking Integration
+- [x] Analyze current landing page "Schedule Free Consultation" button location
+- [x] Create BookingModal component with GHL calendar iframe
+- [x] Style modal to match EnterActDFW branding (professional, modern, compliant)
+- [x] Add branded confirmation messaging after successful booking
+- [x] Integrate booking button into Home page
+- [x] Test booking flow end-to-end
+- [x] Modal is responsive with max-w-4xl and max-h-[90vh]

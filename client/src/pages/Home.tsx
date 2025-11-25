@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { ResourceLeadCaptureDialog } from "@/components/ResourceLeadCaptureDialog";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [showResourceDialog, setShowResourceDialog] = useState(false);
   const [selectedResource, setSelectedResource] = useState<{name: string; file: string}>({name: "", file: ""});
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   const submitLead = trpc.leads.submit.useMutation({
     onSuccess: () => {
@@ -447,7 +449,11 @@ export default function Home() {
               ))}
             </div>
             <div className="text-center">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button 
+                size="lg" 
+                className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                onClick={() => setShowBookingModal(true)}
+              >
                 Schedule Free Consultation →
               </Button>
             </div>
@@ -678,6 +684,12 @@ export default function Home() {
 
       {/* Exit Intent Popup */}
       <ExitIntentPopup />
+
+      {/* Booking Modal */}
+      <BookingModal 
+        open={showBookingModal} 
+        onOpenChange={setShowBookingModal}
+      />
     </div>
   );
 }
