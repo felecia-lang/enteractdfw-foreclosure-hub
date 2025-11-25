@@ -697,3 +697,11 @@
 - [x] Integrate booking button into Home page
 - [x] Test booking flow end-to-end
 - [x] Modal is responsive with max-w-4xl and max-h-[90vh]
+
+## Booking Button on Tool Results Pages
+- [x] Add BookingModal import and state to PropertyValueEstimator.tsx
+- [x] Add Schedule Free Consultation button to Property Value Estimator results section
+- [x] Add BookingModal import and state to TimelineCalculator.tsx
+- [x] Add Schedule Free Consultation button to Timeline Calculator results section
+- [x] Test booking flow on Property Value Estimator results page (form validation working)
+- [x] Test booking flow on Timeline Calculator results page (modal opens successfully)

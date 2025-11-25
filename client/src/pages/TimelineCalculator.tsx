@@ -19,6 +19,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 interface TimelineMilestone {
   id: string;
@@ -37,6 +38,7 @@ export default function TimelineCalculator() {
   const [daysUntilSale, setDaysUntilSale] = useState<number | null>(null);
   const [email, setEmail] = useState<string>("");
   const [isEmailSending, setIsEmailSending] = useState<boolean>(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   const emailTimelineMutation = trpc.timeline.emailPDF.useMutation();
 
@@ -440,6 +442,26 @@ export default function TimelineCalculator() {
                     </div>
                   </div>
                 )}
+
+                {/* Schedule Consultation Section */}
+                {timeline && (
+                  <div className="mt-6 pt-6 border-t">
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Need personalized guidance? Schedule a free consultation with our foreclosure specialists.
+                      </p>
+                      <Button
+                        type="button"
+                        size="lg"
+                        className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                        onClick={() => setShowBookingModal(true)}
+                      >
+                        <Calendar className="h-5 w-5 mr-2" />
+                        Schedule Free Consultation
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </form>
             </CardContent>
           </Card>
@@ -615,6 +637,12 @@ export default function TimelineCalculator() {
           </div>
         </div>
       </footer>
+
+      {/* Booking Modal */}
+      <BookingModal 
+        open={showBookingModal} 
+        onOpenChange={setShowBookingModal}
+      />
     </div>
   );
 }

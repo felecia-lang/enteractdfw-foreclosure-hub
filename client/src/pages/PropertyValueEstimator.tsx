@@ -21,6 +21,7 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 export default function PropertyValueEstimator() {
   const [formData, setFormData] = useState({
@@ -39,6 +40,7 @@ export default function PropertyValueEstimator() {
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [showSmsDialog, setShowSmsDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [isPreFilled, setIsPreFilled] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -762,6 +764,15 @@ export default function PropertyValueEstimator() {
                           <MessageSquare className="h-5 w-5 mr-2" />
                           Text Me
                         </Button>
+
+                        <Button
+                          size="lg"
+                          className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                          onClick={() => setShowBookingModal(true)}
+                        >
+                          <Calendar className="h-5 w-5 mr-2" />
+                          Schedule Free Consultation
+                        </Button>
                       </div>
 
                       {/* Help Note */}
@@ -862,6 +873,12 @@ export default function PropertyValueEstimator() {
         open={showSaveDialog}
         onOpenChange={setShowSaveDialog}
         onSubmit={handleSaveCalculation}
+      />
+
+      {/* Booking Modal */}
+      <BookingModal 
+        open={showBookingModal} 
+        onOpenChange={setShowBookingModal}
       />
     </div>
   );
