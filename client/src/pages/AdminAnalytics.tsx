@@ -55,10 +55,40 @@ export default function AdminAnalytics() {
     { enabled: user?.role === "admin" }
   );
 
+  // Fetch booking data
+  const { data: bookingStats, isLoading: bookingStatsLoading } = trpc.bookings.getStats.useQuery(
+    {
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
+    },
+    { enabled: user?.role === "admin" }
+  );
+
+  const { data: recentBookings, isLoading: bookingsLoading } = trpc.bookings.getRecent.useQuery(
+    {
+      limit: 100,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
+      sourcePage: selectedPage !== "all" ? selectedPage : undefined,
+    },
+    { enabled: user?.role === "admin" }
+  );
+
   // Calculate total calls
   const totalCalls = useMemo(() => {
     return callStats?.reduce((sum, stat) => sum + Number(stat.callCount), 0) || 0;
   }, [callStats]);
+
+  // Calculate total bookings
+  const totalBookings = useMemo(() => {
+    return bookingStats?.reduce((sum, stat) => sum + Number(stat.bookingCount), 0) || 0;
+  }, [bookingStats]);
+
+  // Calculate booking conversion rate (bookings / calls)
+  const conversionRate = useMemo(() => {
+    if (totalCalls === 0) return 0;
+    return ((totalBookings / totalCalls) * 100).toFixed(1);
+  }, [totalBookings, totalCalls]);
 
   // Prepare chart data for call volume (reverse to show chronologically)
   const volumeChartData = useMemo(() => {
@@ -169,14 +199,14 @@ export default function AdminAnalytics() {
 
       <main className="container py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Call Tracking Analytics</h1>
+          <h1 className="text-3xl font-bold mb-2">Conversion Analytics Dashboard</h1>
           <p className="text-muted-foreground">
-            Monitor phone call conversions and analyze which pages drive the most engagement.
+            Monitor phone calls and consultation bookings to measure conversion rates and optimize engagement.
           </p>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid gap-6 md:grid-cols-3 mb-8">
+        <div className="grid gap-6 md:grid-cols-4 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Calls</CardTitle>
@@ -205,13 +235,26 @@ export default function AdminAnalytics() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Date Range</CardTitle>
+              <CardTitle className="text-sm font-medium">Consultations Booked</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{volumeData?.length || 0}</div>
+              <div className="text-2xl font-bold">{totalBookings}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                Days with call data
+                Total confirmed bookings
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{conversionRate}%</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Bookings per call click
               </p>
             </CardContent>
           </Card>
@@ -424,6 +467,78 @@ export default function AdminAnalytics() {
             ) : (
               <div className="h-[200px] flex items-center justify-center text-muted-foreground">
                 No call data available for the selected filters
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Bookings Log Table */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Recent Consultation Bookings</CardTitle>
+            <CardDescription>
+              Showing {recentBookings?.length || 0} confirmed bookings from GHL calendar
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {bookingsLoading ? (
+              <div className="h-[200px] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : recentBookings && recentBookings.length > 0 ? (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Booked On</TableHead>
+                      <TableHead>Consultation Date</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Source Page</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentBookings.map((booking) => (
+                      <TableRow key={booking.id}>
+                        <TableCell className="whitespace-nowrap">
+                          <div className="text-sm">
+                            {new Date(booking.createdAt).toLocaleDateString()}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {new Date(booking.createdAt).toLocaleTimeString()}
+                          </div>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <div className="text-sm font-medium">
+                            {new Date(booking.bookingDateTime).toLocaleDateString()}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {new Date(booking.bookingDateTime).toLocaleTimeString()}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{booking.name}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{booking.email}</div>
+                        </TableCell>
+                        <TableCell className="font-mono text-sm">
+                          {booking.phone || "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-[200px] truncate" title={booking.sourcePage || "Direct booking"}>
+                            {booking.sourcePage || "Direct booking"}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div className="h-[200px] flex items-center justify-center text-muted-foreground">
+                No booking data available yet. Bookings will appear here after GHL webhook is configured.
               </div>
             )}
           </CardContent>

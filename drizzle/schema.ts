@@ -210,3 +210,33 @@ export const phoneCallTracking = mysqlTable("phoneCallTracking", {
 
 export type PhoneCallTracking = typeof phoneCallTracking.$inferSelect;
 export type InsertPhoneCallTracking = typeof phoneCallTracking.$inferInsert;
+
+/**
+ * Booking confirmations table - tracks completed GHL calendar bookings
+ * Captures booking details from webhook for conversion tracking and analytics
+ */
+export const bookingConfirmations = mysqlTable("bookingConfirmations", {
+  id: int("id").autoincrement().primaryKey(),
+  // Contact information
+  name: varchar("name", { length: 200 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  
+  // Booking details
+  bookingDateTime: timestamp("bookingDateTime").notNull(), // When the consultation is scheduled
+  calendarEventId: varchar("calendarEventId", { length: 100 }), // GHL event ID for reference
+  calendarName: varchar("calendarName", { length: 200 }), // Which calendar was booked
+  
+  // Tracking
+  sourcePage: varchar("sourcePage", { length: 255 }), // Page where booking button was clicked
+  ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
+  userAgent: text("userAgent"),
+  
+  // Webhook metadata
+  webhookPayload: text("webhookPayload"), // Store full GHL webhook payload as JSON for debugging
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(), // When booking was confirmed
+});
+
+export type BookingConfirmation = typeof bookingConfirmations.$inferSelect;
+export type InsertBookingConfirmation = typeof bookingConfirmations.$inferInsert;

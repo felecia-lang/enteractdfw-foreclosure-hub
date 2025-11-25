@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -1123,6 +1123,69 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to retrieve call volume data",
+          });
+        }
+      }),
+  }),
+
+  bookings: router({
+    getStats: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .query(async ({ input, ctx }) => {
+        // Admin-only endpoint
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const stats = await getBookingStats({
+            startDate: input.startDate,
+            endDate: input.endDate,
+          });
+          return stats;
+        } catch (error) {
+          console.error("[Bookings] Failed to get booking stats:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve booking statistics",
+          });
+        }
+      }),
+
+    getRecent: protectedProcedure
+      .input(z.object({
+        limit: z.number().min(1).max(200).optional().default(50),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        sourcePage: z.string().optional(),
+      }))
+      .query(async ({ input, ctx }) => {
+        // Admin-only endpoint
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const bookings = await getRecentBookings(input.limit, {
+            startDate: input.startDate,
+            endDate: input.endDate,
+            sourcePage: input.sourcePage,
+          });
+          return bookings;
+        } catch (error) {
+          console.error("[Bookings] Failed to get recent bookings:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve recent bookings",
           });
         }
       }),

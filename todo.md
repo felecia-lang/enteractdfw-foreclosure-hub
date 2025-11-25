@@ -705,3 +705,24 @@
 - [x] Add Schedule Free Consultation button to Timeline Calculator results section
 - [x] Test booking flow on Property Value Estimator results page (form validation working)
 - [x] Test booking flow on Timeline Calculator results page (modal opens successfully)
+
+## GHL Booking Webhook Tracking
+- [x] Design bookingConfirmations database schema (capture: name, email, phone, booking date/time, calendar event ID, source page, created timestamp)
+- [x] Create bookingConfirmations table in drizzle/schema.ts
+- [x] Push database schema changes (pnpm db:push)
+- [x] Create webhook endpoint at /api/webhooks/ghl-booking for GHL to POST booking confirmations
+- [x] Add database helper functions in server/db.ts:
+  - [x] saveBookingConfirmation(data)
+  - [x] getBookingStats(dateRange)
+  - [x] getRecentBookings(limit)
+- [x] Create tRPC endpoints for booking analytics:
+  - [x] bookings.getStats (admin-only)
+  - [x] bookings.getRecent (admin-only)
+- [x] Add booking metrics to admin analytics dashboard:
+  - [x] Total bookings card
+  - [x] Booking conversion rate card (bookings / calls)
+  - [x] Recent bookings table with booking details
+- [x] Write comprehensive tests for booking webhook and endpoints (9 tests passing)
+- [x] Test webhook endpoint with sample GHL payload (success)
+- [x] Verify booking appears in admin dashboard (confirmed)
+- [x] Document GHL webhook configuration instructions (GHL_WEBHOOK_SETUP.md)

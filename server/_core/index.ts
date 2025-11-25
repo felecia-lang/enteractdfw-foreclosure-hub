@@ -10,6 +10,7 @@ import { serveStatic, setupVite } from "./vite";
 import { generateAvoidingScamsPDF, generateForeclosureGuidePDF, generatePersonalizedTimelinePDF } from "../pdfGenerator";
 import { generateNoticeOfDefaultPDF } from "../pdfGeneratorNoticeOfDefault";
 import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
+import { handleGHLBookingWebhook } from "../webhooks/ghl-booking";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -91,6 +92,9 @@ async function startServer() {
       res.status(500).json({ error: 'Failed to generate PDF' });
     }
   });
+  
+  // GHL Booking Webhook
+  app.post("/api/webhooks/ghl-booking", handleGHLBookingWebhook);
   
   app.post("/api/pdf/personalized-timeline", async (req, res) => {
     try {

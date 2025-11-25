@@ -651,3 +651,139 @@ export async function getCallVolumeByDate(filters?: {
     throw error;
   }
 }
+
+
+// ============================================================================
+// Booking Confirmations
+// ============================================================================
+
+export async function saveBookingConfirmation(data: {
+  name: string;
+  email: string;
+  phone?: string;
+  bookingDateTime: Date;
+  calendarEventId?: string;
+  calendarName?: string;
+  sourcePage?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  webhookPayload?: string;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot save booking confirmation: database not available");
+    return null;
+  }
+
+  try {
+    const { bookingConfirmations } = await import("../drizzle/schema");
+    
+    const booking = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone || null,
+      bookingDateTime: data.bookingDateTime,
+      calendarEventId: data.calendarEventId || null,
+      calendarName: data.calendarName || null,
+      sourcePage: data.sourcePage || null,
+      ipAddress: data.ipAddress || null,
+      userAgent: data.userAgent || null,
+      webhookPayload: data.webhookPayload || null,
+    };
+
+    const result = await db.insert(bookingConfirmations).values(booking);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to save booking confirmation:", error);
+    throw error;
+  }
+}
+
+export async function getBookingStats(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get booking stats: database not available");
+    return [];
+  }
+
+  try {
+    const { bookingConfirmations } = await import("../drizzle/schema");
+    const { sql, and, gte, lte, count } = await import("drizzle-orm");
+    
+    // Build where conditions
+    const conditions = [];
+    if (filters?.startDate) {
+      conditions.push(gte(bookingConfirmations.createdAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      conditions.push(lte(bookingConfirmations.createdAt, filters.endDate));
+    }
+
+    let query = db
+      .select({
+        sourcePage: bookingConfirmations.sourcePage,
+        bookingCount: count(),
+      })
+      .from(bookingConfirmations)
+      .groupBy(bookingConfirmations.sourcePage)
+      .orderBy(sql`count(*) DESC`);
+
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions)) as typeof query;
+    }
+
+    const stats = await query;
+    return stats;
+  } catch (error) {
+    console.error("[Database] Failed to get booking stats:", error);
+    throw error;
+  }
+}
+
+export async function getRecentBookings(limit: number = 100, filters?: {
+  startDate?: Date;
+  endDate?: Date;
+  sourcePage?: string;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get recent bookings: database not available");
+    return [];
+  }
+
+  try {
+    const { bookingConfirmations } = await import("../drizzle/schema");
+    const { and, gte, lte, eq, desc } = await import("drizzle-orm");
+    
+    // Build where conditions
+    const conditions = [];
+    if (filters?.startDate) {
+      conditions.push(gte(bookingConfirmations.createdAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      conditions.push(lte(bookingConfirmations.createdAt, filters.endDate));
+    }
+    if (filters?.sourcePage) {
+      conditions.push(eq(bookingConfirmations.sourcePage, filters.sourcePage));
+    }
+
+    let query = db
+      .select()
+      .from(bookingConfirmations)
+      .orderBy(desc(bookingConfirmations.createdAt))
+      .limit(limit);
+
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions)) as typeof query;
+    }
+
+    const bookings = await query;
+    return bookings;
+  } catch (error) {
+    console.error("[Database] Failed to get recent bookings:", error);
+    throw error;
+  }
+}
