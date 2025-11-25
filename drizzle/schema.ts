@@ -240,3 +240,22 @@ export const bookingConfirmations = mysqlTable("bookingConfirmations", {
 
 export type BookingConfirmation = typeof bookingConfirmations.$inferSelect;
 export type InsertBookingConfirmation = typeof bookingConfirmations.$inferInsert;
+
+/**
+ * Page views table - tracks unique visitors to each page for funnel analysis
+ * Uses sessionId to deduplicate views within the same browsing session
+ */
+export const pageViews = mysqlTable("pageViews", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("sessionId", { length: 64 }).notNull(), // Browser session identifier
+  pagePath: varchar("pagePath", { length: 255 }).notNull(), // Page URL path
+  pageTitle: varchar("pageTitle", { length: 255 }), // Page title
+  userEmail: varchar("userEmail", { length: 320 }), // Email if user is logged in
+  ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
+  userAgent: text("userAgent"),
+  referrer: varchar("referrer", { length: 500 }), // Where visitor came from
+  viewedAt: timestamp("viewedAt").defaultNow().notNull(),
+});
+
+export type PageView = typeof pageViews.$inferSelect;
+export type InsertPageView = typeof pageViews.$inferInsert;

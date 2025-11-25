@@ -26,6 +26,8 @@ import TermsOfService from "@/pages/TermsOfService";
 import TimelineCalculator from "@/pages/TimelineCalculator";
 import PropertyValueEstimator from "@/pages/PropertyValueEstimator";
 import ThankYou from "@/pages/ThankYou";
+import { PageViewTracker } from "@/components/PageViewTracker";
+import ConversionFunnel from "@/pages/ConversionFunnel";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -48,6 +50,7 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/admin/testimonials" component={AdminTestimonials} />
       <Route path="/admin/analytics" component={AdminAnalytics} />
+      <Route path="/admin/funnel" component={ConversionFunnel} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />
@@ -65,6 +68,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
+          <PageViewTracker />
           <Toaster position="top-right" />
           <Router />
         </TooltipProvider>

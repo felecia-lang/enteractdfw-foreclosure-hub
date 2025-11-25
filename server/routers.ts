@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -1186,6 +1186,99 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to retrieve recent bookings",
+          });
+        }
+      }),
+  }),
+
+  // Funnel analytics - track page views, calls, and bookings for conversion analysis
+  funnel: router({
+    // Public endpoint to track page views
+    trackPageView: publicProcedure
+      .input(z.object({
+        sessionId: z.string(),
+        pagePath: z.string(),
+        pageTitle: z.string().optional(),
+        referrer: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Get IP address and user agent from request
+          const ipAddress = ctx.req.headers['x-forwarded-for'] as string || ctx.req.headers['x-real-ip'] as string || 'unknown';
+          const userAgent = ctx.req.headers['user-agent'] || undefined;
+          
+          await trackPageView({
+            sessionId: input.sessionId,
+            pagePath: input.pagePath,
+            pageTitle: input.pageTitle,
+            userEmail: ctx.user?.email || undefined,
+            ipAddress,
+            userAgent,
+            referrer: input.referrer,
+          });
+          
+          return { success: true };
+        } catch (error) {
+          console.error("[Funnel] Failed to track page view:", error);
+          // Don't throw - tracking failures shouldn't break the app
+          return { success: false };
+        }
+      }),
+
+    // Admin-only endpoint to get funnel overview
+    getOverview: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const overview = await getFunnelOverview({
+            startDate: input.startDate,
+            endDate: input.endDate,
+          });
+          return overview;
+        } catch (error) {
+          console.error("[Funnel] Failed to get funnel overview:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve funnel overview",
+          });
+        }
+      }),
+
+    // Admin-only endpoint to get funnel metrics by page
+    getByPage: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const pageMetrics = await getFunnelByPage({
+            startDate: input.startDate,
+            endDate: input.endDate,
+          });
+          return pageMetrics;
+        } catch (error) {
+          console.error("[Funnel] Failed to get funnel by page:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve funnel metrics by page",
           });
         }
       }),

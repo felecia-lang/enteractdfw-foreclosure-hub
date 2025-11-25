@@ -726,3 +726,21 @@
 - [x] Test webhook endpoint with sample GHL payload (success)
 - [x] Verify booking appears in admin dashboard (confirmed)
 - [x] Document GHL webhook configuration instructions (GHL_WEBHOOK_SETUP.md)
+
+
+## Conversion Funnel Analysis Page
+- [ ] Design funnel tracking architecture (Page Views → Phone Calls → Bookings)
+- [ ] Create pageViews database table to track unique visitors per page
+- [ ] Add page view tracking to frontend (track on mount, deduplicate by session)
+- [ ] Create funnel analytics tRPC endpoints:
+  - [ ] funnel.getOverview (total visitors, calls, bookings, conversion rates)
+  - [ ] funnel.getByPage (funnel metrics grouped by page)
+  - [ ] funnel.getDropoffAnalysis (identify where users drop off)
+- [ ] Create FunnelAnalysis.tsx page component at /admin/funnel
+- [ ] Build Sankey diagram showing flow: Visitors → Calls → Bookings
+- [ ] Add conversion rate cards for each funnel stage
+- [ ] Add drop-off analysis table showing pages with poor conversion
+- [ ] Add optimization recommendations based on funnel data
+- [ ] Add route to App.tsx and navigation link in Admin page
+- [ ] Test funnel tracking with sample data
+- [ ] Write comprehensive tests for funnel endpoints

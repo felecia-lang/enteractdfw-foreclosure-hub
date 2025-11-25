@@ -787,3 +787,251 @@ export async function getRecentBookings(limit: number = 100, filters?: {
     throw error;
   }
 }
+
+
+// ============================================================================
+// Funnel Analytics Functions
+// ============================================================================
+
+/**
+ * Track a page view for funnel analysis
+ * Deduplicates by sessionId + pagePath to count unique visitors per page
+ */
+export async function trackPageView(data: {
+  sessionId: string;
+  pagePath: string;
+  pageTitle?: string;
+  userEmail?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  referrer?: string;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot track page view: database not available");
+    return;
+  }
+
+  try {
+    const { pageViews } = await import("../drizzle/schema");
+    const { and, eq } = await import("drizzle-orm");
+
+    // Check if this session already viewed this page
+    const existing = await db
+      .select()
+      .from(pageViews)
+      .where(
+        and(
+          eq(pageViews.sessionId, data.sessionId),
+          eq(pageViews.pagePath, data.pagePath)
+        )
+      )
+      .limit(1);
+
+    // Only insert if this is a new unique view
+    if (existing.length === 0) {
+      await db.insert(pageViews).values({
+        sessionId: data.sessionId,
+        pagePath: data.pagePath,
+        pageTitle: data.pageTitle || null,
+        userEmail: data.userEmail || null,
+        ipAddress: data.ipAddress || null,
+        userAgent: data.userAgent || null,
+        referrer: data.referrer || null,
+      });
+    }
+  } catch (error) {
+    console.error("[Database] Failed to track page view:", error);
+    // Don't throw - tracking failures shouldn't break the app
+  }
+}
+
+/**
+ * Get funnel overview metrics
+ * Returns: total visitors, calls, bookings, and conversion rates
+ */
+export async function getFunnelOverview(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get funnel overview: database not available");
+    return {
+      totalVisitors: 0,
+      totalCalls: 0,
+      totalBookings: 0,
+      visitorToCallRate: 0,
+      callToBookingRate: 0,
+      overallConversionRate: 0,
+    };
+  }
+
+  try {
+    const { pageViews, phoneCallTracking, bookingConfirmations } = await import("../drizzle/schema");
+    const { and, gte, lte, count, countDistinct } = await import("drizzle-orm");
+
+    // Build date filters
+    const pageViewConditions = [];
+    const callConditions = [];
+    const bookingConditions = [];
+
+    if (filters?.startDate) {
+      pageViewConditions.push(gte(pageViews.viewedAt, filters.startDate));
+      callConditions.push(gte(phoneCallTracking.clickedAt, filters.startDate));
+      bookingConditions.push(gte(bookingConfirmations.createdAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      pageViewConditions.push(lte(pageViews.viewedAt, filters.endDate));
+      callConditions.push(lte(phoneCallTracking.clickedAt, filters.endDate));
+      bookingConditions.push(lte(bookingConfirmations.createdAt, filters.endDate));
+    }
+
+    // Count unique visitors (distinct sessionIds)
+    let visitorQuery = db
+      .select({ count: countDistinct(pageViews.sessionId) })
+      .from(pageViews);
+    if (pageViewConditions.length > 0) {
+      visitorQuery = visitorQuery.where(and(...pageViewConditions)) as typeof visitorQuery;
+    }
+    const visitorResult = await visitorQuery;
+    const totalVisitors = visitorResult[0]?.count || 0;
+
+    // Count total calls
+    let callQuery = db
+      .select({ count: count() })
+      .from(phoneCallTracking);
+    if (callConditions.length > 0) {
+      callQuery = callQuery.where(and(...callConditions)) as typeof callQuery;
+    }
+    const callResult = await callQuery;
+    const totalCalls = callResult[0]?.count || 0;
+
+    // Count total bookings
+    let bookingQuery = db
+      .select({ count: count() })
+      .from(bookingConfirmations);
+    if (bookingConditions.length > 0) {
+      bookingQuery = bookingQuery.where(and(...bookingConditions)) as typeof bookingQuery;
+    }
+    const bookingResult = await bookingQuery;
+    const totalBookings = bookingResult[0]?.count || 0;
+
+    // Calculate conversion rates
+    const visitorToCallRate = totalVisitors > 0 ? (totalCalls / totalVisitors) * 100 : 0;
+    const callToBookingRate = totalCalls > 0 ? (totalBookings / totalCalls) * 100 : 0;
+    const overallConversionRate = totalVisitors > 0 ? (totalBookings / totalVisitors) * 100 : 0;
+
+    return {
+      totalVisitors,
+      totalCalls,
+      totalBookings,
+      visitorToCallRate: Math.round(visitorToCallRate * 10) / 10,
+      callToBookingRate: Math.round(callToBookingRate * 10) / 10,
+      overallConversionRate: Math.round(overallConversionRate * 10) / 10,
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get funnel overview:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get funnel metrics grouped by page
+ * Shows which pages have the best/worst conversion rates
+ */
+export async function getFunnelByPage(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get funnel by page: database not available");
+    return [];
+  }
+
+  try {
+    const { pageViews, phoneCallTracking, bookingConfirmations } = await import("../drizzle/schema");
+    const { and, gte, lte, count, countDistinct, eq } = await import("drizzle-orm");
+
+    // Build date filter conditions for page views
+    const pageViewConditions = [];
+    if (filters?.startDate) {
+      pageViewConditions.push(gte(pageViews.viewedAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      pageViewConditions.push(lte(pageViews.viewedAt, filters.endDate));
+    }
+
+    // Get all unique pages from page views
+    let pageQuery = db
+      .select({
+        pagePath: pageViews.pagePath,
+        pageTitle: pageViews.pageTitle,
+        visitors: countDistinct(pageViews.sessionId),
+      })
+      .from(pageViews)
+      .groupBy(pageViews.pagePath, pageViews.pageTitle);
+
+    if (pageViewConditions.length > 0) {
+      pageQuery = pageQuery.where(and(...pageViewConditions)) as typeof pageQuery;
+    }
+
+    const pages = await pageQuery;
+
+    // For each page, get call and booking counts
+    const result = await Promise.all(
+      pages.map(async (page) => {
+        // Count calls from this page
+        const callConditions = [eq(phoneCallTracking.pagePath, page.pagePath)];
+        if (filters?.startDate) {
+          callConditions.push(gte(phoneCallTracking.clickedAt, filters.startDate));
+        }
+        if (filters?.endDate) {
+          callConditions.push(lte(phoneCallTracking.clickedAt, filters.endDate));
+        }
+        const callResult = await db
+          .select({ count: count() })
+          .from(phoneCallTracking)
+          .where(and(...callConditions));
+        const calls = callResult[0]?.count || 0;
+
+        // Count bookings from this page
+        const bookingConditions = [eq(bookingConfirmations.sourcePage, page.pagePath)];
+        if (filters?.startDate) {
+          bookingConditions.push(gte(bookingConfirmations.createdAt, filters.startDate));
+        }
+        if (filters?.endDate) {
+          bookingConditions.push(lte(bookingConfirmations.createdAt, filters.endDate));
+        }
+        const bookingResult = await db
+          .select({ count: count() })
+          .from(bookingConfirmations)
+          .where(and(...bookingConditions));
+        const bookings = bookingResult[0]?.count || 0;
+
+        // Calculate conversion rates
+        const visitorToCallRate = page.visitors > 0 ? (calls / page.visitors) * 100 : 0;
+        const callToBookingRate = calls > 0 ? (bookings / calls) * 100 : 0;
+        const overallConversionRate = page.visitors > 0 ? (bookings / page.visitors) * 100 : 0;
+
+        return {
+          pagePath: page.pagePath,
+          pageTitle: page.pageTitle || page.pagePath,
+          visitors: page.visitors,
+          calls,
+          bookings,
+          visitorToCallRate: Math.round(visitorToCallRate * 10) / 10,
+          callToBookingRate: Math.round(callToBookingRate * 10) / 10,
+          overallConversionRate: Math.round(overallConversionRate * 10) / 10,
+        };
+      })
+    );
+
+    // Sort by visitors descending
+    return result.sort((a, b) => b.visitors - a.visitors);
+  } catch (error) {
+    console.error("[Database] Failed to get funnel by page:", error);
+    throw error;
+  }
+}

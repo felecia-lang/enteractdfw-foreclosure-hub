@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Phone, TrendingUp, Calendar, Filter, Download } from "lucide-react";
+import { Phone, TrendingUp, Calendar, Filter, Download, GitBranch, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { APP_LOGO } from "@/const";
 
@@ -188,10 +188,19 @@ export default function AdminAnalytics() {
           <Link href="/">
             <img src={APP_LOGO} alt="EnterActDFW" className="h-10" />
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Admin: {user.name}</span>
+            <Button variant="default" size="sm" asChild>
+              <Link href="/admin/funnel">
+                <GitBranch className="mr-2 h-4 w-4" />
+                Conversion Funnel
+              </Link>
+            </Button>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/">Back to Site</Link>
+              <Link href="/admin">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Admin Dashboard
+              </Link>
             </Button>
           </div>
         </div>
