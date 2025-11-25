@@ -546,3 +546,17 @@
 - [x] Test lead capture flow for all 4 PDFs
 - [x] Verify email delivery with PDF attachment
 - [x] Test GHL lead creation integration
+
+## Thank You Page for Resource Downloads
+- [x] Create ThankYou page component at /thank-you route
+- [x] Add confirmation message with checkmark icon
+- [x] Display which resource was downloaded
+- [x] Show "Check your email" message with inbox icon
+- [x] Add "What Happens Next" section with 3 steps
+- [x] Include prominent "Schedule Free Consultation" CTA
+- [x] Display 2-3 testimonials for social proof
+- [x] Add "Download Another Guide" link back to Resources
+- [x] Pass resource name via URL parameter
+- [x] Update ResourceLeadCaptureDialog to redirect to Thank You page after submission
+- [x] Test Thank You page with all 4 resources
+- [x] Ensure responsive design for mobile

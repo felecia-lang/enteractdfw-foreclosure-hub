@@ -24,6 +24,7 @@ import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import TimelineCalculator from "@/pages/TimelineCalculator";
 import PropertyValueEstimator from "@/pages/PropertyValueEstimator";
+import ThankYou from "@/pages/ThankYou";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -49,6 +50,7 @@ function Router() {
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />
       <Route path="/property-value-estimator" component={PropertyValueEstimator} />
+      <Route path="/thank-you" component={ThankYou} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

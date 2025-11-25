@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,19 +30,27 @@ export function ResourceLeadCaptureDialog({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [, setLocation] = useLocation();
 
   const downloadMutation = trpc.resources.downloadWithCapture.useMutation({
     onSuccess: (data) => {
       setSubmitted(true);
       toast.success(data.message);
       
-      // Reset form after 3 seconds and close dialog
+      // Redirect to Thank You page after 1.5 seconds
       setTimeout(() => {
+        onOpenChange(false);
         setName("");
         setEmail("");
         setSubmitted(false);
-        onOpenChange(false);
-      }, 3000);
+        
+        // Convert resource file to URL parameter format
+        const resourceParam = resourceFile
+          .replace(/\.pdf$/i, '')
+          .replace(/[_\s]+/g, '-')
+          .toLowerCase();
+        setLocation(`/thank-you?resource=${resourceParam}`);
+      }, 1500);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to process your request");
