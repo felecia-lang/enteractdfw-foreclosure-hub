@@ -276,6 +276,101 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Free Tools Section */}
+      <section className="py-16 bg-gradient-to-b from-background to-primary/5">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Free Tools to Help You Make Informed Decisions
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Use our calculators to understand your timeline and property value—no obligation, completely free.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Property Value Estimator Card */}
+            <Card className="hover:shadow-lg transition-shadow border-2">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <DollarSign className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl">Property Value Estimator</CardTitle>
+                </div>
+                <CardDescription className="text-base">
+                  Get an instant estimate of your property's market value and see your equity position with personalized sale options comparison.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 mb-6 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Instant property valuation based on DFW market data</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Compare Traditional Sale, Cash Offer, and Short Sale options</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>See net proceeds and timelines for each option</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Save & resume your calculation anytime</span>
+                  </li>
+                </ul>
+                <Link href="/property-value-estimator">
+                  <Button className="w-full" size="lg">
+                    Calculate Property Value →
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Timeline Calculator Card */}
+            <Card className="hover:shadow-lg transition-shadow border-2">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <Clock className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl">Foreclosure Timeline Calculator</CardTitle>
+                </div>
+                <CardDescription className="text-base">
+                  Understand exactly how much time you have and what actions to take at each stage of the foreclosure process.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 mb-6 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Calculate key dates from Notice of Default to sale</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Texas-specific foreclosure timeline (20-day minimum)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Action items for each critical milestone</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Know your rights and options at every step</span>
+                  </li>
+                </ul>
+                <Link href="/timeline-calculator">
+                  <Button className="w-full" size="lg" variant="outline">
+                    Calculate Timeline →
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Value Proposition */}
       <section className="py-16">
         <div className="container">

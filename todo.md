@@ -497,3 +497,14 @@
 - [x] Add expiration logic for saved calculations (30 days)
 - [x] Test save and resume flow end-to-end
 - [x] Test email delivery with resume links
+
+## Homepage Tools Section
+- [x] Design Tools section layout with two tool cards
+- [x] Create Property Value Estimator tool card with icon, title, description, and CTA
+- [x] Create Timeline Calculator tool card with icon, title, description, and CTA
+- [x] Add section heading and subheading for Tools section
+- [x] Position Tools section appropriately on homepage (after hero/guide section)
+- [x] Ensure responsive design for mobile and tablet views
+- [x] Add hover effects and visual polish to tool cards
+- [x] Test navigation to both tools from homepage
+- [x] Verify CTAs are clear and compelling
