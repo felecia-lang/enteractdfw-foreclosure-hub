@@ -20,6 +20,7 @@ import Admin from "@/pages/Admin";
 import AvoidingScams from "@/pages/AvoidingScams";
 import SuccessStories from "@/pages/SuccessStories";
 import AdminTestimonials from "@/pages/AdminTestimonials";
+import AdminAnalytics from "@/pages/AdminAnalytics";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import TimelineCalculator from "@/pages/TimelineCalculator";
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/success-stories" component={SuccessStories} />
       <Route path="/admin" component={Admin} />
       <Route path="/admin/testimonials" component={AdminTestimonials} />
+      <Route path="/admin/analytics" component={AdminAnalytics} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />

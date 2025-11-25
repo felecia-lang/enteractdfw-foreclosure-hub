@@ -668,3 +668,23 @@
 - [x] Replace phone links in TermsOfService.tsx (batch updated)
 - [x] Verify all phone links are trackable (0 tel: links remaining)
 - [x] Test site-wide call tracking functionality in browser
+
+## Admin Analytics Dashboard
+- [x] Enhance tRPC tracking endpoints for analytics data:
+  - [x] Add getCallVolumeByDate endpoint (daily call counts with date range filter)
+  - [x] getCallStats already provides calls by page
+  - [x] Enhance getRecentCalls with date range and page filters
+- [x] Install chart library (recharts) for data visualization
+- [x] Create AdminAnalytics.tsx page component
+- [x] Build call volume chart (line chart showing calls over time)
+- [x] Build calls by page chart (horizontal bar chart showing top 10 pages)
+- [x] Build filterable call log table with:
+  - [x] Date range filter (start and end date)
+  - [x] Page filter dropdown
+  - [x] All columns displayed (date/time, page, phone, user, IP)
+  - [x] Limit to 100 recent calls (pagination not needed for this volume)
+- [x] Add admin-only route protection at /admin/analytics
+- [x] Add navigation link to analytics dashboard in admin menu
+- [x] Test dashboard with real data (15 calls tracked)
+- [x] Verify filters work correctly
+- [x] Add CSV export functionality

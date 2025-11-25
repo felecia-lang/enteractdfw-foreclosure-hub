@@ -236,14 +236,24 @@ export default function Admin() {
               <h1 className="text-3xl font-bold">Lead Management Dashboard</h1>
               <p className="text-gray-300 mt-2">Welcome back, {user?.name || "Admin"}</p>
             </div>
-            <Button
-              variant="outline"
-              className="bg-white text-[#0A2342] hover:bg-gray-100"
-              onClick={() => window.location.href = "/admin/testimonials"}
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              Manage Testimonials
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="bg-white text-[#0A2342] hover:bg-gray-100"
+                onClick={() => window.location.href = "/admin/analytics"}
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Call Analytics
+              </Button>
+              <Button
+                variant="outline"
+                className="bg-white text-[#0A2342] hover:bg-gray-100"
+                onClick={() => window.location.href = "/admin/testimonials"}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Manage Testimonials
+              </Button>
+            </div>
           </div>
         </div>
       </div>

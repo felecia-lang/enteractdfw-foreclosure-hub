@@ -557,7 +557,14 @@ export async function getPhoneCallStats() {
   }
 }
 
-export async function getRecentPhoneCalls(limit: number = 50) {
+export async function getRecentPhoneCalls(
+  limit: number = 50,
+  filters?: {
+    startDate?: Date;
+    endDate?: Date;
+    pagePath?: string;
+  }
+) {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get recent phone calls: database not available");
@@ -566,17 +573,81 @@ export async function getRecentPhoneCalls(limit: number = 50) {
 
   try {
     const { phoneCallTracking } = await import("../drizzle/schema");
-    const { desc } = await import("drizzle-orm");
+    const { desc, and, gte, lte, eq } = await import("drizzle-orm");
     
-    const calls = await db
+    // Build where conditions
+    const conditions = [];
+    if (filters?.startDate) {
+      conditions.push(gte(phoneCallTracking.clickedAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      conditions.push(lte(phoneCallTracking.clickedAt, filters.endDate));
+    }
+    if (filters?.pagePath) {
+      conditions.push(eq(phoneCallTracking.pagePath, filters.pagePath));
+    }
+
+    let query = db
       .select()
       .from(phoneCallTracking)
       .orderBy(desc(phoneCallTracking.clickedAt))
       .limit(limit);
 
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions)) as typeof query;
+    }
+
+    const calls = await query;
     return calls;
   } catch (error) {
     console.error("[Database] Failed to get recent phone calls:", error);
+    throw error;
+  }
+}
+
+export async function getCallVolumeByDate(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get call volume by date: database not available");
+    return [];
+  }
+
+  try {
+    const { phoneCallTracking } = await import("../drizzle/schema");
+    const { sql, and, gte, lte } = await import("drizzle-orm");
+    
+    // Build where conditions
+    const conditions = [];
+    if (filters?.startDate) {
+      conditions.push(gte(phoneCallTracking.clickedAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      conditions.push(lte(phoneCallTracking.clickedAt, filters.endDate));
+    }
+
+    // Use a subquery to properly group by date
+    const dateColumn = sql<string>`DATE(${phoneCallTracking.clickedAt})`;
+    
+    let query = db
+      .select({
+        date: dateColumn,
+        callCount: sql<number>`count(*)`,
+      })
+      .from(phoneCallTracking)
+      .groupBy(dateColumn)
+      .orderBy(sql`${dateColumn} DESC`);
+
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions)) as typeof query;
+    }
+
+    const volumeData = await query;
+    return volumeData;
+  } catch (error) {
+    console.error("[Database] Failed to get call volume by date:", error);
     throw error;
   }
 }

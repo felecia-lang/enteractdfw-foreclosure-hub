@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -1069,6 +1069,9 @@ Email: info@enteractdfw.com
     getRecentCalls: protectedProcedure
       .input(z.object({
         limit: z.number().min(1).max(200).optional().default(50),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        pagePath: z.string().optional(),
       }))
       .query(async ({ input, ctx }) => {
         // Admin-only endpoint
@@ -1080,13 +1083,46 @@ Email: info@enteractdfw.com
         }
 
         try {
-          const calls = await getRecentPhoneCalls(input.limit);
+          const calls = await getRecentPhoneCalls(input.limit, {
+            startDate: input.startDate,
+            endDate: input.endDate,
+            pagePath: input.pagePath,
+          });
           return calls;
         } catch (error) {
           console.error("[Tracking] Failed to get recent calls:", error);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to retrieve recent calls",
+          });
+        }
+      }),
+
+    getCallVolumeByDate: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .query(async ({ input, ctx }) => {
+        // Admin-only endpoint
+        if (ctx.user?.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const volumeData = await getCallVolumeByDate({
+            startDate: input.startDate,
+            endDate: input.endDate,
+          });
+          return volumeData;
+        } catch (error) {
+          console.error("[Tracking] Failed to get call volume by date:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve call volume data",
           });
         }
       }),
