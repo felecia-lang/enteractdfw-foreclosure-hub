@@ -27,6 +27,7 @@ import TimelineCalculator from "@/pages/TimelineCalculator";
 import PropertyValueEstimator from "@/pages/PropertyValueEstimator";
 import ThankYou from "@/pages/ThankYou";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { ChatEngagementTracker } from "@/components/ChatEngagementTracker";
 import ConversionFunnel from "@/pages/ConversionFunnel";
 
 function Router() {
@@ -69,6 +70,7 @@ function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <PageViewTracker />
+          <ChatEngagementTracker />
           <Toaster position="top-right" />
           <Router />
         </TooltipProvider>

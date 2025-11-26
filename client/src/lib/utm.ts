@@ -60,3 +60,8 @@ export function getAttributionUTM(): UTMParams {
   }
   return extractUTMParams();
 }
+
+/**
+ * Alias for getAttributionUTM for convenience
+ */
+export const getUTMParams = getAttributionUTM;

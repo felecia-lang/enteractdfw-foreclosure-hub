@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage } from "./db";
 import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
@@ -1364,6 +1364,92 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to retrieve medium performance",
+          });
+        }
+      }),
+  }),
+
+  // Chat engagement tracking
+  chat: router({
+    // Track chat engagement events (public endpoint)
+    trackEngagement: publicProcedure
+      .input(z.object({
+        sessionId: z.string(),
+        eventType: z.enum(["chat_opened", "message_sent", "conversation_completed"]),
+        pagePath: z.string(),
+        pageTitle: z.string().optional(),
+        utmSource: z.string().optional(),
+        utmMedium: z.string().optional(),
+        utmCampaign: z.string().optional(),
+        utmTerm: z.string().optional(),
+        utmContent: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          await trackChatEvent({
+            ...input,
+            userEmail: ctx.user?.email || null,
+          });
+          return { success: true };
+        } catch (error) {
+          console.error("[Chat] Failed to track engagement:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to track chat engagement",
+          });
+        }
+      }),
+
+    // Get chat statistics (admin-only)
+    getStats: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+        return next({ ctx });
+      })
+      .query(async ({ input }) => {
+        try {
+          return await getChatStats(input);
+        } catch (error) {
+          console.error("[Chat] Failed to get stats:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve chat statistics",
+          });
+        }
+      }),
+
+    // Get chat engagement by page (admin-only)
+    getByPage: protectedProcedure
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .use(({ ctx, next }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+        return next({ ctx });
+      })
+      .query(async ({ input }) => {
+        try {
+          return await getChatEngagementByPage(input);
+        } catch (error) {
+          console.error("[Chat] Failed to get engagement by page:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve chat engagement by page",
           });
         }
       }),

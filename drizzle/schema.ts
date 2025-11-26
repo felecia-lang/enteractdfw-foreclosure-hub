@@ -276,3 +276,30 @@ export const pageViews = mysqlTable("pageViews", {
 
 export type PageView = typeof pageViews.$inferSelect;
 export type InsertPageView = typeof pageViews.$inferInsert;
+
+/**
+ * Chat engagement table - tracks GHL chat widget interactions
+ * Event types: chat_opened, message_sent, conversation_completed
+ */
+export const chatEngagement = mysqlTable("chatEngagement", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("sessionId", { length: 64 }).notNull(), // Browser session identifier
+  eventType: mysqlEnum("eventType", ["chat_opened", "message_sent", "conversation_completed"]).notNull(),
+  pagePath: varchar("pagePath", { length: 255 }).notNull(), // Page where event occurred
+  pageTitle: varchar("pageTitle", { length: 255 }), // Page title
+  userEmail: varchar("userEmail", { length: 320 }), // Email if user is logged in
+  ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
+  userAgent: text("userAgent"),
+  
+  // UTM Attribution (first-touch)
+  utmSource: varchar("utmSource", { length: 255 }),
+  utmMedium: varchar("utmMedium", { length: 255 }),
+  utmCampaign: varchar("utmCampaign", { length: 255 }),
+  utmTerm: varchar("utmTerm", { length: 255 }),
+  utmContent: varchar("utmContent", { length: 255 }),
+  
+  eventAt: timestamp("eventAt").defaultNow().notNull(),
+});
+
+export type ChatEngagement = typeof chatEngagement.$inferSelect;
+export type InsertChatEngagement = typeof chatEngagement.$inferInsert;

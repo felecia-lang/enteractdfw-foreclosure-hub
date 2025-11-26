@@ -793,3 +793,25 @@
 - [x] Test chat widget visibility on multiple pages (Home, Property Value Estimator)
 - [x] Verify chat widget functionality (visible with "Hi there! Have a question? Chat with us here.")
 - [x] Confirm widget appears on all pages site-wide
+
+
+## Chat Engagement Analytics
+- [x] Create chatEngagement database table (track: sessionId, eventType, pagePath, pageTitle, userEmail, timestamp, UTM parameters)
+- [x] Push database schema changes (pnpm db:push)
+- [x] Create ChatEngagementTracker component to listen for GHL chat events
+- [x] Add database helper functions in server/db.ts:
+  - [x] trackChatEvent(data) - save chat engagement events
+  - [x] getChatStats(dateRange) - total opens, messages, completions
+  - [x] getChatEngagementByPage(dateRange) - chat metrics grouped by page
+- [x] Create tRPC chat router with endpoints:
+  - [x] chat.trackEngagement (public) - track chat events
+  - [x] chat.getStats (admin-only) - get chat statistics
+  - [x] chat.getByPage (admin-only) - get chat metrics by page
+- [x] Integrate ChatEngagementTracker into App.tsx
+- [ ] Add chat metrics to admin analytics dashboard (future enhancement):
+  - [ ] Chat opens card
+  - [ ] Chat messages sent card
+  - [ ] Chat-to-call/booking conversion rate
+- [ ] Update conversion funnel to include chat as engagement channel (future enhancement)
+- [ ] Test chat tracking in browser with GHL widget interactions
+- [ ] Write comprehensive tests for chat analytics endpoints

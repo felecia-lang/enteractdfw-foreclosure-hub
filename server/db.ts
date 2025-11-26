@@ -1035,3 +1035,131 @@ export async function getFunnelByPage(filters?: {
     throw error;
   }
 }
+
+
+// ==================== Chat Engagement Tracking ====================
+
+export async function trackChatEvent(data: {
+  sessionId: string;
+  eventType: "chat_opened" | "message_sent" | "conversation_completed";
+  pagePath: string;
+  pageTitle?: string;
+  userEmail?: string | null;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmTerm?: string;
+  utmContent?: string;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot track chat event: database not available");
+    return;
+  }
+
+  try {
+    const { chatEngagement } = await import("../drizzle/schema");
+    await db.insert(chatEngagement).values({
+      ...data,
+      ipAddress: null, // Will be set by server
+      userAgent: null, // Will be set by server
+    });
+  } catch (error) {
+    console.error("[Database] Failed to track chat event:", error);
+  }
+}
+
+export async function getChatStats(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get chat stats: database not available");
+    return { totalOpens: 0, totalMessages: 0, totalCompletions: 0 };
+  }
+
+  try {
+    const { chatEngagement } = await import("../drizzle/schema");
+    const { sql } = await import("drizzle-orm");
+
+    const conditions = [];
+    if (filters?.startDate) {
+      conditions.push(sql`${chatEngagement.eventAt} >= ${filters.startDate}`);
+    }
+    if (filters?.endDate) {
+      conditions.push(sql`${chatEngagement.eventAt} <= ${filters.endDate}`);
+    }
+
+    const whereClause = conditions.length > 0 ? sql`WHERE ${sql.join(conditions, sql` AND `)}` : sql``;
+
+    const result = await db.execute(sql`
+      SELECT 
+        SUM(CASE WHEN eventType = 'chat_opened' THEN 1 ELSE 0 END) as totalOpens,
+        SUM(CASE WHEN eventType = 'message_sent' THEN 1 ELSE 0 END) as totalMessages,
+        SUM(CASE WHEN eventType = 'conversation_completed' THEN 1 ELSE 0 END) as totalCompletions
+      FROM chatEngagement
+      ${whereClause}
+    `);
+
+    const row = result[0] as any;
+    return {
+      totalOpens: Number(row?.totalOpens || 0),
+      totalMessages: Number(row?.totalMessages || 0),
+      totalCompletions: Number(row?.totalCompletions || 0),
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get chat stats:", error);
+    return { totalOpens: 0, totalMessages: 0, totalCompletions: 0 };
+  }
+}
+
+export async function getChatEngagementByPage(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get chat engagement by page: database not available");
+    return [];
+  }
+
+  try {
+    const { chatEngagement } = await import("../drizzle/schema");
+    const { sql } = await import("drizzle-orm");
+
+    const conditions = [];
+    if (filters?.startDate) {
+      conditions.push(sql`${chatEngagement.eventAt} >= ${filters.startDate}`);
+    }
+    if (filters?.endDate) {
+      conditions.push(sql`${chatEngagement.eventAt} <= ${filters.endDate}`);
+    }
+
+    const whereClause = conditions.length > 0 ? sql`WHERE ${sql.join(conditions, sql` AND `)}` : sql``;
+
+    const result = await db.execute(sql`
+      SELECT 
+        pagePath,
+        pageTitle,
+        SUM(CASE WHEN eventType = 'chat_opened' THEN 1 ELSE 0 END) as opens,
+        SUM(CASE WHEN eventType = 'message_sent' THEN 1 ELSE 0 END) as messages,
+        SUM(CASE WHEN eventType = 'conversation_completed' THEN 1 ELSE 0 END) as completions
+      FROM chatEngagement
+      ${whereClause}
+      GROUP BY pagePath, pageTitle
+      ORDER BY opens DESC
+    `);
+
+    return result.map((row: any) => ({
+      pagePath: row.pagePath,
+      pageTitle: row.pageTitle || row.pagePath,
+      opens: Number(row.opens || 0),
+      messages: Number(row.messages || 0),
+      completions: Number(row.completions || 0),
+    }));
+  } catch (error) {
+    console.error("[Database] Failed to get chat engagement by page:", error);
+    return [];
+  }
+}
