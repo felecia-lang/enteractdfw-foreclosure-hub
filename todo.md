@@ -898,3 +898,10 @@
 - [x] Add tRPC endpoints for activation/deactivation and expiring/expired links
 - [x] Add expiration status badges to link management table (Inactive/Expired)
 - [x] Test scheduled job execution (runs successfully with no expired links)
+
+## QR Code Generation
+- [x] Install qrcode library for QR code generation
+- [x] Create backend API endpoint for generating QR codes (tRPC endpoint)
+- [x] Add QR code button in admin links table actions column
+- [x] Build QR code preview modal with download options
+- [x] Test QR code generation and download functionality

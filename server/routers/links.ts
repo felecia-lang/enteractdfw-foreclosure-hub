@@ -2,6 +2,7 @@ import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { parse } from "csv-parse/sync";
+import QRCode from "qrcode";
 import {
   createShortenedLink,
   getShortenedLink,
@@ -510,5 +511,54 @@ export const linksRouter = router({
     .query(async () => {
       const expiredLinks = await getExpiredLinks();
       return expiredLinks;
+    }),
+
+  /**
+   * Generate QR code for a shortened link
+   * Public endpoint - returns base64 data URL
+   */
+  generateQRCode: publicProcedure
+    .input(
+      z.object({
+        shortCode: z.string(),
+        size: z.number().min(100).max(1000).default(300),
+      })
+    )
+    .query(async ({ input }) => {
+      const link = await getShortenedLink(input.shortCode);
+      
+      if (!link) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Shortened link not found",
+        });
+      }
+      
+      // Generate full short URL
+      const shortUrl = `${process.env.VITE_APP_URL || 'http://localhost:3000'}/l/${link.customAlias || link.shortCode}`;
+      
+      try {
+        // Generate QR code as data URL
+        const qrCodeDataUrl = await QRCode.toDataURL(shortUrl, {
+          width: input.size,
+          margin: 2,
+          color: {
+            dark: '#000000',
+            light: '#FFFFFF',
+          },
+        });
+        
+        return {
+          qrCode: qrCodeDataUrl,
+          shortUrl,
+          shortCode: link.customAlias || link.shortCode,
+          title: link.title,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate QR code",
+        });
+      }
     }),
 });

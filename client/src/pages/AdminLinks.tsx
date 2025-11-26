@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Copy, ExternalLink, Trash2, BarChart3, Link as LinkIcon, Upload, Download, Power, PowerOff } from "lucide-react";
+import { Loader2, Plus, Copy, ExternalLink, Trash2, BarChart3, Link as LinkIcon, Upload, Download, Power, PowerOff, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -28,6 +28,8 @@ import { Badge } from "@/components/ui/badge";
 export default function AdminLinks() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isBulkImportDialogOpen, setIsBulkImportDialogOpen] = useState(false);
+  const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
+  const [selectedLinkForQR, setSelectedLinkForQR] = useState<string | null>(null);
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [importResults, setImportResults] = useState<{
     total: number;
@@ -563,6 +565,16 @@ export default function AdminLinks() {
                             <Button
                               variant="ghost"
                               size="sm"
+                              onClick={() => {
+                                setSelectedLinkForQR(link.shortCode);
+                                setQrCodeDialogOpen(true);
+                              }}
+                            >
+                              <QrCode className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={() => window.open(link.shortUrl, "_blank")}
                             >
                               <ExternalLink className="w-4 h-4" />
@@ -600,6 +612,75 @@ export default function AdminLinks() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* QR Code Dialog */}
+      <Dialog open={qrCodeDialogOpen} onOpenChange={setQrCodeDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>QR Code</DialogTitle>
+            <DialogDescription>
+              Scan this QR code to access the shortened link
+            </DialogDescription>
+          </DialogHeader>
+          <QRCodeDisplay shortCode={selectedLinkForQR || ""} />
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// QR Code Display Component
+function QRCodeDisplay({ shortCode }: { shortCode: string }) {
+  const { data, isLoading } = trpc.links.generateQRCode.useQuery(
+    { shortCode, size: 300 },
+    { enabled: !!shortCode }
+  );
+
+  const handleDownload = () => {
+    if (!data?.qrCode) return;
+
+    const link = document.createElement("a");
+    link.href = data.qrCode;
+    link.download = `qr-${data.shortCode}.png`;
+    link.click();
+    toast.success("QR code downloaded");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-center bg-white p-4 rounded-lg border">
+        <img src={data.qrCode} alt="QR Code" className="w-64 h-64" />
+      </div>
+      <div className="space-y-2">
+        <div className="text-sm">
+          <span className="font-medium">Short URL:</span>
+          <code className="ml-2 text-sm bg-slate-100 px-2 py-1 rounded">
+            {data.shortUrl}
+          </code>
+        </div>
+        {data.title && (
+          <div className="text-sm">
+            <span className="font-medium">Title:</span>
+            <span className="ml-2 text-slate-600">{data.title}</span>
+          </div>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <Button onClick={handleDownload} className="flex-1">
+          <Download className="w-4 h-4 mr-2" />
+          Download QR Code
+        </Button>
       </div>
     </div>
   );
