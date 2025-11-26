@@ -32,6 +32,7 @@ import ConversionFunnel from "@/pages/ConversionFunnel";
 import AdminLinks from "@/pages/AdminLinks";
 import AdminLinkAnalytics from "@/pages/AdminLinkAnalytics";
 import AdminCampaigns from "@/pages/AdminCampaigns";
+import AdminExpiringLinks from "@/pages/AdminExpiringLinks";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -58,6 +59,7 @@ function Router() {
       <Route path="/admin/links" component={AdminLinks} />
       <Route path="/admin/link-analytics" component={AdminLinkAnalytics} />
       <Route path="/admin/campaigns" component={AdminCampaigns} />
+      <Route path="/admin/expiring-links" component={AdminExpiringLinks} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />

@@ -514,6 +514,31 @@ export const linksRouter = router({
     }),
 
   /**
+   * Extend link expiration by N days
+   * Admin-only endpoint
+   */
+  extendExpiration: adminProcedure
+    .input(
+      z.object({
+        shortCode: z.string(),
+        days: z.number().min(1).max(365),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { extendLinkExpiration } = await import("../db");
+      const success = await extendLinkExpiration(input.shortCode, input.days);
+      
+      if (!success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to extend link expiration",
+        });
+      }
+      
+      return { success: true };
+    }),
+
+  /**
    * Generate QR code for a shortened link
    * Public endpoint - returns base64 data URL
    */

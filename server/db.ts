@@ -2015,3 +2015,75 @@ export async function getCampaignStats(campaignId: number) {
     return null;
   }
 }
+
+/**
+ * Get links expiring in the next N days
+ */
+export async function getLinksExpiringInDays(days: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { and, isNotNull, gte, lte, desc } = await import("drizzle-orm");
+    
+    const now = new Date();
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + days);
+    
+    const links = await db
+      .select()
+      .from(shortenedLinks)
+      .where(
+        and(
+          isNotNull(shortenedLinks.expiresAt),
+          gte(shortenedLinks.expiresAt, now),
+          lte(shortenedLinks.expiresAt, futureDate)
+        )
+      )
+      .orderBy(shortenedLinks.expiresAt);
+    
+    return links;
+  } catch (error) {
+    console.error("[Database] Failed to get expiring links:", error);
+    return [];
+  }
+}
+
+/**
+ * Extend link expiration by N days
+ */
+export async function extendLinkExpiration(shortCode: string, days: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot extend link expiration: database not available");
+    return false;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    // Get current link
+    const link = await getShortenedLink(shortCode);
+    if (!link) {
+      console.warn("[Database] Link not found:", shortCode);
+      return false;
+    }
+    
+    // Calculate new expiration date
+    const currentExpiration = link.expiresAt ? new Date(link.expiresAt) : new Date();
+    const newExpiration = new Date(currentExpiration);
+    newExpiration.setDate(newExpiration.getDate() + days);
+    
+    await db
+      .update(shortenedLinks)
+      .set({ expiresAt: newExpiration })
+      .where(eq(shortenedLinks.shortCode, shortCode));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to extend link expiration:", error);
+    return false;
+  }
+}

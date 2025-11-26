@@ -918,3 +918,15 @@
 - [ ] Build campaign filter dropdown in links table
 - [ ] Add bulk campaign assignment for multiple links
 - [ ] Test campaign creation, assignment, and filtering
+
+## Expiring Links Dashboard
+- [x] Create database function to get links expiring in next 30 days (getLinksExpiringInDays)
+- [x] Add backend API endpoint for extending link expiration dates (extendExpiration mutation)
+- [x] Build expiring links dashboard page at /admin/expiring-links
+- [x] Add visual indicators for urgency (critical ≤7 days, warning 8-14 days, normal 15-30 days)
+- [x] Implement one-click extension buttons (extend by 30/60/90 days)
+- [x] Display time remaining until expiration for each link with color-coded badges
+- [x] Add route to App.tsx
+- [x] Add time range selector (7/14/30 days)
+- [x] Add stats cards showing expiring count by urgency level
+- [ ] Test dashboard with links at various expiration stages (blocked by campaignId database issue)
