@@ -9,6 +9,7 @@ import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } f
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
+import { linksRouter } from "./routers/links";
 
 
 export const appRouter = router({
@@ -1454,6 +1455,9 @@ Email: info@enteractdfw.com
         }
       }),
   }),
+
+  // Link shortening
+  links: linksRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -303,3 +303,60 @@ export const chatEngagement = mysqlTable("chatEngagement", {
 
 export type ChatEngagement = typeof chatEngagement.$inferSelect;
 export type InsertChatEngagement = typeof chatEngagement.$inferInsert;
+
+/**
+ * Shortened links table for branded URL shortening and click tracking.
+ * Stores original URLs, generated short codes, and click analytics.
+ */
+export const shortenedLinks = mysqlTable("shortenedLinks", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Original long URL to redirect to */
+  originalUrl: text("originalUrl").notNull(),
+  /** Short code used in the branded URL (e.g., "abc123" for links.enteractai.com/abc123) */
+  shortCode: varchar("shortCode", { length: 20 }).notNull().unique(),
+  /** Optional custom alias for the short code */
+  customAlias: varchar("customAlias", { length: 100 }),
+  /** Total number of clicks on this shortened link */
+  clicks: int("clicks").default(0).notNull(),
+  /** User who created this shortened link (null for system-generated) */
+  createdBy: varchar("createdBy", { length: 64 }),
+  /** Optional title/description for the link */
+  title: varchar("title", { length: 255 }),
+  /** Link expiration date (null = never expires) */
+  expiresAt: timestamp("expiresAt"),
+  /** UTM parameters to append to the original URL */
+  utmSource: varchar("utmSource", { length: 100 }),
+  utmMedium: varchar("utmMedium", { length: 100 }),
+  utmCampaign: varchar("utmCampaign", { length: 100 }),
+  utmTerm: varchar("utmTerm", { length: 100 }),
+  utmContent: varchar("utmContent", { length: 100 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ShortenedLink = typeof shortenedLinks.$inferSelect;
+export type InsertShortenedLink = typeof shortenedLinks.$inferInsert;
+
+/**
+ * Link clicks table for detailed click tracking and analytics.
+ * Records each click on a shortened link with metadata.
+ */
+export const linkClicks = mysqlTable("linkClicks", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Reference to the shortened link */
+  shortCode: varchar("shortCode", { length: 20 }).notNull(),
+  /** IP address of the visitor */
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  /** User agent string */
+  userAgent: text("userAgent"),
+  /** HTTP referer */
+  referer: text("referer"),
+  /** User email if authenticated */
+  userEmail: varchar("userEmail", { length: 320 }),
+  /** Session ID for tracking unique visitors */
+  sessionId: varchar("sessionId", { length: 255 }),
+  clickedAt: timestamp("clickedAt").defaultNow().notNull(),
+});
+
+export type LinkClick = typeof linkClicks.$inferSelect;
+export type InsertLinkClick = typeof linkClicks.$inferInsert;

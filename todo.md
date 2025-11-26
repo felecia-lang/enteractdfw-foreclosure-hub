@@ -823,3 +823,38 @@
 - [x] Update BookingModal component
 - [x] Verify booking flow works with new URL (calendar loads successfully)
 - [x] Test booking modal opens and displays calendar correctly
+
+
+## Branded Link Shortening System
+- [ ] Design link shortening architecture (database schema, URL generation, redirect handling)
+- [ ] Research link shortening services (Bitly API, Rebrandly API, or custom solution)
+- [ ] Create shortenedLinks database table (originalUrl, shortCode, clicks, createdAt, expiresAt)
+- [ ] Push database schema changes (pnpm db:push)
+- [ ] Build link shortening service integration:
+  - [ ] Create tRPC endpoint: links.shorten(url) - generate short link
+  - [ ] Create tRPC endpoint: links.getStats(shortCode) - get click statistics
+  - [ ] Create tRPC endpoint: links.list() - list all shortened links (admin-only)
+- [ ] Create redirect handler at /l/:shortCode to track clicks and redirect
+- [ ] Build admin interface at /admin/links for managing shortened links
+- [ ] Add click tracking with UTM parameter preservation
+- [ ] Test link shortening and redirect flow
+- [ ] Write comprehensive tests for link shortening system
+
+## Link Shortening System
+- [x] Design database schema for shortened links and click tracking
+- [x] Create shortenedLinks table with UTM parameters, expiration, custom aliases
+- [x] Create linkClicks table for detailed click analytics
+- [x] Add database helper functions for CRUD operations
+- [x] Create tRPC router with 6 endpoints (create, getByCode, getAll, getStats, delete, update)
+- [x] Implement admin-only access control for link management
+- [x] Add automatic short code generation (6-character alphanumeric)
+- [x] Add URL validation and normalization
+- [x] Create Express redirect handler at /l/:shortCode route
+- [x] Implement click tracking with metadata (IP, user agent, referer)
+- [x] Build admin dashboard UI at /admin/links
+- [x] Add link creation dialog with UTM parameters
+- [x] Display stats cards (total links, total clicks, avg clicks)
+- [x] Add link management table with copy/delete/edit actions
+- [x] Write comprehensive test suite (16 tests covering all functionality)
+- [x] Test redirect functionality with UTM parameter preservation
+- [x] Verify click tracking in real-time

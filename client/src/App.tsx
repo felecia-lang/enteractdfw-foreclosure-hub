@@ -29,6 +29,7 @@ import ThankYou from "@/pages/ThankYou";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ChatEngagementTracker } from "@/components/ChatEngagementTracker";
 import ConversionFunnel from "@/pages/ConversionFunnel";
+import AdminLinks from "@/pages/AdminLinks";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/admin/testimonials" component={AdminTestimonials} />
       <Route path="/admin/analytics" component={AdminAnalytics} />
       <Route path="/admin/funnel" component={ConversionFunnel} />
+      <Route path="/admin/links" component={AdminLinks} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />

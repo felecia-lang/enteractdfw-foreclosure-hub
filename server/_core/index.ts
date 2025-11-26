@@ -11,6 +11,7 @@ import { generateAvoidingScamsPDF, generateForeclosureGuidePDF, generatePersonal
 import { generateNoticeOfDefaultPDF } from "../pdfGeneratorNoticeOfDefault";
 import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
 import { handleGHLBookingWebhook } from "../webhooks/ghl-booking";
+import shortlinksRouter from "../routes/shortlinks";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -95,6 +96,9 @@ async function startServer() {
   
   // GHL Booking Webhook
   app.post("/api/webhooks/ghl-booking", handleGHLBookingWebhook);
+  
+  // Shortened link redirect handler
+  app.use(shortlinksRouter);
   
   app.post("/api/pdf/personalized-timeline", async (req, res) => {
     try {

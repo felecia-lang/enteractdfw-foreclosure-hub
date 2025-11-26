@@ -1163,3 +1163,321 @@ export async function getChatEngagementByPage(filters?: {
     return [];
   }
 }
+
+
+// ============================================================================
+// Link Shortening Functions
+// ============================================================================
+
+/**
+ * Create a new shortened link
+ */
+export async function createShortenedLink(data: {
+  originalUrl: string;
+  shortCode: string;
+  customAlias?: string;
+  title?: string;
+  createdBy?: string;
+  expiresAt?: Date;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmTerm?: string;
+  utmContent?: string;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create shortened link: database not available");
+    return null;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    
+    const link = {
+      originalUrl: data.originalUrl,
+      shortCode: data.shortCode,
+      customAlias: data.customAlias || null,
+      title: data.title || null,
+      createdBy: data.createdBy || null,
+      expiresAt: data.expiresAt || null,
+      utmSource: data.utmSource || null,
+      utmMedium: data.utmMedium || null,
+      utmCampaign: data.utmCampaign || null,
+      utmTerm: data.utmTerm || null,
+      utmContent: data.utmContent || null,
+      clicks: 0,
+    };
+
+    const result = await db.insert(shortenedLinks).values(link);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create shortened link:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get a shortened link by short code or custom alias
+ */
+export async function getShortenedLink(codeOrAlias: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get shortened link: database not available");
+    return null;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq, or } = await import("drizzle-orm");
+    
+    const results = await db
+      .select()
+      .from(shortenedLinks)
+      .where(
+        or(
+          eq(shortenedLinks.shortCode, codeOrAlias),
+          eq(shortenedLinks.customAlias, codeOrAlias)
+        )
+      )
+      .limit(1);
+
+    return results.length > 0 ? results[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get shortened link:", error);
+    throw error;
+  }
+}
+
+/**
+ * Increment click count for a shortened link
+ */
+export async function incrementLinkClicks(shortCode: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot increment link clicks: database not available");
+    return;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq, sql } = await import("drizzle-orm");
+    
+    await db
+      .update(shortenedLinks)
+      .set({ clicks: sql`${shortenedLinks.clicks} + 1` })
+      .where(eq(shortenedLinks.shortCode, shortCode));
+  } catch (error) {
+    console.error("[Database] Failed to increment link clicks:", error);
+    // Don't throw - tracking failures shouldn't break redirects
+  }
+}
+
+/**
+ * Track a link click with detailed metadata
+ */
+export async function trackLinkClick(data: {
+  shortCode: string;
+  ipAddress?: string;
+  userAgent?: string;
+  referer?: string;
+  userEmail?: string;
+  sessionId?: string;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot track link click: database not available");
+    return;
+  }
+
+  try {
+    const { linkClicks } = await import("../drizzle/schema");
+    
+    await db.insert(linkClicks).values({
+      shortCode: data.shortCode,
+      ipAddress: data.ipAddress || null,
+      userAgent: data.userAgent || null,
+      referer: data.referer || null,
+      userEmail: data.userEmail || null,
+      sessionId: data.sessionId || null,
+    });
+  } catch (error) {
+    console.error("[Database] Failed to track link click:", error);
+    // Don't throw - tracking failures shouldn't break redirects
+  }
+}
+
+/**
+ * Get all shortened links (admin only)
+ */
+export async function getAllShortenedLinks(filters?: {
+  createdBy?: string;
+  includeExpired?: boolean;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get all shortened links: database not available");
+    return [];
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq, and, or, gt, isNull, desc } = await import("drizzle-orm");
+    
+    const conditions = [];
+    
+    if (filters?.createdBy) {
+      conditions.push(eq(shortenedLinks.createdBy, filters.createdBy));
+    }
+    
+    if (!filters?.includeExpired) {
+      // Only include links that haven't expired
+      conditions.push(
+        or(
+          isNull(shortenedLinks.expiresAt),
+          gt(shortenedLinks.expiresAt, new Date())
+        )
+      );
+    }
+
+    let query = db
+      .select()
+      .from(shortenedLinks)
+      .orderBy(desc(shortenedLinks.createdAt));
+
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions)) as typeof query;
+    }
+
+    const links = await query;
+    return links;
+  } catch (error) {
+    console.error("[Database] Failed to get all shortened links:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get click statistics for a shortened link
+ */
+export async function getLinkClickStats(shortCode: string, filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get link click stats: database not available");
+    return {
+      totalClicks: 0,
+      uniqueVisitors: 0,
+      clicksByDate: [],
+    };
+  }
+
+  try {
+    const { linkClicks } = await import("../drizzle/schema");
+    const { eq, and, gte, lte, count, countDistinct, sql } = await import("drizzle-orm");
+    
+    const conditions = [eq(linkClicks.shortCode, shortCode)];
+    
+    if (filters?.startDate) {
+      conditions.push(gte(linkClicks.clickedAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      conditions.push(lte(linkClicks.clickedAt, filters.endDate));
+    }
+
+    // Get total clicks
+    const totalResult = await db
+      .select({ count: count() })
+      .from(linkClicks)
+      .where(and(...conditions));
+    const totalClicks = totalResult[0]?.count || 0;
+
+    // Get unique visitors (by session ID)
+    const uniqueResult = await db
+      .select({ count: countDistinct(linkClicks.sessionId) })
+      .from(linkClicks)
+      .where(and(...conditions));
+    const uniqueVisitors = uniqueResult[0]?.count || 0;
+
+    // Get clicks by date
+    const dateColumn = sql<string>`DATE(${linkClicks.clickedAt})`;
+    const clicksByDate = await db
+      .select({
+        date: dateColumn,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(and(...conditions))
+      .groupBy(dateColumn)
+      .orderBy(sql`${dateColumn} DESC`);
+
+    return {
+      totalClicks,
+      uniqueVisitors,
+      clicksByDate,
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get link click stats:", error);
+    throw error;
+  }
+}
+
+/**
+ * Delete a shortened link
+ */
+export async function deleteShortenedLink(shortCode: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot delete shortened link: database not available");
+    return false;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    await db
+      .delete(shortenedLinks)
+      .where(eq(shortenedLinks.shortCode, shortCode));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete shortened link:", error);
+    throw error;
+  }
+}
+
+/**
+ * Update a shortened link
+ */
+export async function updateShortenedLink(
+  shortCode: string,
+  updates: {
+    title?: string;
+    expiresAt?: Date | null;
+    originalUrl?: string;
+  }
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update shortened link: database not available");
+    return false;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    await db
+      .update(shortenedLinks)
+      .set(updates)
+      .where(eq(shortenedLinks.shortCode, shortCode));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update shortened link:", error);
+    throw error;
+  }
+}
