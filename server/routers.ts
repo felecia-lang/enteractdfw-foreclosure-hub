@@ -10,6 +10,7 @@ import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
 import { linksRouter } from "./routers/links";
+import { campaignsRouter } from "./routers/campaigns";
 
 
 export const appRouter = router({
@@ -1458,6 +1459,9 @@ Email: info@enteractdfw.com
 
   // Link shortening
   links: linksRouter,
+
+  // Campaign management
+  campaigns: campaignsRouter,
 });
 
 export type AppRouter = typeof appRouter;

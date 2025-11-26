@@ -905,3 +905,16 @@
 - [x] Add QR code button in admin links table actions column
 - [x] Build QR code preview modal with download options
 - [x] Test QR code generation and download functionality
+
+## Campaign Tagging System
+- [x] Create campaigns table in database schema
+- [x] Add campaignId field to shortenedLinks table
+- [x] Create database functions for campaign CRUD operations (create, getAll, getById, update, delete, assignLink, getLinksByCampaign, getCampaignStats)
+- [x] Build backend API endpoints for campaign management (campaignsRouter with 7 endpoints)
+- [x] Create campaign management UI page at /admin/campaigns
+- [x] Add campaigns route to App.tsx
+- [ ] Resolve database column casing issue (campaignId vs campaignid)
+- [ ] Add campaign selector to link creation form
+- [ ] Build campaign filter dropdown in links table
+- [ ] Add bulk campaign assignment for multiple links
+- [ ] Test campaign creation, assignment, and filtering

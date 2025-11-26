@@ -49,9 +49,11 @@ export default function AdminLinks() {
   const [utmSource, setUtmSource] = useState("");
   const [utmMedium, setUtmMedium] = useState("");
   const [utmCampaign, setUtmCampaign] = useState("");
+  const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
 
   // Fetch all shortened links
-  const { data: links, isLoading, refetch } = trpc.links.getAll.useQuery();
+  const { data: links = [], isLoading, refetch } = trpc.links.getAll.useQuery();
+  const { data: campaigns = [] } = trpc.campaigns.getAll.useQuery();
 
   // Create link mutation
   const createMutation = trpc.links.create.useMutation({

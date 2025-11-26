@@ -1812,3 +1812,206 @@ export async function activateLink(shortCode: string) {
     return false;
   }
 }
+
+/**
+ * Create a new campaign
+ */
+export async function createCampaign(campaign: { name: string; description?: string; color?: string; createdBy?: string }) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create campaign: database not available");
+    return null;
+  }
+
+  try {
+    const { campaigns } = await import("../drizzle/schema");
+    
+    const result = await db.insert(campaigns).values(campaign);
+    
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create campaign:", error);
+    return null;
+  }
+}
+
+/**
+ * Get all campaigns
+ */
+export async function getAllCampaigns() {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { campaigns } = await import("../drizzle/schema");
+    const { desc } = await import("drizzle-orm");
+    
+    const allCampaigns = await db
+      .select()
+      .from(campaigns)
+      .orderBy(desc(campaigns.createdAt));
+    
+    return allCampaigns;
+  } catch (error) {
+    console.error("[Database] Failed to get campaigns:", error);
+    return [];
+  }
+}
+
+/**
+ * Get campaign by ID
+ */
+export async function getCampaignById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const { campaigns } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    const result = await db
+      .select()
+      .from(campaigns)
+      .where(eq(campaigns.id, id))
+      .limit(1);
+    
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get campaign:", error);
+    return null;
+  }
+}
+
+/**
+ * Update a campaign
+ */
+export async function updateCampaign(id: number, updates: { name?: string; description?: string; color?: string }) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update campaign: database not available");
+    return false;
+  }
+
+  try {
+    const { campaigns } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    await db
+      .update(campaigns)
+      .set(updates)
+      .where(eq(campaigns.id, id));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update campaign:", error);
+    return false;
+  }
+}
+
+/**
+ * Delete a campaign
+ */
+export async function deleteCampaign(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot delete campaign: database not available");
+    return false;
+  }
+
+  try {
+    const { campaigns, shortenedLinks } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    // First, remove campaign assignment from all links
+    await db
+      .update(shortenedLinks)
+      .set({ campaignId: null })
+      .where(eq(shortenedLinks.campaignId, id));
+    
+    // Then delete the campaign
+    await db
+      .delete(campaigns)
+      .where(eq(campaigns.id, id));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete campaign:", error);
+    return false;
+  }
+}
+
+/**
+ * Assign a link to a campaign
+ */
+export async function assignLinkToCampaign(shortCode: string, campaignId: number | null) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot assign link to campaign: database not available");
+    return false;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    await db
+      .update(shortenedLinks)
+      .set({ campaignId })
+      .where(eq(shortenedLinks.shortCode, shortCode));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to assign link to campaign:", error);
+    return false;
+  }
+}
+
+/**
+ * Get links by campaign ID
+ */
+export async function getLinksByCampaign(campaignId: number | null) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq, isNull, desc } = await import("drizzle-orm");
+    
+    const links = await db
+      .select()
+      .from(shortenedLinks)
+      .where(campaignId === null ? isNull(shortenedLinks.campaignId) : eq(shortenedLinks.campaignId, campaignId))
+      .orderBy(desc(shortenedLinks.createdAt));
+    
+    return links;
+  } catch (error) {
+    console.error("[Database] Failed to get links by campaign:", error);
+    return [];
+  }
+}
+
+/**
+ * Get campaign statistics
+ */
+export async function getCampaignStats(campaignId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq, sum, count } = await import("drizzle-orm");
+    
+    const stats = await db
+      .select({
+        totalLinks: count(),
+        totalClicks: sum(shortenedLinks.clicks),
+      })
+      .from(shortenedLinks)
+      .where(eq(shortenedLinks.campaignId, campaignId));
+    
+    return stats[0] || { totalLinks: 0, totalClicks: 0 };
+  } catch (error) {
+    console.error("[Database] Failed to get campaign stats:", error);
+    return null;
+  }
+}

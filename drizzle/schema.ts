@@ -305,6 +305,27 @@ export type ChatEngagement = typeof chatEngagement.$inferSelect;
 export type InsertChatEngagement = typeof chatEngagement.$inferInsert;
 
 /**
+ * Campaigns table for organizing shortened links into groups.
+ * Enables bulk management and performance comparison.
+ */
+export const campaigns = mysqlTable("campaigns", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Campaign name (e.g., "Winter 2024 Email", "Facebook Ads Q1") */
+  name: varchar("name", { length: 255 }).notNull(),
+  /** Optional description of the campaign */
+  description: text("description"),
+  /** Campaign color for visual identification (hex code) */
+  color: varchar("color", { length: 7 }).default("#3b82f6"),
+  /** User who created this campaign */
+  createdBy: varchar("createdBy", { length: 64 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Campaign = typeof campaigns.$inferSelect;
+export type InsertCampaign = typeof campaigns.$inferInsert;
+
+/**
  * Shortened links table for branded URL shortening and click tracking.
  * Stores original URLs, generated short codes, and click analytics.
  */
@@ -326,6 +347,8 @@ export const shortenedLinks = mysqlTable("shortenedLinks", {
   expiresAt: timestamp("expiresAt"),
   /** Whether the link is currently active (false = deactivated) */
   isActive: int("isActive").default(1).notNull(),
+  /** Campaign ID for grouping links (null = no campaign) */
+  campaignId: int("campaignId"),
   /** UTM parameters to append to the original URL */
   utmSource: varchar("utmSource", { length: 100 }),
   utmMedium: varchar("utmMedium", { length: 100 }),
