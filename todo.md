@@ -871,3 +871,20 @@
 - [x] Show results table with success/error status for each row
 - [x] Add CSV template download button
 - [x] Test bulk import with 5-row CSV file (100% success rate)
+
+## Link Analytics Dashboard
+- [x] Enhance linkClicks table schema with additional tracking fields (country, city, deviceType, browser, os)
+- [x] Create analytics aggregation functions in db.ts (clicks over time, geographic distribution, device breakdown)
+- [x] Build backend API for analytics data (daily/weekly/monthly trends, top links, referrer analysis)
+- [x] Create analytics dashboard page at /admin/link-analytics
+- [x] Add date range selector for filtering analytics data (7d, 30d, 90d, all time)
+- [x] Build click-through rate chart showing trends over time (line chart with Recharts)
+- [x] Create geographic distribution visualization (horizontal bar chart by country)
+- [x] Add device and browser breakdown charts (pie chart and bar chart)
+- [x] Build referral sources table with click counts
+- [x] Create top-performing links leaderboard with top 10 links
+- [x] Add overall statistics cards (total clicks, unique visitors, CTR, countries)
+- [x] Install ua-parser-js for user agent parsing
+- [x] Update redirect handler to parse user agent and extract device/browser/OS
+- [x] Fix MySQL ONLY_FULL_GROUP_BY compatibility with sql.raw
+- [x] Test analytics dashboard with existing click data

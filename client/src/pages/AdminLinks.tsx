@@ -203,7 +203,7 @@ export default function AdminLinks() {
                     Create Short Link
                   </Button>
                 </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px]">
+                <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
                   <DialogTitle>Create Short Link</DialogTitle>
                   <DialogDescription>

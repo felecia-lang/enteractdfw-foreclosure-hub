@@ -9,6 +9,8 @@ import {
   getLinkClickStats,
   deleteShortenedLink,
   updateShortenedLink,
+  getLinkAnalytics,
+  getTopPerformingLinks,
 } from "../db";
 
 /**
@@ -402,5 +404,48 @@ export const linksRouter = router({
       }
 
       return { success: true };
+    }),
+
+  /**
+   * Get comprehensive analytics for all links or a specific link
+   * Admin-only endpoint
+   */
+  getAnalytics: adminProcedure
+    .input(
+      z.object({
+        shortCode: z.string().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const analytics = await getLinkAnalytics(input);
+
+      if (!analytics) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to retrieve analytics data",
+        });
+      }
+
+      return analytics;
+    }),
+
+  /**
+   * Get top performing links
+   * Admin-only endpoint
+   */
+  getTopLinks: adminProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(50).default(10),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { limit, startDate, endDate } = input;
+      const topLinks = await getTopPerformingLinks(limit, { startDate, endDate });
+      return topLinks;
     }),
 });

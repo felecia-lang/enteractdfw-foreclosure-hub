@@ -355,6 +355,13 @@ export const linkClicks = mysqlTable("linkClicks", {
   userEmail: varchar("userEmail", { length: 320 }),
   /** Session ID for tracking unique visitors */
   sessionId: varchar("sessionId", { length: 255 }),
+  /** Geographic data */
+  country: varchar("country", { length: 100 }),
+  city: varchar("city", { length: 100 }),
+  /** Device and browser information */
+  deviceType: varchar("deviceType", { length: 50 }), // mobile, desktop, tablet
+  browser: varchar("browser", { length: 50 }), // chrome, firefox, safari, etc.
+  os: varchar("os", { length: 50 }), // windows, macos, ios, android, etc.
   clickedAt: timestamp("clickedAt").defaultNow().notNull(),
 });
 

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getShortenedLink, incrementLinkClicks, trackLinkClick } from "../db";
+import { UAParser } from "ua-parser-js";
 
 const router = Router();
 
@@ -152,13 +153,29 @@ router.get("/l/:shortCode", async (req, res) => {
 
     redirectUrl = url.toString();
 
+    // Parse user agent for device/browser/OS info
+    const userAgentString = req.get("user-agent") || "";
+    const parser = new UAParser(userAgentString);
+    const uaResult = parser.getResult();
+
+    // Extract device type
+    let deviceType = "desktop";
+    if (uaResult.device.type === "mobile") deviceType = "mobile";
+    else if (uaResult.device.type === "tablet") deviceType = "tablet";
+
     // Track the click asynchronously (don't wait for it)
     const trackingData = {
       shortCode: link.shortCode,
       ipAddress: req.ip || req.socket.remoteAddress,
-      userAgent: req.get("user-agent"),
+      userAgent: userAgentString,
       referer: req.get("referer"),
       sessionId: undefined, // Session tracking can be added if needed
+      deviceType,
+      browser: uaResult.browser.name || "Unknown",
+      os: uaResult.os.name || "Unknown",
+      // Geographic data will be populated by IP lookup service in the future
+      country: undefined,
+      city: undefined,
     };
 
     // Increment click counter and track detailed click

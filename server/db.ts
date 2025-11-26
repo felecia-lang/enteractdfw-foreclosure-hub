@@ -1283,6 +1283,11 @@ export async function trackLinkClick(data: {
   referer?: string;
   userEmail?: string;
   sessionId?: string;
+  country?: string;
+  city?: string;
+  deviceType?: string;
+  browser?: string;
+  os?: string;
 }) {
   const db = await getDb();
   if (!db) {
@@ -1300,6 +1305,11 @@ export async function trackLinkClick(data: {
       referer: data.referer || null,
       userEmail: data.userEmail || null,
       sessionId: data.sessionId || null,
+      country: data.country || null,
+      city: data.city || null,
+      deviceType: data.deviceType || null,
+      browser: data.browser || null,
+      os: data.os || null,
     });
   } catch (error) {
     console.error("[Database] Failed to track link click:", error);
@@ -1402,16 +1412,15 @@ export async function getLinkClickStats(shortCode: string, filters?: {
     const uniqueVisitors = uniqueResult[0]?.count || 0;
 
     // Get clicks by date
-    const dateColumn = sql<string>`DATE(${linkClicks.clickedAt})`;
     const clicksByDate = await db
       .select({
-        date: dateColumn,
+        date: sql.raw('DATE(clickedAt)'),
         clicks: count(),
       })
       .from(linkClicks)
       .where(and(...conditions))
-      .groupBy(dateColumn)
-      .orderBy(sql`${dateColumn} DESC`);
+      .groupBy(sql.raw('DATE(clickedAt)'))
+      .orderBy(sql.raw('DATE(clickedAt) DESC'));
 
     return {
       totalClicks,
@@ -1478,6 +1487,214 @@ export async function updateShortenedLink(
     return true;
   } catch (error) {
     console.error("[Database] Failed to update shortened link:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get comprehensive analytics data for all links or a specific link
+ */
+export async function getLinkAnalytics(filters?: {
+  shortCode?: string;
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get link analytics: database not available");
+    return null;
+  }
+
+  try {
+    const { linkClicks } = await import("../drizzle/schema");
+    const { eq, and, gte, lte, count, countDistinct, sql } = await import("drizzle-orm");
+    
+    const conditions = [];
+    
+    if (filters?.shortCode) {
+      conditions.push(eq(linkClicks.shortCode, filters.shortCode));
+    }
+    if (filters?.startDate) {
+      conditions.push(gte(linkClicks.clickedAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      conditions.push(lte(linkClicks.clickedAt, filters.endDate));
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    // Total clicks and unique visitors
+    const totalResult = await db
+      .select({ count: count() })
+      .from(linkClicks)
+      .where(whereClause);
+    const totalClicks = totalResult[0]?.count || 0;
+
+    const uniqueResult = await db
+      .select({ count: countDistinct(linkClicks.sessionId) })
+      .from(linkClicks)
+      .where(whereClause);
+    const uniqueVisitors = uniqueResult[0]?.count || 0;
+
+    // Clicks over time (daily)
+    const clicksByDate = await db
+      .select({
+        date: sql.raw(`DATE(clickedAt)`),
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(sql.raw('DATE(clickedAt)'))
+      .orderBy(sql.raw('DATE(clickedAt) DESC'))
+      .limit(30);
+
+    // Geographic distribution
+    const clicksByCountry = await db
+      .select({
+        country: linkClicks.country,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(linkClicks.country)
+      .orderBy(sql`${count()} DESC`)
+      .limit(10);
+
+    const clicksByCity = await db
+      .select({
+        city: linkClicks.city,
+        country: linkClicks.country,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(linkClicks.city, linkClicks.country)
+      .orderBy(sql`${count()} DESC`)
+      .limit(10);
+
+    // Device breakdown
+    const clicksByDevice = await db
+      .select({
+        deviceType: linkClicks.deviceType,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(linkClicks.deviceType)
+      .orderBy(sql`${count()} DESC`);
+
+    // Browser breakdown
+    const clicksByBrowser = await db
+      .select({
+        browser: linkClicks.browser,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(linkClicks.browser)
+      .orderBy(sql`${count()} DESC`)
+      .limit(10);
+
+    // OS breakdown
+    const clicksByOS = await db
+      .select({
+        os: linkClicks.os,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(linkClicks.os)
+      .orderBy(sql`${count()} DESC`)
+      .limit(10);
+
+    // Referrer breakdown
+    const clicksByReferrer = await db
+      .select({
+        referer: linkClicks.referer,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(linkClicks.referer)
+      .orderBy(sql`${count()} DESC`)
+      .limit(10);
+
+    return {
+      totalClicks,
+      uniqueVisitors,
+      clicksByDate,
+      clicksByCountry,
+      clicksByCity,
+      clicksByDevice,
+      clicksByBrowser,
+      clicksByOS,
+      clicksByReferrer,
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get link analytics:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get top performing links
+ */
+export async function getTopPerformingLinks(limit: number = 10, filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get top performing links: database not available");
+    return [];
+  }
+
+  try {
+    const { linkClicks, shortenedLinks } = await import("../drizzle/schema");
+    const { eq, and, gte, lte, count, sql } = await import("drizzle-orm");
+    
+    const conditions = [];
+    
+    if (filters?.startDate) {
+      conditions.push(gte(linkClicks.clickedAt, filters.startDate));
+    }
+    if (filters?.endDate) {
+      conditions.push(lte(linkClicks.clickedAt, filters.endDate));
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    const topLinks = await db
+      .select({
+        shortCode: linkClicks.shortCode,
+        clicks: count(),
+      })
+      .from(linkClicks)
+      .where(whereClause)
+      .groupBy(linkClicks.shortCode)
+      .orderBy(sql`${count()} DESC`)
+      .limit(limit);
+
+    // Enrich with link details
+    const enrichedLinks = await Promise.all(
+      topLinks.map(async (link) => {
+        const linkDetails = await db
+          .select()
+          .from(shortenedLinks)
+          .where(eq(shortenedLinks.shortCode, link.shortCode))
+          .limit(1);
+        
+        return {
+          ...link,
+          title: linkDetails[0]?.title,
+          originalUrl: linkDetails[0]?.originalUrl,
+        };
+      })
+    );
+
+    return enrichedLinks;
+  } catch (error) {
+    console.error("[Database] Failed to get top performing links:", error);
     throw error;
   }
 }
