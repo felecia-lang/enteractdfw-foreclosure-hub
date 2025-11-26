@@ -815,3 +815,11 @@
 - [ ] Update conversion funnel to include chat as engagement channel (future enhancement)
 - [ ] Test chat tracking in browser with GHL widget interactions
 - [ ] Write comprehensive tests for chat analytics endpoints
+
+
+## Update Booking Calendar URL
+- [x] Find all instances of old GHL booking URL (api.leadconnectorhq.com/widget/booking/vISKzedcwnJuerwQSBmg)
+- [x] Replace with new permanent URL (links.enteractai.com/widget/booking/vISKzedcwnJuerwQSBmg)
+- [x] Update BookingModal component
+- [x] Verify booking flow works with new URL (calendar loads successfully)
+- [x] Test booking modal opens and displays calendar correctly
