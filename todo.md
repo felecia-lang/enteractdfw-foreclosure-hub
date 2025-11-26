@@ -888,3 +888,13 @@
 - [x] Update redirect handler to parse user agent and extract device/browser/OS
 - [x] Fix MySQL ONLY_FULL_GROUP_BY compatibility with sql.raw
 - [x] Test analytics dashboard with existing click data
+
+## Link Expiration Management
+- [x] Add isActive field to shortenedLinks table schema
+- [x] Create database functions for expiration checks (getExpiredLinks, getExpiringLinks)
+- [x] Build scheduled job to run daily expiration checks at 2 AM
+- [x] Implement automatic link deactivation for expired links
+- [x] Create notification system for links expiring within 7 days
+- [x] Add tRPC endpoints for activation/deactivation and expiring/expired links
+- [x] Add expiration status badges to link management table (Inactive/Expired)
+- [x] Test scheduled job execution (runs successfully with no expired links)

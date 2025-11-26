@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Copy, ExternalLink, Trash2, BarChart3, Link as LinkIcon, Upload, Download } from "lucide-react";
+import { Loader2, Plus, Copy, ExternalLink, Trash2, BarChart3, Link as LinkIcon, Upload, Download, Power, PowerOff } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -523,7 +523,12 @@ export default function AdminLinks() {
                             <code className="text-sm bg-slate-100 px-2 py-1 rounded">
                               {link.customAlias || link.shortCode}
                             </code>
-                            {link.isExpired && (
+                            {!link.isActive && (
+                              <Badge variant="destructive" className="text-xs">
+                                Inactive
+                              </Badge>
+                            )}
+                            {link.isExpired && link.isActive && (
                               <Badge variant="destructive" className="text-xs">
                                 Expired
                               </Badge>

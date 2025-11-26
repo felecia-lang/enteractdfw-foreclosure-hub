@@ -11,6 +11,10 @@ import {
   updateShortenedLink,
   getLinkAnalytics,
   getTopPerformingLinks,
+  activateLink,
+  deactivateLink,
+  getExpiringLinks,
+  getExpiredLinks,
 } from "../db";
 
 /**
@@ -447,5 +451,64 @@ export const linksRouter = router({
       const { limit, startDate, endDate } = input;
       const topLinks = await getTopPerformingLinks(limit, { startDate, endDate });
       return topLinks;
+    }),
+
+  /**
+   * Activate a shortened link
+   * Admin-only endpoint
+   */
+  activate: adminProcedure
+    .input(z.object({ shortCode: z.string() }))
+    .mutation(async ({ input }) => {
+      const success = await activateLink(input.shortCode);
+      
+      if (!success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to activate link",
+        });
+      }
+      
+      return { success: true };
+    }),
+
+  /**
+   * Deactivate a shortened link
+   * Admin-only endpoint
+   */
+  deactivate: adminProcedure
+    .input(z.object({ shortCode: z.string() }))
+    .mutation(async ({ input }) => {
+      const success = await deactivateLink(input.shortCode);
+      
+      if (!success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to deactivate link",
+        });
+      }
+      
+      return { success: true };
+    }),
+
+  /**
+   * Get links expiring soon
+   * Admin-only endpoint
+   */
+  getExpiring: adminProcedure
+    .input(z.object({ daysAhead: z.number().min(1).max(90).default(7) }))
+    .query(async ({ input }) => {
+      const expiringLinks = await getExpiringLinks(input.daysAhead);
+      return expiringLinks;
+    }),
+
+  /**
+   * Get expired links
+   * Admin-only endpoint
+   */
+  getExpired: adminProcedure
+    .query(async () => {
+      const expiredLinks = await getExpiredLinks();
+      return expiredLinks;
     }),
 });

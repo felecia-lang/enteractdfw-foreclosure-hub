@@ -127,6 +127,13 @@
       "when": 1764168575355,
       "tag": "0017_woozy_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1764169723339,
+      "tag": "0018_shallow_wild_pack",
+      "breakpoints": true
     }
   ]
 }

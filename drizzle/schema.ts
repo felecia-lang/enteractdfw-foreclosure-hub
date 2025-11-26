@@ -324,6 +324,8 @@ export const shortenedLinks = mysqlTable("shortenedLinks", {
   title: varchar("title", { length: 255 }),
   /** Link expiration date (null = never expires) */
   expiresAt: timestamp("expiresAt"),
+  /** Whether the link is currently active (false = deactivated) */
+  isActive: int("isActive").default(1).notNull(),
   /** UTM parameters to append to the original URL */
   utmSource: varchar("utmSource", { length: 100 }),
   utmMedium: varchar("utmMedium", { length: 100 }),

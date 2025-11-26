@@ -1698,3 +1698,117 @@ export async function getTopPerformingLinks(limit: number = 10, filters?: {
     throw error;
   }
 }
+
+/**
+ * Get all expired links that are still active
+ */
+export async function getExpiredLinks() {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { and, lte, eq } = await import("drizzle-orm");
+    
+    const now = new Date();
+    const expired = await db
+      .select()
+      .from(shortenedLinks)
+      .where(
+        and(
+          lte(shortenedLinks.expiresAt, now),
+          eq(shortenedLinks.isActive, 1)
+        )
+      );
+    
+    return expired;
+  } catch (error) {
+    console.error("[Database] Failed to get expired links:", error);
+    return [];
+  }
+}
+
+/**
+ * Get links expiring within the specified number of days
+ */
+export async function getExpiringLinks(daysAhead: number = 7) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { and, gte, lte, eq } = await import("drizzle-orm");
+    
+    const now = new Date();
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + daysAhead);
+    
+    const expiring = await db
+      .select()
+      .from(shortenedLinks)
+      .where(
+        and(
+          gte(shortenedLinks.expiresAt, now),
+          lte(shortenedLinks.expiresAt, futureDate),
+          eq(shortenedLinks.isActive, 1)
+        )
+      );
+    
+    return expiring;
+  } catch (error) {
+    console.error("[Database] Failed to get expiring links:", error);
+    return [];
+  }
+}
+
+/**
+ * Deactivate a shortened link
+ */
+export async function deactivateLink(shortCode: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot deactivate link: database not available");
+    return false;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    await db
+      .update(shortenedLinks)
+      .set({ isActive: 0 })
+      .where(eq(shortenedLinks.shortCode, shortCode));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to deactivate link:", error);
+    return false;
+  }
+}
+
+/**
+ * Activate a shortened link
+ */
+export async function activateLink(shortCode: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot activate link: database not available");
+    return false;
+  }
+
+  try {
+    const { shortenedLinks } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    await db
+      .update(shortenedLinks)
+      .set({ isActive: 1 })
+      .where(eq(shortenedLinks.shortCode, shortCode));
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to activate link:", error);
+    return false;
+  }
+}
