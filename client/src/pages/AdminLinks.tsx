@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Copy, ExternalLink, Trash2, BarChart3, Link as LinkIcon } from "lucide-react";
+import { Loader2, Plus, Copy, ExternalLink, Trash2, BarChart3, Link as LinkIcon, Upload, Download } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -27,6 +27,20 @@ import { Badge } from "@/components/ui/badge";
 
 export default function AdminLinks() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isBulkImportDialogOpen, setIsBulkImportDialogOpen] = useState(false);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [importResults, setImportResults] = useState<{
+    total: number;
+    successCount: number;
+    errorCount: number;
+    results: Array<{
+      row: number;
+      success: boolean;
+      shortCode?: string;
+      error?: string;
+      originalUrl: string;
+    }>;
+  } | null>(null);
   const [originalUrl, setOriginalUrl] = useState("");
   const [customAlias, setCustomAlias] = useState("");
   const [title, setTitle] = useState("");
@@ -47,6 +61,18 @@ export default function AdminLinks() {
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create link");
+    },
+  });
+
+  // Bulk import mutation
+  const bulkImportMutation = trpc.links.bulkImport.useMutation({
+    onSuccess: (data) => {
+      setImportResults(data);
+      toast.success(`Imported ${data.successCount} of ${data.total} links`);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to import CSV");
     },
   });
 
@@ -97,6 +123,52 @@ export default function AdminLinks() {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.name.endsWith('.csv')) {
+        toast.error('Please select a CSV file');
+        return;
+      }
+      setCsvFile(file);
+      setImportResults(null);
+    }
+  };
+
+  const handleBulkImport = async () => {
+    if (!csvFile) {
+      toast.error('Please select a CSV file');
+      return;
+    }
+
+    try {
+      const csvContent = await csvFile.text();
+      bulkImportMutation.mutate({ csvContent });
+    } catch (error) {
+      toast.error('Failed to read CSV file');
+    }
+  };
+
+  const handleDownloadTemplate = () => {
+    const template = 'originalUrl,title,customAlias,utmSource,utmMedium,utmCampaign\nhttps://example.com/page1,Example Page,page1,email,newsletter,campaign1\nhttps://example.com/page2,Another Page,,social,facebook,campaign2';
+    const blob = new Blob([template], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'link-import-template.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success('Template downloaded');
+  };
+
+  const resetBulkImportDialog = () => {
+    setCsvFile(null);
+    setImportResults(null);
+    setIsBulkImportDialogOpen(false);
+  };
+
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString("en-US", {
       month: "short",
@@ -115,13 +187,22 @@ export default function AdminLinks() {
               <h1 className="text-3xl font-bold text-slate-900">Link Management</h1>
               <p className="text-slate-600 mt-1">Create and manage branded short links</p>
             </div>
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-blue-600 to-teal-600">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Short Link
-                </Button>
-              </DialogTrigger>
+            <div className="flex gap-3">
+              <Dialog open={isBulkImportDialogOpen} onOpenChange={setIsBulkImportDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Bulk Import
+                  </Button>
+                </DialogTrigger>
+              </Dialog>
+              <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-gradient-to-r from-blue-600 to-teal-600">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Short Link
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
                   <DialogTitle>Create Short Link</DialogTitle>
@@ -218,6 +299,144 @@ export default function AdminLinks() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+
+            {/* Bulk Import Dialog */}
+            <Dialog open={isBulkImportDialogOpen} onOpenChange={(open) => {
+              if (!open) resetBulkImportDialog();
+              setIsBulkImportDialogOpen(open);
+            }}>
+              <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Bulk Import Links</DialogTitle>
+                  <DialogDescription>
+                    Upload a CSV file to create multiple short links at once
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  {/* Template Download */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Download className="w-5 h-5 text-blue-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-blue-900 mb-1">CSV Template</h4>
+                        <p className="text-xs text-blue-700 mb-2">
+                          Download the template to see the required format. Required column: originalUrl. Optional: title, customAlias, utmSource, utmMedium, utmCampaign
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleDownloadTemplate}
+                          className="border-blue-600 text-blue-600 hover:bg-blue-100"
+                        >
+                          <Download className="w-3 h-3 mr-1" />
+                          Download Template
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* File Upload */}
+                  <div className="space-y-2">
+                    <Label htmlFor="csvFile">Select CSV File</Label>
+                    <Input
+                      id="csvFile"
+                      type="file"
+                      accept=".csv"
+                      onChange={handleFileChange}
+                      className="cursor-pointer"
+                    />
+                    {csvFile && (
+                      <p className="text-sm text-green-600 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                        {csvFile.name} selected
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Import Results */}
+                  {importResults && (
+                    <div className="space-y-3">
+                      <div className="bg-slate-50 border rounded-lg p-4">
+                        <h4 className="font-medium text-sm mb-2">Import Summary</h4>
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div>
+                            <div className="text-2xl font-bold text-slate-900">{importResults.total}</div>
+                            <div className="text-xs text-slate-600">Total Rows</div>
+                          </div>
+                          <div>
+                            <div className="text-2xl font-bold text-green-600">{importResults.successCount}</div>
+                            <div className="text-xs text-slate-600">Successful</div>
+                          </div>
+                          <div>
+                            <div className="text-2xl font-bold text-red-600">{importResults.errorCount}</div>
+                            <div className="text-xs text-slate-600">Failed</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Results Table */}
+                      {importResults.results.length > 0 && (
+                        <div className="border rounded-lg overflow-hidden">
+                          <div className="max-h-[300px] overflow-y-auto">
+                            <Table>
+                              <TableHeader className="bg-slate-50 sticky top-0">
+                                <TableRow>
+                                  <TableHead className="w-16">Row</TableHead>
+                                  <TableHead>URL</TableHead>
+                                  <TableHead className="w-24">Status</TableHead>
+                                  <TableHead>Short Code / Error</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {importResults.results.map((result, idx) => (
+                                  <TableRow key={idx}>
+                                    <TableCell className="font-mono text-xs">{result.row}</TableCell>
+                                    <TableCell className="text-xs truncate max-w-[200px]" title={result.originalUrl}>
+                                      {result.originalUrl}
+                                    </TableCell>
+                                    <TableCell>
+                                      {result.success ? (
+                                        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Success</Badge>
+                                      ) : (
+                                        <Badge variant="destructive">Failed</Badge>
+                                      )}
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      {result.success ? (
+                                        <code className="bg-slate-100 px-2 py-1 rounded">{result.shortCode}</code>
+                                      ) : (
+                                        <span className="text-red-600">{result.error}</span>
+                                      )}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={resetBulkImportDialog}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    onClick={handleBulkImport}
+                    disabled={!csvFile || bulkImportMutation.isPending}
+                    className="bg-gradient-to-r from-blue-600 to-teal-600"
+                  >
+                    {bulkImportMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    Import Links
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
 import { TRPCError } from "@trpc/server";
+import { parse } from "csv-parse/sync";
 import {
   createShortenedLink,
   getShortenedLink,
@@ -235,6 +236,139 @@ export const linksRouter = router({
       }
 
       return { success: true };
+    }),
+
+  /**
+   * Bulk import links from CSV
+   * Admin-only endpoint
+   */
+  bulkImport: adminProcedure
+    .input(
+      z.object({
+        csvContent: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        // Parse CSV content
+        const records = parse(input.csvContent, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true,
+        }) as Array<{
+          originalUrl: string;
+          title?: string;
+          customAlias?: string;
+          utmSource?: string;
+          utmMedium?: string;
+          utmCampaign?: string;
+        }>;
+
+        const results: Array<{
+          row: number;
+          success: boolean;
+          shortCode?: string;
+          error?: string;
+          originalUrl: string;
+        }> = [];
+
+        // Process each row
+        for (let i = 0; i < records.length; i++) {
+          const record = records[i];
+          const rowNumber = i + 2; // +2 because row 1 is header and arrays are 0-indexed
+
+          try {
+            // Validate required field
+            if (!record.originalUrl || record.originalUrl.trim() === "") {
+              results.push({
+                row: rowNumber,
+                success: false,
+                error: "Missing originalUrl",
+                originalUrl: record.originalUrl || "",
+              });
+              continue;
+            }
+
+            // Validate and normalize URL
+            const normalizedUrl = validateUrl(record.originalUrl.trim());
+
+            // Generate short code
+            let shortCode = generateShortCode();
+            let attempts = 0;
+            while (attempts < 10) {
+              const existing = await getShortenedLink(shortCode);
+              if (!existing) break;
+              shortCode = generateShortCode();
+              attempts++;
+            }
+
+            if (attempts >= 10) {
+              results.push({
+                row: rowNumber,
+                success: false,
+                error: "Failed to generate unique short code",
+                originalUrl: record.originalUrl,
+              });
+              continue;
+            }
+
+            // Check if custom alias is already taken
+            if (record.customAlias) {
+              const existing = await getShortenedLink(record.customAlias);
+              if (existing) {
+                results.push({
+                  row: rowNumber,
+                  success: false,
+                  error: `Custom alias '${record.customAlias}' already taken`,
+                  originalUrl: record.originalUrl,
+                });
+                continue;
+              }
+            }
+
+            // Create the link
+            await createShortenedLink({
+              originalUrl: normalizedUrl,
+              shortCode,
+              customAlias: record.customAlias?.trim() || undefined,
+              title: record.title?.trim() || undefined,
+              createdBy: ctx.user?.openId,
+              utmSource: record.utmSource?.trim() || undefined,
+              utmMedium: record.utmMedium?.trim() || undefined,
+              utmCampaign: record.utmCampaign?.trim() || undefined,
+            });
+
+            results.push({
+              row: rowNumber,
+              success: true,
+              shortCode: record.customAlias || shortCode,
+              originalUrl: record.originalUrl,
+            });
+          } catch (error) {
+            results.push({
+              row: rowNumber,
+              success: false,
+              error: error instanceof Error ? error.message : "Unknown error",
+              originalUrl: record.originalUrl || "",
+            });
+          }
+        }
+
+        const successCount = results.filter((r) => r.success).length;
+        const errorCount = results.filter((r) => !r.success).length;
+
+        return {
+          total: records.length,
+          successCount,
+          errorCount,
+          results,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error instanceof Error ? error.message : "Failed to parse CSV",
+        });
+      }
     }),
 
   /**
