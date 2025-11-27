@@ -12,6 +12,7 @@ import { generateNoticeOfDefaultPDF } from "../pdfGeneratorNoticeOfDefault";
 import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
 import { handleGHLBookingWebhook } from "../webhooks/ghl-booking";
 import shortlinksRouter from "../routes/shortlinks";
+import { initializeScheduledJobs } from "../jobs/scheduler";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -149,6 +150,9 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    
+    // Initialize scheduled jobs after server starts
+    initializeScheduledJobs();
   });
 }
 

@@ -936,3 +936,13 @@
 - [x] Verify links table loads correctly in admin dashboard (38 links displayed)
 - [x] Test all link management pages (AdminLinks, AdminLinkAnalytics, AdminExpiringLinks)
 - [x] All pages loading successfully after database fix
+
+## Email Notifications for Expiring Links
+- [x] Review existing notification system (notifyOwner function)
+- [x] Email notification already implemented in linkExpiration.ts job
+- [x] Install node-cron package for scheduling
+- [x] Create scheduler.ts to initialize cron jobs
+- [x] Configure daily cron job at 2:00 AM CST
+- [x] Integrate scheduler into server startup (server/_core/index.ts)
+- [x] Test scheduled job execution manually (runs successfully)
+- [x] Verify scheduler initializes on server start
