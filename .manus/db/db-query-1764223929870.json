@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE shortenedLinks ADD COLUMN campaignId INT",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user tYQ9sMJ3YyJbnfU.ac4291f19fa3 --database LjpDYh45TKLXumuEiGDadw --execute ALTER TABLE shortenedLinks ADD COLUMN campaignId INT",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 520
+}
