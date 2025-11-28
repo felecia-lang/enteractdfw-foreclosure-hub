@@ -951,3 +951,11 @@
 - [x] Remove auto-execution code from linkExpiration.ts that calls process.exit()
 - [x] Test server starts without exiting (verified - scheduler initializes and server stays running)
 - [x] Ready for deployment (server no longer exits on startup)
+
+## Fix Property Value Estimator - Sale Options Comparison
+- [x] Investigate why comparison results (Traditional Sale, Cash Offer, Short Sale) are not displaying
+- [x] Check frontend component rendering logic (comparison only shows when mortgage balance > 0)
+- [x] Verify backend API returns comparison data correctly (working as expected)
+- [x] Add helpful message when mortgage balance is not entered
+- [x] Implement "Add Mortgage Balance" CTA button that scrolls to form and focuses field
+- [x] Test the new helpful message display (verified - shows blue box with TrendingUp icon and button)

@@ -584,6 +584,33 @@ export default function PropertyValueEstimator() {
                 )}
 
                 {/* Sale Options Comparison */}
+                {!comparison && showResults && !formData.mortgageBalance && (
+                  <div className="mb-8 p-6 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0">
+                        <TrendingUp className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-blue-900 mb-2">Want to Compare Your Sale Options?</h3>
+                        <p className="text-blue-700 mb-4">
+                          Enter your current mortgage balance above to see a detailed comparison of Traditional Sale, Cash Offer, and Short Sale options with estimated net proceeds and timelines for each.
+                        </p>
+                        <Button
+                          onClick={() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            setTimeout(() => {
+                              document.getElementById('mortgageBalance')?.focus();
+                            }, 500);
+                          }}
+                          variant="default"
+                          className="bg-blue-600 hover:bg-blue-700"
+                        >
+                          Add Mortgage Balance
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {comparison && (
                   <div className="mb-8">
                     <h3 className="text-2xl font-bold text-foreground mb-2 text-center">Compare Your Sale Options</h3>
