@@ -959,3 +959,20 @@
 - [x] Add helpful message when mortgage balance is not entered
 - [x] Implement "Add Mortgage Balance" CTA button that scrolls to form and focuses field
 - [x] Test the new helpful message display (verified - shows blue box with TrendingUp icon and button)
+
+## PDF Report Generation for Property Valuation
+- [x] PDF generation library already installed (pdfkit + @types/pdfkit)
+- [x] PDF report structure already designed (server/comparisonPdfGenerator.ts)
+- [x] Backend API endpoint already exists (downloadComparisonPDF tRPC mutation)
+- [x] PDF generation with EnterActDFW branding already implemented
+- [x] Property details section included in PDF
+- [x] Estimated value section with range included
+- [x] Sale options comparison table with net proceeds included
+- [x] Pros/cons for each sale option included
+- [x] Contact information and next steps section included
+- [x] "Download Full Report (PDF)" button added to results page
+- [x] Updated frontend to use tRPC mutation (downloadPDFMutation)
+- [x] Fixed TypeScript type errors (Number() conversions)
+- [ ] Fix tRPC binary response issue (tRPC can't return PDF buffers directly)
+- [ ] Solution: Create Express route for PDF download OR return base64 encoded PDF
+- [ ] Test PDF download after implementing solution

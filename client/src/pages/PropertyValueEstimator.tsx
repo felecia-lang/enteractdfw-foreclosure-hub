@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar, MessageSquare, Save } from "lucide-react";
+import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar, MessageSquare, Save, Loader2 } from "lucide-react";
 import { APP_TITLE } from "@/const";
 import { EmailCaptureDialog } from "@/components/EmailCaptureDialog";
 import SmsCaptureDialog from "@/components/SmsCaptureDialog";
@@ -43,6 +43,7 @@ export default function PropertyValueEstimator() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [isPreFilled, setIsPreFilled] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
 
   const [location] = useLocation();
 
@@ -235,6 +236,38 @@ export default function PropertyValueEstimator() {
     setResult(null);
     setShowResults(false);
     setComparison(null);
+  };
+
+  const downloadPDFMutation = trpc.propertyValuation.downloadComparisonPDF.useMutation({
+    onSuccess: () => {
+      toast.success('PDF report downloaded successfully!');
+    },
+    onError: (error) => {
+      console.error('PDF download error:', error);
+      toast.error('Failed to download PDF report. Please try again.');
+    },
+  });
+
+  const handleDownloadPDF = async () => {
+    if (!result || !comparison) return;
+
+    setDownloadingPDF(true);
+    try {
+      await downloadPDFMutation.mutateAsync({
+        propertyValue: result.estimatedValue,
+        mortgageBalance: Number(formData.mortgageBalance) || 0,
+        propertyDetails: {
+          zipCode: formData.zipCode,
+          propertyType: formData.propertyType,
+          squareFeet: Number(formData.squareFeet),
+          bedrooms: Number(formData.bedrooms),
+          bathrooms: Number(formData.bathrooms),
+          condition: formData.condition,
+        },
+      });
+    } finally {
+      setDownloadingPDF(false);
+    }
   };
 
   const formatCurrency = (value: number) => {
@@ -827,15 +860,37 @@ export default function PropertyValueEstimator() {
                   </div>
                 )}
 
-                <div className="flex gap-4">
-                  <Button onClick={handleReset} variant="outline" className="flex-1">
-                    Calculate Another Property
-                  </Button>
-                  <Button asChild className="flex-1">
-                    <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
-                      Get Professional Appraisal
-                    </TrackablePhoneLink>
-                  </Button>
+                <div className="flex flex-col gap-3">
+                  <div className="flex gap-4">
+                    <Button onClick={handleReset} variant="outline" className="flex-1">
+                      Calculate Another Property
+                    </Button>
+                    <Button asChild className="flex-1">
+                      <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                        Get Professional Appraisal
+                      </TrackablePhoneLink>
+                    </Button>
+                  </div>
+                  {comparison && (
+                    <Button 
+                      onClick={handleDownloadPDF} 
+                      variant="default" 
+                      className="w-full"
+                      disabled={downloadingPDF}
+                    >
+                      {downloadingPDF ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Generating PDF...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="mr-2 h-4 w-4" />
+                          Download Full Report (PDF)
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </div>
               </Card>
 
