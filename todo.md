@@ -946,3 +946,8 @@
 - [x] Integrate scheduler into server startup (server/_core/index.ts)
 - [x] Test scheduled job execution manually (runs successfully)
 - [x] Verify scheduler initializes on server start
+
+## Fix Deployment Failure
+- [x] Remove auto-execution code from linkExpiration.ts that calls process.exit()
+- [x] Test server starts without exiting (verified - scheduler initializes and server stays running)
+- [x] Ready for deployment (server no longer exits on startup)

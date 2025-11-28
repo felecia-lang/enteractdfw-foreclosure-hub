@@ -60,10 +60,5 @@ export async function checkLinkExpiration() {
   }
 }
 
-// Run immediately when imported (for testing)
-if (import.meta.url === `file://${process.argv[1]}`) {
-  checkLinkExpiration().then(() => {
-    console.log("[LinkExpiration] Manual execution completed");
-    process.exit(0);
-  });
-}
+// To manually test this job, run:
+// npx tsx server/jobs/linkExpiration.ts
