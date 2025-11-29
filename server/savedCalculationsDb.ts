@@ -28,6 +28,7 @@ function getExpirationDate(): Date {
  */
 export async function saveCalculation(data: {
   email: string;
+  propertyAddress?: string;
   zipCode: string;
   propertyType: string;
   squareFeet: number;
@@ -48,6 +49,7 @@ export async function saveCalculation(data: {
   const insertData: InsertSavedCalculation = {
     token,
     email: data.email,
+    propertyAddress: data.propertyAddress,
     zipCode: data.zipCode,
     propertyType: data.propertyType,
     squareFeet: data.squareFeet,

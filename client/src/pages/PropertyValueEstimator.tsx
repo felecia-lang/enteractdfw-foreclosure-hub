@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,19 +13,21 @@ import {
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar, MessageSquare, Save, Loader2 } from "lucide-react";
+import { Calculator, Home, TrendingUp, AlertCircle, Phone, Download, Mail, Calendar, MessageSquare, Save, Loader2, History } from "lucide-react";
 import { APP_TITLE } from "@/const";
 import { EmailCaptureDialog } from "@/components/EmailCaptureDialog";
 import SmsCaptureDialog from "@/components/SmsCaptureDialog";
 import SaveResumeDialog from "@/components/SaveResumeDialog";
 import { ProgressBar } from "@/components/ProgressBar";
 import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
 
 export default function PropertyValueEstimator() {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
+    propertyAddress: "",
     zipCode: "",
     propertyType: "single_family" as "single_family" | "condo" | "townhouse" | "multi_family",
     squareFeet: "",
@@ -65,6 +68,7 @@ export default function PropertyValueEstimator() {
     if (getCalculationQuery.data) {
       const calc = getCalculationQuery.data;
       setFormData({
+        propertyAddress: calc.propertyAddress || "",
         zipCode: calc.zipCode,
         propertyType: calc.propertyType as any,
         squareFeet: calc.squareFeet.toString(),
@@ -164,6 +168,7 @@ export default function PropertyValueEstimator() {
     try {
       await saveCalculationMutation.mutateAsync({
         email,
+        propertyAddress: formData.propertyAddress,
         zipCode: formData.zipCode,
         propertyType: formData.propertyType,
         squareFeet: parseFloat(formData.squareFeet),
@@ -225,6 +230,7 @@ export default function PropertyValueEstimator() {
 
   const handleReset = () => {
     setFormData({
+      propertyAddress: "",
       zipCode: "",
       propertyType: "single_family",
       squareFeet: "",
@@ -235,36 +241,52 @@ export default function PropertyValueEstimator() {
     });
     setResult(null);
     setShowResults(false);
-    setComparison(null);
   };
-
-  const downloadPDFMutation = trpc.propertyValuation.downloadComparisonPDF.useMutation({
-    onSuccess: () => {
-      toast.success('PDF report downloaded successfully!');
-    },
-    onError: (error) => {
-      console.error('PDF download error:', error);
-      toast.error('Failed to download PDF report. Please try again.');
-    },
-  });
 
   const handleDownloadPDF = async () => {
     if (!result || !comparison) return;
 
     setDownloadingPDF(true);
     try {
-      await downloadPDFMutation.mutateAsync({
-        propertyValue: result.estimatedValue,
-        mortgageBalance: Number(formData.mortgageBalance) || 0,
-        propertyDetails: {
-          zipCode: formData.zipCode,
-          propertyType: formData.propertyType,
-          squareFeet: Number(formData.squareFeet),
-          bedrooms: Number(formData.bedrooms),
-          bathrooms: Number(formData.bathrooms),
-          condition: formData.condition,
+      const response = await fetch('/api/download-comparison-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          propertyValue: result.estimatedValue,
+          mortgageBalance: Number(formData.mortgageBalance) || 0,
+          propertyDetails: {
+            propertyAddress: formData.propertyAddress,
+            zipCode: formData.zipCode,
+            propertyType: formData.propertyType,
+            squareFeet: Number(formData.squareFeet),
+            bedrooms: Number(formData.bedrooms),
+            bathrooms: Number(formData.bathrooms),
+            condition: formData.condition,
+          },
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      // Convert response to blob and trigger download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Property_Sale_Options_Comparison.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast.success('PDF report downloaded successfully!');
+    } catch (error) {
+      console.error('PDF download error:', error);
+      toast.error('Failed to download PDF report. Please try again.');
     } finally {
       setDownloadingPDF(false);
     }
@@ -327,6 +349,21 @@ export default function PropertyValueEstimator() {
             <Card className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
+                  {/* Property Address */}
+                  <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor="propertyAddress">Property Address</Label>
+                    <Input
+                      id="propertyAddress"
+                      type="text"
+                      placeholder="123 Main St, Dallas, TX"
+                      value={formData.propertyAddress}
+                      onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Optional - helps identify the property in your reports
+                    </p>
+                  </div>
+
                   {/* ZIP Code */}
                   <div className="space-y-2">
                     <Label htmlFor="zipCode">Property ZIP Code *</Label>
@@ -795,14 +832,20 @@ export default function PropertyValueEstimator() {
                           variant="outline"
                           size="lg"
                           className="w-full"
-                          onClick={() => {
-                            toast.info("PDF download coming soon!", {
-                              description: "For now, use the Email or SMS option to receive your report.",
-                            });
-                          }}
+                          onClick={handleDownloadPDF}
+                          disabled={!comparison || downloadingPDF}
                         >
-                          <Download className="h-5 w-5 mr-2" />
-                          Download PDF
+                          {downloadingPDF ? (
+                            <>
+                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <Download className="h-5 w-5 mr-2" />
+                              Download PDF
+                            </>
+                          )}
                         </Button>
 
                         <Button
@@ -833,6 +876,22 @@ export default function PropertyValueEstimator() {
                           <Calendar className="h-5 w-5 mr-2" />
                           Schedule Free Consultation
                         </Button>
+
+                        {user && (
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            className="w-full"
+                            asChild
+                          >
+                            <Link href="/comparison-history">
+                              <a className="flex items-center justify-center">
+                                <History className="h-5 w-5 mr-2" />
+                                View Past Comparisons
+                              </a>
+                            </Link>
+                          </Button>
+                        )}
                       </div>
 
                       {/* Help Note */}

@@ -1,0 +1,1 @@
+ALTER TABLE `savedCalculations` ADD `propertyAddress` varchar(255);

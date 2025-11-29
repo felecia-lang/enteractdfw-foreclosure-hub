@@ -976,3 +976,42 @@
 - [ ] Fix tRPC binary response issue (tRPC can't return PDF buffers directly)
 - [ ] Solution: Create Express route for PDF download OR return base64 encoded PDF
 - [ ] Test PDF download after implementing solution
+
+## Fix PDF Download Functionality (Express Route Solution)
+- [x] Create Express route at /api/download-comparison-pdf for binary PDF delivery
+- [x] Update server/_core/index.ts to add new route handler
+- [x] Accept comparison data as query parameters or POST body
+- [x] Call comparisonPdfGenerator.ts to generate PDF buffer
+- [x] Set proper Content-Type: application/pdf header
+- [x] Set Content-Disposition: attachment header with filename
+- [x] Stream PDF buffer to response
+- [x] Update PropertyValueEstimator.tsx to use new Express route
+- [x] Replace tRPC mutation with window.open() or fetch with blob response
+- [x] Test PDF download works correctly in browser
+
+## Add Property Address Field
+- [x] Add propertyAddress field to PropertyValueEstimator form state
+- [x] Add address input field to form UI (before ZIP code field)
+- [x] Update form validation to include address
+- [x] Pass address to all backend endpoints (email, SMS, save, PDF)
+- [x] Update comparisonPdfGenerator.ts to include address in PDF
+- [x] Update comparisonEmailService.ts to include address in email
+- [x] Update SMS service to include address in message
+- [x] Update savedCalculations schema to store address
+- [x] Test address field displays correctly in all outputs
+
+## Comparison History Feature
+- [x] Create comparisonHistory database table with schema
+- [x] Add fields: userId, propertyAddress, zipCode, propertyType, squareFeet, bedrooms, bathrooms, condition, estimatedValue, mortgageBalance, equity, createdAt
+- [x] Create database helper functions (saveComparison, getUserComparisons, getComparisonById)
+- [x] Add tRPC router for comparison history (save, getAll, getById)
+- [x] Automatically save comparison when user views results
+- [x] Create /comparison-history page route
+- [x] Build ComparisonHistory.tsx component with table/card view
+- [x] Display saved comparisons with property details and date
+- [x] Add "View Details" button to load saved comparison
+- [x] Add "Download PDF" button for each saved comparison
+- [x] Add "Delete" button to remove saved comparisons
+- [x] Show empty state when no comparisons exist
+- [x] Add link to comparison history from PropertyValueEstimator results
+- [x] Test full workflow: calculate → auto-save → view history → reload comparison

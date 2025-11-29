@@ -10,6 +10,8 @@ import { serveStatic, setupVite } from "./vite";
 import { generateAvoidingScamsPDF, generateForeclosureGuidePDF, generatePersonalizedTimelinePDF } from "../pdfGenerator";
 import { generateNoticeOfDefaultPDF } from "../pdfGeneratorNoticeOfDefault";
 import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
+import { generateComparisonPDF } from "../comparisonPdfGenerator";
+import { calculateSaleOptions } from "../saleOptionsComparison";
 import { handleGHLBookingWebhook } from "../webhooks/ghl-booking";
 import shortlinksRouter from "../routes/shortlinks";
 import { initializeScheduledJobs } from "../jobs/scheduler";
@@ -119,6 +121,35 @@ async function startServer() {
       
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'attachment; filename="My_Foreclosure_Timeline.pdf"');
+      res.send(pdfBuffer);
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  });
+  
+  // Comparison PDF download route
+  app.post("/api/download-comparison-pdf", async (req, res) => {
+    try {
+      const { propertyValue, mortgageBalance, propertyDetails } = req.body;
+      
+      if (!propertyValue || !mortgageBalance || !propertyDetails) {
+        return res.status(400).json({ error: 'Invalid request: propertyValue, mortgageBalance, and propertyDetails are required' });
+      }
+      
+      // Calculate comparison
+      const comparison = calculateSaleOptions(propertyValue, mortgageBalance);
+      
+      // Generate PDF
+      const pdfBuffer = await generateComparisonPDF({
+        propertyValue,
+        propertyDetails,
+        comparison,
+        generatedAt: new Date()
+      });
+      
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="Property_Sale_Options_Comparison.pdf"');
       res.send(pdfBuffer);
     } catch (error) {
       console.error('PDF generation error:', error);

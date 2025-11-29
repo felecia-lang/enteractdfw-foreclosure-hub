@@ -87,7 +87,7 @@ export default function AdminLinkAnalytics() {
 
   // Prepare chart data
   const clicksOverTime = analytics.clicksByDate.map((item) => ({
-    date: new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    date: new Date(item.date as string | number | Date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
     clicks: item.clicks,
   })).reverse();
 

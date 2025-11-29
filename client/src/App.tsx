@@ -33,6 +33,7 @@ import AdminLinks from "@/pages/AdminLinks";
 import AdminLinkAnalytics from "@/pages/AdminLinkAnalytics";
 import AdminCampaigns from "@/pages/AdminCampaigns";
 import AdminExpiringLinks from "@/pages/AdminExpiringLinks";
+import ComparisonHistory from "@/pages/ComparisonHistory";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />
       <Route path="/property-value-estimator" component={PropertyValueEstimator} />
+      <Route path="/comparison-history" component={ComparisonHistory} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

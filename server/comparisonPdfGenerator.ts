@@ -7,6 +7,7 @@ import PDFDocument from "pdfkit";
 import type { SaleOptionsComparison } from "./saleOptionsComparison";
 
 interface PropertyDetails {
+  propertyAddress?: string;
   zipCode: string;
   propertyType: string;
   squareFeet: number;
@@ -86,6 +87,7 @@ export async function generateComparisonPDF(data: ComparisonReportData): Promise
         .moveDown(0.5);
 
       const details = [
+        ...(data.propertyDetails.propertyAddress ? [{ label: "Address", value: data.propertyDetails.propertyAddress }] : []),
         { label: "ZIP Code", value: data.propertyDetails.zipCode },
         { label: "Property Type", value: data.propertyDetails.propertyType },
         { label: "Square Feet", value: data.propertyDetails.squareFeet.toLocaleString() },

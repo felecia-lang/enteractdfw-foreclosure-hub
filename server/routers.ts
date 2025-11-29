@@ -560,6 +560,7 @@ Email: info@enteractdfw.com
   propertyValuation: router({
     calculate: publicProcedure
       .input(z.object({
+        propertyAddress: z.string().optional(),
         zipCode: z.string().regex(/^\d{5}$/, "ZIP code must be 5 digits"),
         propertyType: z.enum(["single_family", "condo", "townhouse", "multi_family"]),
         squareFeet: z.number().min(300).max(10000),
@@ -568,10 +569,33 @@ Email: info@enteractdfw.com
         condition: z.enum(["excellent", "good", "fair", "poor"]),
         mortgageBalance: z.number().optional(),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         try {
           const { calculatePropertyValue } = await import("./propertyValuation");
           const result = calculatePropertyValue(input);
+          
+          // Save to comparison history if user is authenticated
+          if (ctx.user) {
+            try {
+              const { saveComparison } = await import("./comparisonHistoryDb");
+              await saveComparison({
+                userId: ctx.user.id,
+                propertyAddress: input.propertyAddress,
+                zipCode: input.zipCode,
+                propertyType: input.propertyType,
+                squareFeet: input.squareFeet,
+                bedrooms: input.bedrooms,
+                bathrooms: input.bathrooms,
+                condition: input.condition,
+                estimatedValue: result.estimatedValue,
+                mortgageBalance: input.mortgageBalance || 0,
+                equity: result.estimatedValue - (input.mortgageBalance || 0),
+              });
+            } catch (historyError) {
+              // Don't fail the calculation if history save fails
+              console.error("[PropertyValuation] Failed to save comparison history:", historyError);
+            }
+          }
           
           return result;
         } catch (error) {
@@ -780,6 +804,7 @@ Email: info@enteractdfw.com
     saveCalculation: publicProcedure
       .input(z.object({
         email: z.string().email(),
+        propertyAddress: z.string().optional(),
         zipCode: z.string(),
         propertyType: z.string(),
         squareFeet: z.number(),
@@ -799,6 +824,7 @@ Email: info@enteractdfw.com
           // Save calculation and get token
           const token = await saveCalculation({
             email: input.email,
+            propertyAddress: input.propertyAddress,
             zipCode: input.zipCode,
             propertyType: input.propertyType,
             squareFeet: input.squareFeet,
@@ -1462,6 +1488,71 @@ Email: info@enteractdfw.com
 
   // Campaign management
   campaigns: campaignsRouter,
+
+  // Comparison history
+  comparisonHistory: router({
+    // Get all comparisons for the current user
+    getAll: protectedProcedure.query(async ({ ctx }) => {
+      try {
+        const { getUserComparisons } = await import("./comparisonHistoryDb");
+        return await getUserComparisons(ctx.user.id);
+      } catch (error) {
+        console.error("[ComparisonHistory] Failed to get comparisons:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to retrieve comparison history",
+        });
+      }
+    }),
+
+    // Get a specific comparison by ID
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input, ctx }) => {
+        try {
+          const { getComparisonById } = await import("./comparisonHistoryDb");
+          const comparison = await getComparisonById(input.id, ctx.user.id);
+          if (!comparison) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Comparison not found",
+            });
+          }
+          return comparison;
+        } catch (error) {
+          if (error instanceof TRPCError) throw error;
+          console.error("[ComparisonHistory] Failed to get comparison:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve comparison",
+          });
+        }
+      }),
+
+    // Delete a comparison
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        try {
+          const { deleteComparison } = await import("./comparisonHistoryDb");
+          const success = await deleteComparison(input.id, ctx.user.id);
+          if (!success) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Comparison not found or access denied",
+            });
+          }
+          return { success: true };
+        } catch (error) {
+          if (error instanceof TRPCError) throw error;
+          console.error("[ComparisonHistory] Failed to delete comparison:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to delete comparison",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

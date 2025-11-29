@@ -154,6 +154,7 @@ export const savedCalculations = mysqlTable("savedCalculations", {
   email: varchar("email", { length: 320 }).notNull(),
   
   // Property details
+  propertyAddress: varchar("propertyAddress", { length: 255 }),
   zipCode: varchar("zipCode", { length: 10 }).notNull(),
   propertyType: varchar("propertyType", { length: 50 }).notNull(),
   squareFeet: int("squareFeet").notNull(),
@@ -392,3 +393,30 @@ export const linkClicks = mysqlTable("linkClicks", {
 
 export type LinkClick = typeof linkClicks.$inferSelect;
 export type InsertLinkClick = typeof linkClicks.$inferInsert;
+
+/**
+ * Comparison history table for storing property valuation calculations.
+ * Allows users to view their past property valuations and comparisons.
+ */
+export const comparisonHistory = mysqlTable("comparisonHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  /** User ID (references users table) */
+  userId: int("userId").notNull(),
+  /** Property details */
+  propertyAddress: varchar("propertyAddress", { length: 255 }),
+  zipCode: varchar("zipCode", { length: 10 }).notNull(),
+  propertyType: varchar("propertyType", { length: 50 }).notNull(),
+  squareFeet: int("squareFeet").notNull(),
+  bedrooms: int("bedrooms").notNull(),
+  bathrooms: int("bathrooms").notNull(),
+  condition: varchar("condition", { length: 50 }).notNull(),
+  /** Calculation results */
+  estimatedValue: int("estimatedValue").notNull(),
+  mortgageBalance: int("mortgageBalance").notNull(),
+  equity: int("equity").notNull(),
+  /** Timestamps */
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ComparisonHistory = typeof comparisonHistory.$inferSelect;
+export type InsertComparisonHistory = typeof comparisonHistory.$inferInsert;
