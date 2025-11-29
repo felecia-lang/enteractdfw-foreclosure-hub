@@ -1015,3 +1015,14 @@
 - [x] Show empty state when no comparisons exist
 - [x] Add link to comparison history from PropertyValueEstimator results
 - [x] Test full workflow: calculate → auto-save → view history → reload comparison
+
+## Reformat Notice of Default Checklist for Printing
+- [x] Examine current NoticeOfDefaultChecklist.tsx layout
+- [x] Identify elements that overflow page margins
+- [x] Adjust font sizes for better fit on 8.5 x 11 inch paper
+- [x] Optimize column widths or switch to single-column layout if needed
+- [x] Increase page margins for better printability
+- [x] Shorten text entries using bullet points where appropriate
+- [x] Add print-specific CSS styles (@media print)
+- [x] Test print preview to ensure clean layout
+- [x] Verify all content fits within page boundaries

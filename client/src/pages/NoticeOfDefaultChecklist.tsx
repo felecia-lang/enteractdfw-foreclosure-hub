@@ -187,7 +187,7 @@ export default function NoticeOfDefaultChecklist() {
                       className="mt-1 h-4 w-4 print:h-3 print:w-3" 
                       onChange={(e) => handleCheckboxChange("Find the total amount needed to cure the default (reinstatement amount)", e.target.checked)}
                     />
-                    <span className="text-sm">Find the total amount needed to cure the default (reinstatement amount)</span>
+                    <span className="text-sm">Find total amount needed to cure default (reinstatement amount)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input 
@@ -195,11 +195,11 @@ export default function NoticeOfDefaultChecklist() {
                       className="mt-1 h-4 w-4 print:h-3 print:w-3" 
                       onChange={(e) => handleCheckboxChange("Note the deadline to cure the default (typically 20-30 days in Texas)", e.target.checked)}
                     />
-                    <span className="text-sm">Note the deadline to cure the default (typically 20-30 days in Texas)</span>
+                    <span className="text-sm">Note deadline to cure (typically 20-30 days in Texas)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Identify who sent the notice (lender name and contact information)</span>
+                    <span className="text-sm">Identify who sent notice (lender name and contact info)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -232,7 +232,7 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Set reminders for key dates to ensure you don't miss deadlines</span>
+                    <span className="text-sm">Set reminders for key dates to avoid missing deadlines</span>
                   </label>
                 </div>
               </CardContent>
@@ -265,7 +265,7 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Current mortgage statement showing balance and payment history</span>
+                    <span className="text-sm">Current mortgage statement with balance and payment history</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -298,7 +298,7 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Ask to speak with Loss Mitigation or Foreclosure Prevention department</span>
+                    <span className="text-sm">Ask for Loss Mitigation or Foreclosure Prevention dept</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -306,7 +306,7 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Ask about available options (loan modification, repayment plan, forbearance)</span>
+                    <span className="text-sm">Ask about options (modification, repayment plan, forbearance)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -314,11 +314,11 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Take detailed notes (date, time, representative name, discussion)</span>
+                    <span className="text-sm">Take notes (date, time, rep name, discussion)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Request written confirmation of any agreements or next steps</span>
+                    <span className="text-sm">Request written confirmation of agreements/next steps</span>
                   </label>
                 </div>
               </CardContent>
@@ -339,7 +339,7 @@ export default function NoticeOfDefaultChecklist() {
                 <div className="space-y-2 ml-13 print:ml-11">
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Find a HUD-approved counselor at www.consumerfinance.gov/find-a-housing-counselor</span>
+                    <span className="text-sm">Find HUD counselor at consumerfinance.gov/find-a-housing-counselor</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -372,11 +372,11 @@ export default function NoticeOfDefaultChecklist() {
                 <div className="space-y-2 ml-13 print:ml-11">
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Consider reinstatement (pay all past-due amounts if you have funds)</span>
+                    <span className="text-sm">Consider reinstatement (pay past-due amounts if funds available)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Explore loan modification (permanently change loan terms)</span>
+                    <span className="text-sm">Explore loan modification (change loan terms)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -384,7 +384,7 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Consider selling your home (especially if you have equity)</span>
+                    <span className="text-sm">Consider selling home (especially if you have equity)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -425,7 +425,7 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Submit via certified mail or online portal (keep tracking confirmation)</span>
+                    <span className="text-sm">Submit via certified mail or online (keep tracking)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -450,19 +450,19 @@ export default function NoticeOfDefaultChecklist() {
                 <div className="space-y-2 ml-13 print:ml-11">
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Get a professional market analysis of your home's value</span>
+                    <span className="text-sm">Get professional market analysis of home value</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Calculate your equity (market value minus what you owe)</span>
+                    <span className="text-sm">Calculate equity (market value minus amount owed)</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Contact EnterActDFW for a fair, no-obligation cash offer: (832) 932-7585</span>
+                    <span className="text-sm">Contact EnterActDFW for no-obligation cash offer: (832) 932-7585</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Understand that selling stops foreclosure and may preserve your credit</span>
+                    <span className="text-sm">Note: Selling stops foreclosure and may preserve credit</span>
                   </label>
                 </div>
               </CardContent>
@@ -623,13 +623,15 @@ export default function NoticeOfDefaultChecklist() {
       <style>{`
         @media print {
           @page {
-            margin: 0.5in;
+            margin: 0.6in 0.5in;
             size: letter;
           }
           
           body {
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
+            font-size: 11pt;
+            line-height: 1.3;
           }
           
           .print\\:hidden {
@@ -645,9 +647,93 @@ export default function NoticeOfDefaultChecklist() {
             page-break-inside: avoid;
           }
           
+          .print\\:py-4 {
+            padding-top: 0.5rem !important;
+            padding-bottom: 0.5rem !important;
+          }
+          
+          .print\\:p-4 {
+            padding: 0.5rem !important;
+          }
+          
+          .print\\:p-3 {
+            padding: 0.4rem !important;
+          }
+          
+          .print\\:p-1 {
+            padding: 0.15rem !important;
+          }
+          
+          .print\\:mb-2 {
+            margin-bottom: 0.3rem !important;
+          }
+          
+          .print\\:mb-4 {
+            margin-bottom: 0.5rem !important;
+          }
+          
+          .print\\:space-y-4 > * + * {
+            margin-top: 0.5rem !important;
+          }
+          
+          .print\\:ml-11 {
+            margin-left: 2.5rem !important;
+          }
+          
+          .print\\:text-lg {
+            font-size: 1.05rem !important;
+            line-height: 1.4 !important;
+          }
+          
+          .print\\:text-sm {
+            font-size: 0.8rem !important;
+          }
+          
+          .print\\:w-8 {
+            width: 1.8rem !important;
+          }
+          
+          .print\\:h-8 {
+            height: 1.8rem !important;
+          }
+          
+          .print\\:h-3 {
+            height: 0.65rem !important;
+          }
+          
+          .print\\:w-3 {
+            width: 0.65rem !important;
+          }
+          
+          .print\\:border-2 {
+            border-width: 1.5px !important;
+          }
+          
+          /* Optimize text for printing */
+          h1, h2, h3 {
+            page-break-after: avoid;
+          }
+          
+          /* Reduce spacing between checklist items */
+          label {
+            margin-bottom: 0.15rem !important;
+          }
+          
+          /* Ensure checkboxes print properly */
           input[type="checkbox"] {
             -webkit-appearance: checkbox;
             appearance: checkbox;
+            flex-shrink: 0;
+          }
+          
+          /* Tighter card spacing */
+          .space-y-6 > * + * {
+            margin-top: 0.6rem !important;
+          }
+          
+          /* Optimize urgent notice box */
+          .border-destructive {
+            border-width: 1.5px !important;
           }
         }
       `}</style>
