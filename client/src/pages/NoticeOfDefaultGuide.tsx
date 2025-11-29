@@ -230,9 +230,9 @@ export default function NoticeOfDefaultGuide() {
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/">
-            <a className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <img src="/enteractdfw-logo.png" alt="EnterActDFW" className="h-10" />
-            </a>
+            </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/">

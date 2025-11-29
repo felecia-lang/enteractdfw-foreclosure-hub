@@ -1026,3 +1026,9 @@
 - [x] Add print-specific CSS styles (@media print)
 - [x] Test print preview to ensure clean layout
 - [x] Verify all content fits within page boundaries
+
+## Fix Nested Anchor Tag Error
+- [x] Locate NoticeOfDefaultGuide.tsx file
+- [x] Find nested <a> tags (likely Link component wrapping another <a>)
+- [x] Remove nested anchor structure
+- [x] Test page to verify error is resolved
