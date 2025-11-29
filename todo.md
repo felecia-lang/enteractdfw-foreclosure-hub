@@ -1032,3 +1032,10 @@
 - [x] Find nested <a> tags (likely Link component wrapping another <a>)
 - [x] Remove nested anchor structure
 - [x] Test page to verify error is resolved
+
+## Replace Notice of Default Checklist PDF
+- [x] Copy new branded PDF to client/public folder
+- [x] Find "Download PDF" button on Notice of Default guide page
+- [x] Find "View Printable Checklist" button on Notice of Default guide page
+- [x] Update both buttons to link to new PDF file
+- [x] Test both download links work correctly

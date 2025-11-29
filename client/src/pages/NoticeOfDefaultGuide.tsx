@@ -220,7 +220,7 @@ export default function NoticeOfDefaultGuide() {
   }, [checkedItems]);
 
   const downloadPDF = () => {
-    window.open('/api/pdf/notice-of-default-checklist', '_blank');
+    window.open('/notice-of-default-checklist.pdf', '_blank');
     toast.success('PDF download started');
   };
   
@@ -443,10 +443,10 @@ export default function NoticeOfDefaultGuide() {
             Get a printable PDF checklist to track your progress through each step. Stay organized and ensure you don't miss critical deadlines.
           </p>
           <Button size="lg" asChild>
-            <Link href="/guides/notice-of-default/checklist">
+            <a href="/notice-of-default-checklist.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center">
               <Download className="h-5 w-5 mr-2" />
               <span>View Printable Checklist</span>
-            </Link>
+            </a>
           </Button>
         </div>
       </section>
