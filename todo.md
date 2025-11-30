@@ -1039,3 +1039,9 @@
 - [x] Find "View Printable Checklist" button on Notice of Default guide page
 - [x] Update both buttons to link to new PDF file
 - [x] Test both download links work correctly
+
+## Fix Nested Anchor Tag Error on Homeowner Rights Page
+- [x] Locate HomeownerRights component file
+- [x] Find nested <a> tags in Link components
+- [x] Replace nested anchors with div or span elements
+- [x] Test page to verify error is resolved

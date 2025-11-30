@@ -60,9 +60,9 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/">
-            <a className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <img src="/enteractdfw-logo.png" alt="EnterActDFW" className="h-10" />
-            </a>
+            </div>
           </Link>
           <div className="flex items-center gap-4">
             <Button variant="outline" size="sm" asChild className="hidden sm:flex">
@@ -96,7 +96,7 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
               <nav className="space-y-1">
                 {navigationItems.map((item) => (
                   <Link key={item.href} href={item.href}>
-                    <a
+                    <div
                       className={cn(
                         "block px-3 py-2 rounded-md text-sm transition-colors",
                         location === item.href
@@ -105,7 +105,7 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
                       )}
                     >
                       {item.title}
-                    </a>
+                    </div>
                   </Link>
                 ))}
               </nav>
@@ -116,7 +116,7 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
                 </p>
                 <Button size="sm" className="w-full" asChild>
                   <Link href="/">
-                    <a>Get Free Guide</a>
+                    <span>Get Free Guide</span>
                   </Link>
                 </Button>
               </div>
@@ -129,7 +129,7 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
               <nav className="container py-6 space-y-1">
                 {navigationItems.map((item) => (
                   <Link key={item.href} href={item.href}>
-                    <a
+                    <div
                       className={cn(
                         "block px-4 py-3 rounded-md text-sm transition-colors",
                         location === item.href
@@ -139,7 +139,7 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.title}
-                    </a>
+                    </div>
                   </Link>
                 ))}
               </nav>
