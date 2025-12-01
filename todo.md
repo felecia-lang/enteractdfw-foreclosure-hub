@@ -1045,3 +1045,10 @@
 - [x] Find nested <a> tags in Link components
 - [x] Replace nested anchors with div or span elements
 - [x] Test page to verify error is resolved
+
+## Fix 404 Error on /knowledge-base/notice-of-default Page
+- [x] Navigate to the URL to confirm 404 error
+- [x] Check App.tsx routing configuration
+- [x] Verify NoticeOfDefaultGuide component exists
+- [x] Add missing route or fix incorrect route path
+- [x] Test the page loads correctly

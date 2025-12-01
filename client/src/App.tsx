@@ -44,6 +44,7 @@ function Router() {
       <Route path="/knowledge-base/understanding-foreclosure" component={UnderstandingForeclosure} />
       <Route path="/knowledge-base/homeowner-rights" component={HomeownerRights} />
       <Route path="/knowledge-base/options" component={OptionsToAvoidForeclosure} />
+      <Route path="/knowledge-base/notice-of-default" component={NoticeOfDefaultGuide} />
       <Route path="/faq" component={FAQ} />
       <Route path="/resources" component={Resources} />
       <Route path="/about" component={About} />
