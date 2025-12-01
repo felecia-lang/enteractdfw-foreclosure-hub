@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Phone, Download, AlertTriangle, Clock, CheckCircle2, FileText, Users, Home } from "lucide-react";
@@ -8,6 +8,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 const actionSteps = [
   {
@@ -173,6 +174,7 @@ const actionSteps = [
 ];
 
 export default function NoticeOfDefaultGuide() {
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
 
   // Load checked items from localStorage on mount
@@ -583,11 +585,9 @@ export default function NoticeOfDefaultGuide() {
                 size="lg" 
                 variant="outline"
                 className="border-2 border-[#0A2342] text-[#0A2342] hover:bg-[#0A2342] hover:text-white font-semibold px-8 py-6 text-lg"
-                asChild
+                onClick={() => setShowBookingModal(true)}
               >
-                <a href="/#lead-form">
-                  Schedule Free Consultation
-                </a>
+                Schedule Free Consultation
               </Button>
             </div>
           </div>
@@ -632,6 +632,9 @@ export default function NoticeOfDefaultGuide() {
           </div>
         </div>
       </footer>
+
+      {/* Booking Modal */}
+      <BookingModal open={showBookingModal} onOpenChange={setShowBookingModal} />
     </div>
   );
 }

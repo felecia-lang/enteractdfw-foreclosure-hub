@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Award, Users, Heart, Shield, Home as HomeIcon, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 export default function About() {
+  const [showBookingModal, setShowBookingModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -244,10 +248,8 @@ export default function About() {
             Schedule a free, no-obligation consultation. I'll review your situation, explain your options, and help you make the best decision for your family.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
-                Schedule Your Free Consultation
-              </TrackablePhoneLink>
+            <Button size="lg" onClick={() => setShowBookingModal(true)}>
+              Schedule Your Free Consultation
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/">
@@ -257,6 +259,9 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* Booking Modal */}
+      <BookingModal open={showBookingModal} onOpenChange={setShowBookingModal} />
 
       {/* Footer */}
       <footer className="bg-card border-t py-12">

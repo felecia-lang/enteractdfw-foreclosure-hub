@@ -11,6 +11,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useState } from "react";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 // Component to display approved user-submitted testimonials
 function UserTestimonials() {
@@ -253,6 +254,7 @@ const stats = [
 ];
 
 export default function SuccessStories() {
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -442,10 +444,8 @@ export default function SuccessStories() {
               Every homeowner's situation is unique, but you don't have to face foreclosure alone. Let us help you find the best path forward—whether that's selling quickly, negotiating with your lender, or exploring other options.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" variant="secondary">
-                <Link href="/">
-                  Schedule Free Consultation
-                </Link>
+              <Button size="lg" variant="secondary" onClick={() => setShowBookingModal(true)}>
+                Schedule Free Consultation
               </Button>
               <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
@@ -621,6 +621,9 @@ export default function SuccessStories() {
           <p>© 2025 {APP_TITLE}. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* Booking Modal */}
+      <BookingModal open={showBookingModal} onOpenChange={setShowBookingModal} />
     </div>
   );
 }

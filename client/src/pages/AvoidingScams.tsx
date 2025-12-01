@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AlertTriangle, Shield, CheckCircle2, XCircle, Phone, Mail, ExternalLink, Download } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,8 +7,11 @@ import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 export default function AvoidingScams() {
+  const [showBookingModal, setShowBookingModal] = useState(false);
+
   const downloadPDF = () => {
     // Direct link to PDF download endpoint
     const url = '/api/pdf/avoiding-scams-guide';
@@ -673,11 +677,9 @@ export default function AvoidingScams() {
                 size="lg" 
                 variant="outline"
                 className="border-2 border-[#0A2342] text-[#0A2342] hover:bg-[#0A2342] hover:text-white font-semibold px-8 py-6 text-lg"
-                asChild
+                onClick={() => setShowBookingModal(true)}
               >
-                <a href="/#lead-form">
-                  Schedule Free Consultation
-                </a>
+                Schedule Free Consultation
               </Button>
             </div>
           </div>
@@ -690,6 +692,9 @@ export default function AvoidingScams() {
           </p>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal open={showBookingModal} onOpenChange={setShowBookingModal} />
     </KnowledgeBaseLayout>
   );
 }

@@ -19,7 +19,7 @@ export default function BookingModal({ open, onOpenChange }: BookingModalProps) 
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
   // GHL calendar URL
-  const calendarUrl = "https://links.enteractai.com/widget/booking/vISKzedcwnJuerwQSBmg";
+  const calendarUrl = "https://links.enteractai.com/widget/booking/4H1QKftQ8nG2hkZesjUM";
 
   // Listen for booking completion message from GHL iframe
   useEffect(() => {

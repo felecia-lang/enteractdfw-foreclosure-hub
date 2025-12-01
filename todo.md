@@ -1052,3 +1052,27 @@
 - [x] Verify NoticeOfDefaultGuide component exists
 - [x] Add missing route or fix incorrect route path
 - [x] Test the page loads correctly
+
+## Reformat Foreclosure Assistance Guides into Single PDF
+- [x] Extract content from Contacting Your Lender Guide PDF
+- [x] Extract content from Avoiding Foreclosure Scams Guide PDF- [x] Create table of contents structure
+- [x] Combine and organize content with clear section headings
+- [x] Add branded call-out boxes (TIP, WARNING, RED FLAG)
+- [x] Format templates as fillable examples (phone script, call log, hardship letter)
+- [x] Add "How We Can Help" section with EnterActDFW info
+- [x] Include all disclaimers and resource referencestDFW contact info
+- [x] Preserve all disclaimers and resource references
+- [x] Generate final PDF titled "Texas Foreclosure Survival & Scam Protection Guide"
+
+## Update All "Schedule Free Consultation" Links to GHL Calendar
+- [x] Search all page components for "Schedule Free Consultation" text
+- [x] Identify all instances (found 9 instances in 8 files)
+- [x] Update BookingModal.tsx to use GHL calendar ID
+- [x] Update About.tsx consultation link
+- [x] Update AvoidingScams.tsx consultation link
+- [x] Update ContactingYourLenderGuide.tsx consultation link
+- [x] Update Home.tsx consultation link (already correct)
+- [x] Update NoticeOfDefaultGuide.tsx consultation link
+- [x] Update PropertyValueEstimator.tsx consultation link (already correct)
+- [x] Update SuccessStories.tsx consultation link
+- [x] Test all updated links

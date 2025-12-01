@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import BookingModal from "@/components/BookingModal";
 
 interface CallLogData {
   dateOfCall: string;
@@ -25,6 +26,7 @@ interface CallLogData {
 }
 
 export default function ContactingYourLenderGuide() {
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [callLog, setCallLog] = useState<CallLogData>({
     dateOfCall: '',
     time: '',
@@ -917,11 +919,9 @@ export default function ContactingYourLenderGuide() {
                 size="lg" 
                 variant="outline"
                 className="border-2 border-[#0A2342] text-[#0A2342] hover:bg-[#0A2342] hover:text-white font-semibold px-8 py-6 text-lg"
-                asChild
+                onClick={() => setShowBookingModal(true)}
               >
-                <a href="/#lead-form">
-                  Schedule Free Consultation
-                </a>
+                Schedule Free Consultation
               </Button>
             </div>
           </div>
@@ -940,6 +940,9 @@ export default function ContactingYourLenderGuide() {
           </p>
         </div>
       </footer>
+
+      {/* Booking Modal */}
+      <BookingModal open={showBookingModal} onOpenChange={setShowBookingModal} />
     </div>
   );
 }
