@@ -207,6 +207,10 @@ export function generateAvoidingScamsPDF(): typeof PDFDocument.prototype {
 
   addSubsectionHeader('Texas Department of Savings and Mortgage Lending');
   addBodyText('Website: sml.texas.gov | Phone: 1-877-276-5550');
+  doc.moveDown(0.5);
+
+  addSubsectionHeader('Local Law Enforcement');
+  addBodyText('For criminal fraud cases: Contact your local police department or sheriff\'s office to file a report if you believe you\'ve been the victim of criminal fraud.');
   doc.moveDown(1.5);
 
   // What to Do If Scammed
@@ -255,7 +259,7 @@ export function generateAvoidingScamsPDF(): typeof PDFDocument.prototype {
   doc.fontSize(10).fillColor('#000000').font('Helvetica')
     .text('Phone: (832) 932-7585')
     .text('Email: info@enteractdfw.com')
-    .text('Address: 4440 State Hwy 121, Suite 300, Lewisville, TX 75056');
+    .text('Address: 4400 State Hwy 121, Suite 300, Lewisville, TX 75056');
   doc.moveDown(2);
 
   // Legal Disclaimer

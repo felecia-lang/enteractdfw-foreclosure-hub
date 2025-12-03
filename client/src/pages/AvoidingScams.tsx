@@ -638,17 +638,39 @@ export default function AvoidingScams() {
                   </p>
                 </div>
               </div>
+              <div className="border-t border-white/20 pt-4 mt-4">
+                <h3 className="font-bold mb-3">Contact Us:</h3>
+                <div className="space-y-2 text-sm">
+                  <p className="flex items-center gap-2">
+                    <Phone className="h-4 w-4" />
+                    <span>Phone: (832) 932-7585</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    <span>Email: info@enteractdfw.com</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Address: 4400 State Hwy 121, Suite 300, Lewisville, TX 75056</span>
+                  </p>
+                </div>
+              </div>
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <Button variant="secondary" size="lg" className="flex items-center gap-2" asChild>
                   <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
-                    Call (832) 932-7585
+                    Call Now: (832) 932-7585
                   </TrackablePhoneLink>
                 </Button>
-                <Button variant="outline" size="lg" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border-white/30" asChild>
-                  <a href="mailto:info@enteractdfw.com">
-                    <Mail className="h-5 w-5" />
-                    Email Us
-                  </a>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border-white/30"
+                  onClick={() => setShowBookingModal(true)}
+                >
+                  Schedule Free Consultation
                 </Button>
               </div>
             </CardContent>
