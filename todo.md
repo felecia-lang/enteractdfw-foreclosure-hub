@@ -1082,3 +1082,4 @@
 - [x] Create lead capture modal for Property Value Estimator button
 - [x] Create print function for 'Print Call Log' button that prints only Interactive Call Log section
 - [x] Create print function for 'Print Template' button that prints only Sample Hardship Letter Template section
+- [x] Fix options-to-avoid-foreclosure page not found error
