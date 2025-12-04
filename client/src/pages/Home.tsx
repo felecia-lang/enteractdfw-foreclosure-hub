@@ -25,8 +25,10 @@ import { ResourceLeadCaptureDialog } from "@/components/ResourceLeadCaptureDialo
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
+import { PropertyValueLeadCaptureModal } from "@/components/PropertyValueLeadCaptureModal";
 
 export default function Home() {
+  const [showPropertyValueModal, setShowPropertyValueModal] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     email: "",
@@ -327,11 +329,13 @@ export default function Home() {
                     <span>Save & resume your calculation anytime</span>
                   </li>
                 </ul>
-                <Link href="/property-value-estimator">
-                  <Button className="w-full" size="lg">
-                    Calculate Property Value →
-                  </Button>
-                </Link>
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => setShowPropertyValueModal(true)}
+                >
+                  Calculate Property Value →
+                </Button>
               </CardContent>
             </Card>
 
@@ -689,6 +693,12 @@ export default function Home() {
       <BookingModal 
         open={showBookingModal} 
         onOpenChange={setShowBookingModal}
+      />
+
+      {/* Property Value Lead Capture Modal */}
+      <PropertyValueLeadCaptureModal
+        open={showPropertyValueModal}
+        onOpenChange={setShowPropertyValueModal}
       />
     </div>
   );

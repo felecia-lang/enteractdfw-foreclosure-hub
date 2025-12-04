@@ -218,6 +218,23 @@ export type PhoneCallTracking = typeof phoneCallTracking.$inferSelect;
 export type InsertPhoneCallTracking = typeof phoneCallTracking.$inferInsert;
 
 /**
+ * Property value estimator leads table - captures leads before granting access to calculator
+ * Stores name and email for users who want to use the property value estimator
+ */
+export const propertyValueLeads = mysqlTable("propertyValueLeads", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
+  userAgent: text("userAgent"),
+  accessGrantedAt: timestamp("accessGrantedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PropertyValueLead = typeof propertyValueLeads.$inferSelect;
+export type InsertPropertyValueLead = typeof propertyValueLeads.$inferInsert;
+
+/**
  * Booking confirmations table - tracks completed GHL calendar bookings
  * Captures booking details from webhook for conversion tracking and analytics
  */

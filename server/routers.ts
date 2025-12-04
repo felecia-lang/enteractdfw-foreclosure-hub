@@ -1553,6 +1553,43 @@ Email: info@enteractdfw.com
         }
       }),
   }),
+
+  // Property Value Estimator Lead Capture
+  propertyValue: router({
+    captureLead: publicProcedure
+      .input(z.object({
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email("Invalid email address"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+ try {
+          const { createPropertyValueLead } = await import("./propertyValueLeadsDb");
+          
+          // Get IP address and user agent from request
+          const ipAddress = (ctx.req.headers['x-forwarded-for'] as string)?.split(',')[0] || 
+                           (ctx.req.headers['x-real-ip'] as string) || 
+                           ctx.req.socket?.remoteAddress || 
+                           null;
+          const userAgent = ctx.req.headers['user-agent'] || null;
+
+          // Create the lead
+          const lead = await createPropertyValueLead({
+            name: input.name,
+            email: input.email,
+            ipAddress,
+            userAgent,
+          });
+
+          return { success: true, leadId: lead.id };
+        } catch (error) {
+          console.error("[PropertyValue] Failed to capture lead:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to save your information. Please try again.",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
