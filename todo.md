@@ -1077,3 +1077,4 @@
 - [x] Update SuccessStories.tsx consultation link
 - [x] Test all updated links
 - [x] Create print function for 'Print Call Log' button that prints only Interactive Call Log section
+- [x] Create print function for 'Print Template' button that prints only Sample Hardship Letter Template section

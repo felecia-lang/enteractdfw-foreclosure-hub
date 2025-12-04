@@ -114,6 +114,44 @@ export default function ContactingYourLenderGuide() {
       printWindow.close();
     }, 250);
   };
+
+  const handlePrintTemplate = () => {
+    // Create a new window for printing only the hardship letter template
+    const printContent = document.getElementById('hardship-letter-template');
+    if (!printContent) return;
+
+    const printWindow = window.open('', '', 'height=800,width=800');
+    if (!printWindow) return;
+
+    printWindow.document.write('<html><head><title>Hardship Letter Template</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write(`
+      body { font-family: 'Times New Roman', serif; padding: 40px; line-height: 1.6; font-size: 12pt; }
+      .template-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #0A2342; text-align: center; }
+      .template-content { max-width: 650px; margin: 0 auto; }
+      .template-content > div { margin-bottom: 16px; }
+      .text-right { text-align: right; }
+      strong { font-weight: bold; }
+      em { font-style: italic; }
+      ul { margin-top: 8px; margin-left: 20px; }
+      li { margin-bottom: 4px; }
+      .border-l-4 { border-left: 3px solid #00A6A6; padding-left: 16px; margin: 12px 0; background: #f9f9f9; padding: 12px; }
+      @media print { body { padding: 20px; } }
+    `);
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write('<div class="template-title">Sample Hardship Letter Template</div>');
+    printWindow.document.write('<div class="template-content">');
+    printWindow.document.write(printContent.innerHTML);
+    printWindow.document.write('</div></body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Wait for content to load, then print
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+  };
   
   const downloadPDF = () => {
     window.open('/api/pdf/contacting-lender-guide', '_blank');
@@ -686,7 +724,7 @@ export default function ContactingYourLenderGuide() {
             </CardContent>
           </Card>
 
-          {/* Hardship Letter Template */}
+          {/* Sample Hardship Letter Template */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
@@ -699,7 +737,7 @@ export default function ContactingYourLenderGuide() {
                 A hardship letter explains why you fell behind on payments and demonstrates your commitment to resolving the situation. Customize this template with your specific details.
               </p>
 
-              <div className="p-6 bg-muted/30 rounded-lg border space-y-4 text-sm">
+              <div id="hardship-letter-template" className="p-6 bg-muted/30 rounded-lg border space-y-4 text-sm">
                 <div className="text-right text-muted-foreground">
                   [Your Name]<br />
                   [Your Address]<br />
@@ -803,7 +841,7 @@ export default function ContactingYourLenderGuide() {
               </div>
 
               <div className="mt-4 flex justify-center gap-4 print:hidden">
-                <Button onClick={handlePrint} variant="outline">
+                <Button onClick={handlePrintTemplate} variant="outline">
                   <Printer className="h-4 w-4 mr-2" />
                   Print Template
                 </Button>
