@@ -1083,3 +1083,4 @@
 - [x] Create print function for 'Print Call Log' button that prints only Interactive Call Log section
 - [x] Create print function for 'Print Template' button that prints only Sample Hardship Letter Template section
 - [x] Fix options-to-avoid-foreclosure page not found error - added /knowledge-base/options-to-avoid-foreclosure route
+- [x] Update 'Get Free Offer' button on Options to Avoid Foreclosure page to link to Property Value Estimator

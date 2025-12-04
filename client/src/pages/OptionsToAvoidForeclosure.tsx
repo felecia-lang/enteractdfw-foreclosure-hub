@@ -463,7 +463,7 @@ export default function OptionsToAvoidForeclosure() {
                 <h4 className="font-semibold text-foreground mb-3 text-center">Ready to Get a Fair Cash Offer?</h4>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button size="lg" className="bg-accent hover:bg-accent/90" asChild>
-                    <Link href="/">
+                    <Link href="/property-value-estimator">
                       <span>Get Free Offer</span>
                     </Link>
                   </Button>
