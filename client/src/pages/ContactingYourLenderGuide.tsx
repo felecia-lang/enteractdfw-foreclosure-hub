@@ -82,7 +82,37 @@ export default function ContactingYourLenderGuide() {
   };
 
   const handlePrint = () => {
-    window.print();
+    // Create a new window for printing only the call log
+    const printContent = document.getElementById('interactive-call-log');
+    if (!printContent) return;
+
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (!printWindow) return;
+
+    printWindow.document.write('<html><head><title>Call Log</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write(`
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      .call-log-title { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #0A2342; }
+      .call-log-content { background: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+      .field-group { margin-bottom: 15px; }
+      .field-label { font-weight: bold; font-size: 14px; margin-bottom: 5px; display: block; }
+      .field-value { font-size: 14px; padding: 8px; border: 1px solid #ddd; background: white; border-radius: 4px; display: block; width: 100%; box-sizing: border-box; }
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+      textarea.field-value { min-height: 80px; resize: none; }
+      @media print { body { padding: 10px; } }
+    `);
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write(printContent.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Wait for content to load, then print
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
   };
   
   const downloadPDF = () => {
@@ -487,10 +517,10 @@ export default function ContactingYourLenderGuide() {
           </Card>
 
           {/* Interactive Call Log */}
-          <Card>
+          <Card id="interactive-call-log">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-3">
+                <CardTitle className="flex items-center gap-3 call-log-title">
                   <FileText className="h-6 w-6 text-primary" />
                   Interactive Call Log
                 </CardTitle>
@@ -510,7 +540,7 @@ export default function ContactingYourLenderGuide() {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="p-6 bg-muted/30 rounded-lg border space-y-4">
+              <div className="p-6 bg-muted/30 rounded-lg border space-y-4 call-log-content">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-semibold mb-2 block">Date of Call:</label>

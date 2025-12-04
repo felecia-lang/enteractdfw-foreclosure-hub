@@ -1076,3 +1076,4 @@
 - [x] Update PropertyValueEstimator.tsx consultation link (already correct)
 - [x] Update SuccessStories.tsx consultation link
 - [x] Test all updated links
+- [x] Create print function for 'Print Call Log' button that prints only Interactive Call Log section
