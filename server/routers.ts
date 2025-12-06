@@ -1590,6 +1590,78 @@ Email: info@enteractdfw.com
         }
       }),
   }),
+
+  // Cash Offer Requests
+  cashOffers: router({
+    submit: publicProcedure
+      .input(
+        z.object({
+          fullName: z.string().min(1, "Full name is required"),
+          email: z.string().email("Valid email is required"),
+          phone: z.string().min(10, "Valid phone number is required"),
+          street: z.string().min(1, "Street address is required"),
+          city: z.string().min(1, "City is required"),
+          state: z.string().length(2, "State must be 2 characters"),
+          zipCode: z.string().min(5, "Valid ZIP code is required"),
+          bedrooms: z.number().int().min(1).max(10),
+          bathrooms: z.number().min(1).max(10),
+          squareFeet: z.number().int().min(500).max(10000),
+          yearBuilt: z.number().int().min(1900).max(new Date().getFullYear()),
+          condition: z.enum(["excellent", "good", "fair", "poor", "needs_major_repairs"]),
+          additionalNotes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Get IP address and user agent from request
+          const ipAddress = ctx.req.headers['x-forwarded-for'] as string || 
+                           ctx.req.headers['x-real-ip'] as string || 
+                           ctx.req.socket?.remoteAddress || 
+                           null;
+          const userAgent = ctx.req.headers['user-agent'] || null;
+
+          // Import database function
+          const { createCashOfferRequest } = await import("./db");
+
+          // Create cash offer request in database
+          await createCashOfferRequest({
+            fullName: input.fullName,
+            email: input.email,
+            phone: input.phone,
+            street: input.street,
+            city: input.city,
+            state: input.state,
+            zipCode: input.zipCode,
+            bedrooms: input.bedrooms,
+            bathrooms: input.bathrooms,
+            squareFeet: input.squareFeet,
+            yearBuilt: input.yearBuilt,
+            condition: input.condition,
+            additionalNotes: input.additionalNotes,
+            status: "new",
+            ipAddress,
+            userAgent,
+          });
+
+          // Send notification to owner
+          await notifyOwner({
+            title: "New Cash Offer Request",
+            content: `New cash offer request from ${input.fullName}\n\nProperty: ${input.street}, ${input.city}, ${input.state} ${input.zipCode}\n${input.bedrooms} bed, ${input.bathrooms} bath, ${input.squareFeet} sqft\nYear Built: ${input.yearBuilt}\nCondition: ${input.condition}\n\nContact: ${input.email} | ${input.phone}${input.additionalNotes ? `\n\nNotes: ${input.additionalNotes}` : ""}`,
+          });
+
+          return {
+            success: true,
+            message: "Your cash offer request has been submitted successfully!",
+          };
+        } catch (error) {
+          console.error("[CashOffer] Failed to submit request:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to submit your request. Please try again.",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

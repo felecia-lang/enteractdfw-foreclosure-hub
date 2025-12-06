@@ -437,3 +437,59 @@ export const comparisonHistory = mysqlTable("comparisonHistory", {
 
 export type ComparisonHistory = typeof comparisonHistory.$inferSelect;
 export type InsertComparisonHistory = typeof comparisonHistory.$inferInsert;
+
+/**
+ * Cash offer requests table for capturing detailed property information
+ * when homeowners request a cash offer from EnterActDFW.
+ */
+export const cashOfferRequests = mysqlTable("cashOfferRequests", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Contact information
+  fullName: varchar("fullName", { length: 200 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  
+  // Property address
+  street: varchar("street", { length: 255 }).notNull(),
+  city: varchar("city", { length: 100 }).notNull(),
+  state: varchar("state", { length: 2 }).notNull(),
+  zipCode: varchar("zipCode", { length: 10 }).notNull(),
+  
+  // Property specifications
+  bedrooms: int("bedrooms").notNull(),
+  bathrooms: int("bathrooms").notNull(),
+  squareFeet: int("squareFeet").notNull(),
+  yearBuilt: int("yearBuilt").notNull(),
+  condition: mysqlEnum("condition", [
+    "excellent",
+    "good",
+    "fair",
+    "poor",
+    "needs_major_repairs"
+  ]).notNull(),
+  
+  // Additional details
+  additionalNotes: text("additionalNotes"),
+  
+  // Status tracking
+  status: mysqlEnum("status", [
+    "new",
+    "reviewing",
+    "offer_sent",
+    "accepted",
+    "declined",
+    "closed"
+  ]).default("new").notNull(),
+  
+  // Tracking metadata
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CashOfferRequest = typeof cashOfferRequests.$inferSelect;
+export type InsertCashOfferRequest = typeof cashOfferRequests.$inferInsert;

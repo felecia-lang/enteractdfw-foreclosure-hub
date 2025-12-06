@@ -1,0 +1,22 @@
+CREATE TABLE `cashOfferRequests` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`fullName` varchar(200) NOT NULL,
+	`email` varchar(320) NOT NULL,
+	`phone` varchar(20) NOT NULL,
+	`street` varchar(255) NOT NULL,
+	`city` varchar(100) NOT NULL,
+	`state` varchar(2) NOT NULL,
+	`zipCode` varchar(10) NOT NULL,
+	`bedrooms` int NOT NULL,
+	`bathrooms` int NOT NULL,
+	`squareFeet` int NOT NULL,
+	`yearBuilt` int NOT NULL,
+	`condition` enum('excellent','good','fair','poor','needs_major_repairs') NOT NULL,
+	`additionalNotes` text,
+	`status` enum('new','reviewing','offer_sent','accepted','declined','closed') NOT NULL DEFAULT 'new',
+	`ipAddress` varchar(45),
+	`userAgent` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `cashOfferRequests_id` PRIMARY KEY(`id`)
+);

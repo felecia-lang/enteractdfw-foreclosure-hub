@@ -2087,3 +2087,91 @@ export async function extendLinkExpiration(shortCode: string, days: number) {
     return false;
   }
 }
+
+/**
+ * Cash Offer Requests - Database functions for managing cash offer submissions
+ */
+
+export async function createCashOfferRequest(request: import("../drizzle/schema").InsertCashOfferRequest) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create cash offer request: database not available");
+    return undefined;
+  }
+
+  try {
+    const { cashOfferRequests } = await import("../drizzle/schema");
+    const result = await db.insert(cashOfferRequests).values(request);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create cash offer request:", error);
+    throw error;
+  }
+}
+
+export async function getAllCashOfferRequests() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get cash offer requests: database not available");
+    return [];
+  }
+
+  try {
+    const { cashOfferRequests } = await import("../drizzle/schema");
+    const { desc } = await import("drizzle-orm");
+    const results = await db
+      .select()
+      .from(cashOfferRequests)
+      .orderBy(desc(cashOfferRequests.createdAt));
+    return results;
+  } catch (error) {
+    console.error("[Database] Failed to get cash offer requests:", error);
+    return [];
+  }
+}
+
+export async function getCashOfferRequestById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get cash offer request: database not available");
+    return undefined;
+  }
+
+  try {
+    const { cashOfferRequests } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    const results = await db
+      .select()
+      .from(cashOfferRequests)
+      .where(eq(cashOfferRequests.id, id))
+      .limit(1);
+    return results.length > 0 ? results[0] : undefined;
+  } catch (error) {
+    console.error("[Database] Failed to get cash offer request:", error);
+    return undefined;
+  }
+}
+
+export async function updateCashOfferRequestStatus(
+  id: number,
+  status: "new" | "reviewing" | "offer_sent" | "accepted" | "declined" | "closed"
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update cash offer request status: database not available");
+    return false;
+  }
+
+  try {
+    const { cashOfferRequests } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    await db
+      .update(cashOfferRequests)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(cashOfferRequests.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update cash offer request status:", error);
+    return false;
+  }
+}

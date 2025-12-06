@@ -1,3 +1,4 @@
+import { useState } from "react";
 import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -5,8 +6,10 @@ import { CheckCircle2, AlertCircle, TrendingUp, Home, FileText, DollarSign, Scal
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import CashOfferRequestModal from "@/components/CashOfferRequestModal";
 
 export default function OptionsToAvoidForeclosure() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <KnowledgeBaseLayout
       title="Options to Avoid Foreclosure"
@@ -462,10 +465,12 @@ export default function OptionsToAvoidForeclosure() {
               <div className="p-6 bg-accent/10 rounded-lg border border-accent/30">
                 <h4 className="font-semibold text-foreground mb-3 text-center">Ready to Get a Fair Cash Offer?</h4>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" className="bg-accent hover:bg-accent/90" asChild>
-                    <Link href="/property-value-estimator">
-                      <span>Get Free Offer</span>
-                    </Link>
+                  <Button 
+                    size="lg" 
+                    className="bg-accent hover:bg-accent/90"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    Get Free Offer
                   </Button>
                   <Button size="lg" variant="outline" asChild>
                     <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call (832) 932-7585
@@ -570,6 +575,12 @@ export default function OptionsToAvoidForeclosure() {
           Call the Homeowner's HOPE Hotline at 1-888-995-HOPE (4673) or visit our <Link href="/resources"><span className="underline cursor-pointer">Resources page</span></Link> for local counselors.
         </AlertDescription>
       </Alert>
+
+      {/* Cash Offer Request Modal */}
+      <CashOfferRequestModal 
+        open={isModalOpen} 
+        onOpenChange={setIsModalOpen} 
+      />
     </KnowledgeBaseLayout>
   );
 }

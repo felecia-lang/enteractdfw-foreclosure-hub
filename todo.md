@@ -1085,3 +1085,19 @@
 - [x] Fix options-to-avoid-foreclosure page not found error - added /knowledge-base/options-to-avoid-foreclosure route
 - [x] Update 'Get Free Offer' button on Options to Avoid Foreclosure page to link to Property Value Estimator
 - [x] Change CTA button text from 'Get Free Guide' to 'Call Now' on Understanding Foreclosure page
+
+## Cash Offer Request Form
+- [ ] Create cash offer request form modal component
+- [ ] Add database schema for cash offer requests
+- [ ] Create backend tRPC procedures for form submission
+- [ ] Replace "Get Free Offer" button with modal trigger on Options page
+- [ ] Add owner notification for new cash offer requests
+- [ ] Create unit tests for cash offer submission
+
+## Cash Offer Request Form
+- [x] Create cash offer request form with comprehensive property details
+- [x] Add database schema for storing cash offer requests
+- [x] Create backend tRPC procedure for handling submissions
+- [x] Build modal component with all required fields
+- [x] Integrate modal with Options to Avoid Foreclosure page
+- [x] Add unit tests for cash offer submission
