@@ -115,9 +115,9 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
                   Talk to our team for a free, no-obligation consultation.
                 </p>
                 <Button size="sm" className="w-full" asChild>
-                  <Link href="/">
-                    <span>Get Free Guide</span>
-                  </Link>
+                  <TrackablePhoneLink phoneNumber="832-932-7585">
+                    <span>Call Now</span>
+                  </TrackablePhoneLink>
                 </Button>
               </div>
             </div>
