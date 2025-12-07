@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
 import { useState } from "react";
+import RelatedArticles, { relatedArticlesMap } from "@/components/RelatedArticles";
 
 export default function AvoidingScams() {
   const [showBookingModal, setShowBookingModal] = useState(false);
@@ -720,6 +721,8 @@ export default function AvoidingScams() {
           </p>
         </div>
       </div>
+
+      <RelatedArticles articles={relatedArticlesMap["avoiding-scams"]} />
 
       {/* Booking Modal */}
       <BookingModal open={showBookingModal} onOpenChange={setShowBookingModal} />

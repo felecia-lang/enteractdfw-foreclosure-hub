@@ -7,6 +7,7 @@ import { Link } from "wouter";
 import { useState } from "react";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import CashOfferRequestModal from "@/components/CashOfferRequestModal";
+import RelatedArticles, { relatedArticlesMap } from "@/components/RelatedArticles";
 
 export default function OptionsToAvoidForeclosure() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -579,6 +580,8 @@ export default function OptionsToAvoidForeclosure() {
           Call the Homeowner's HOPE Hotline at 1-888-995-HOPE (4673) or visit our <Link href="/resources"><span className="underline cursor-pointer">Resources page</span></Link> for local counselors.
         </AlertDescription>
       </Alert>
+
+      <RelatedArticles articles={relatedArticlesMap["options"]} />
 
       {/* Cash Offer Request Modal */}
       <CashOfferRequestModal 

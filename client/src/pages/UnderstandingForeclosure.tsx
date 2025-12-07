@@ -2,6 +2,7 @@ import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Clock, FileText, Home } from "lucide-react";
+import RelatedArticles, { relatedArticlesMap } from "@/components/RelatedArticles";
 
 export default function UnderstandingForeclosure() {
   return (
@@ -274,6 +275,8 @@ export default function UnderstandingForeclosure() {
           and the options available to help you avoid foreclosure.
         </AlertDescription>
       </Alert>
+
+      <RelatedArticles articles={relatedArticlesMap["understanding-foreclosure"]} />
     </KnowledgeBaseLayout>
   );
 }

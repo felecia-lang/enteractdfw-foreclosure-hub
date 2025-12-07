@@ -22,6 +22,106 @@ import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Search, X } from "lucide-react";
+import { searchContent } from "@/data/searchData";
+
+// Search Bar Component
+function SearchBar() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<ReturnType<typeof searchContent>>([]);
+  const [showResults, setShowResults] = useState(false);
+
+  const handleSearch = (value: string) => {
+    setQuery(value);
+    if (value.trim().length >= 2) {
+      const searchResults = searchContent(value, 8);
+      setResults(searchResults);
+      setShowResults(true);
+    } else {
+      setResults([]);
+      setShowResults(false);
+    }
+  };
+
+  const clearSearch = () => {
+    setQuery("");
+    setResults([]);
+    setShowResults(false);
+  };
+
+  const highlightText = (text: string, query: string) => {
+    if (!query) return text;
+    const parts = text.split(new RegExp(`(${query})`, 'gi'));
+    return parts.map((part, i) => 
+      part.toLowerCase() === query.toLowerCase() ? 
+        <mark key={i} className="bg-yellow-200 font-semibold">{part}</mark> : part
+    );
+  };
+
+  return (
+    <div className="relative max-w-2xl mx-auto mb-8">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Search articles, FAQs, glossary terms..."
+          value={query}
+          onChange={(e) => handleSearch(e.target.value)}
+          className="pl-10 pr-10 h-12 text-base"
+        />
+        {query && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
+      </div>
+
+      {/* Search Results Dropdown */}
+      {showResults && results.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-card border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
+          {results.map((result) => (
+            <Link key={result.id} href={result.href}>
+              <a
+                className="block p-4 hover:bg-muted transition-colors border-b last:border-b-0"
+                onClick={clearSearch}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <div className="text-xs text-muted-foreground mb-1">
+                      {result.breadcrumb.join(" > ")}
+                    </div>
+                    <h4 className="font-semibold text-foreground mb-1">
+                      {highlightText(result.title, query)}
+                    </h4>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {result.description}
+                    </p>
+                    <span className="inline-block mt-2 text-xs px-2 py-1 bg-primary/10 text-primary rounded">
+                      {result.category}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* No Results */}
+      {showResults && results.length === 0 && query.trim().length >= 2 && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-card border rounded-lg shadow-lg p-4 z-50">
+          <p className="text-sm text-muted-foreground text-center">
+            No results found for "{query}". Try different keywords or browse the categories below.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const SUGGESTED_QUESTIONS = [
   "What is the foreclosure timeline in Texas?",
@@ -233,6 +333,9 @@ export default function KnowledgeBase() {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Comprehensive guides, resources, and step-by-step instructions to help you understand your rights, explore your options, and take action to protect your home.
           </p>
+          
+          {/* Search Bar */}
+          <SearchBar />
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
               <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>

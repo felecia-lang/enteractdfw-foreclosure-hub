@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
+import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
+import RelatedArticles, { relatedArticlesMap } from "@/components/RelatedArticles";
 
 interface CallLogData {
   dateOfCall: string;
@@ -204,6 +206,13 @@ export default function ContactingYourLenderGuide() {
       {/* Hero Section */}
       <section className="py-12 bg-gradient-to-br from-primary/10 via-background to-background print:py-6">
         <div className="container max-w-4xl">
+          <BreadcrumbNavigation 
+            items={[
+              { label: "Knowledge Base", href: "/knowledge-base" },
+              { label: "Strategic Communication with Your Lender" }
+            ]}
+            className="mb-6 print:hidden"
+          />
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 print:text-3xl">
               Strategic Communication with Your Lender
@@ -995,6 +1004,8 @@ export default function ContactingYourLenderGuide() {
           </div>
         </div>
       </section>
+
+      <RelatedArticles articles={relatedArticlesMap["contact-lender"]} />
 
       {/* Footer - Print version */}
       <footer className="hidden print:block py-6 border-t mt-12">

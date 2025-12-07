@@ -9,6 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
+import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
+import RelatedArticles, { relatedArticlesMap } from "@/components/RelatedArticles";
 
 const actionSteps = [
   {
@@ -263,6 +265,13 @@ export default function NoticeOfDefaultGuide() {
       {/* Hero Section */}
       <section className="py-12 bg-gradient-to-b from-destructive/10 to-background border-b">
         <div className="container max-w-4xl">
+          <BreadcrumbNavigation 
+            items={[
+              { label: "Knowledge Base", href: "/knowledge-base" },
+              { label: "Navigating the Notice of Default" }
+            ]}
+            className="mb-6"
+          />
           <div className="flex items-start gap-4 mb-6">
             <div className="p-3 bg-destructive/10 rounded-lg">
               <AlertTriangle className="h-8 w-8 text-destructive" />
@@ -593,6 +602,8 @@ export default function NoticeOfDefaultGuide() {
           </div>
         </div>
       </section>
+
+      <RelatedArticles articles={relatedArticlesMap["notice-of-default"]} />
 
       {/* Footer */}
       <footer className="bg-card border-t py-12">

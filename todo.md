@@ -1226,3 +1226,18 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Integrate breadcrumbs into KnowledgeBaseLayout component
 - [x] Add breadcrumbs to individual knowledge base pages (Understanding Foreclosure, Homeowner Rights, Options to Avoid Foreclosure, Avoiding Scams)
 - [x] Test breadcrumb navigation across all pages
+
+## Knowledge Base Enhancements
+- [x] Create standalone breadcrumb component for custom layout pages
+- [x] Add breadcrumbs to Notice of Default Guide page
+- [x] Add breadcrumbs to Contacting Lender Guide page
+- [x] Create RelatedArticles component with topic-based recommendations
+- [x] Add RelatedArticles to Understanding Foreclosure page
+- [x] Add RelatedArticles to Homeowner Rights page
+- [x] Add RelatedArticles to Options to Avoid Foreclosure page
+- [x] Add RelatedArticles to Notice of Default Guide page
+- [x] Add RelatedArticles to Contacting Lender Guide page
+- [x] Add RelatedArticles to Avoiding Scams page
+- [x] Implement search functionality on Knowledge Base hub page
+- [x] Add keyword highlighting in search results
+- [x] Show breadcrumb paths in search results

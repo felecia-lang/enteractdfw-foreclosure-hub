@@ -2,6 +2,7 @@ import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, Scale, FileText, AlertCircle, CheckCircle2, Home, Phone } from "lucide-react";
+import RelatedArticles, { relatedArticlesMap } from "@/components/RelatedArticles";
 
 export default function HomeownerRights() {
   return (
@@ -604,6 +605,8 @@ export default function HomeownerRights() {
           a qualified foreclosure defense attorney or contact a HUD-approved housing counselor at 1-888-995-HOPE (4673).
         </AlertDescription>
       </Alert>
+
+      <RelatedArticles articles={relatedArticlesMap["homeowner-rights"]} />
     </KnowledgeBaseLayout>
   );
 }
