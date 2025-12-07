@@ -49,14 +49,17 @@ async function startServer() {
   // PDF download routes
   app.get("/api/pdf/avoiding-scams-guide", (req, res) => {
     try {
-      const doc = generateAvoidingScamsPDF();
+      const pdfPath = path.join(process.cwd(), 'client/public/pdfs/Foreclosure_Scams_Guide.pdf');
+      if (!fs.existsSync(pdfPath)) {
+        return res.status(404).json({ error: 'PDF not found' });
+      }
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename="Avoiding_Foreclosure_Scams_Guide.pdf"');
-      doc.pipe(res);
-      doc.end();
+      res.setHeader('Content-Disposition', 'attachment; filename="Spotting_Red_Flags_Scams_Guide.pdf"');
+      const fileStream = fs.createReadStream(pdfPath);
+      fileStream.pipe(res);
     } catch (error) {
-      console.error('PDF generation error:', error);
-      res.status(500).json({ error: 'Failed to generate PDF' });
+      console.error('PDF serving error:', error);
+      res.status(500).json({ error: 'Failed to serve PDF' });
     }
   });
   

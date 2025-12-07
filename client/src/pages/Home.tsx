@@ -612,9 +612,9 @@ export default function Home() {
                     <Shield className="h-6 w-6 text-primary" />
                   </div>
                 </div>
-                <CardTitle className="text-lg">Avoiding Foreclosure Scams Guide</CardTitle>
+                <CardTitle className="text-lg">Spotting the Red Flags</CardTitle>
                 <CardDescription className="text-sm">
-                  Protect yourself from predatory companies and scams targeting homeowners facing foreclosure.
+                  A homeowner's guide to recognizing and avoiding foreclosure scams, with red flags, warning signs, and how to find legitimate help.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -623,8 +623,8 @@ export default function Home() {
                   size="lg"
                   onClick={() => {
                     setSelectedResource({
-                      name: "Avoiding Foreclosure Scams Guide",
-                      file: "Avoiding_Foreclosure_Scams_Guide.pdf"
+                      name: "Spotting the Red Flags: Foreclosure Scams Guide",
+                      file: "Foreclosure_Scams_Guide.pdf"
                     });
                     setShowResourceDialog(true);
                   }}

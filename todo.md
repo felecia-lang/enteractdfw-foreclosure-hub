@@ -1161,3 +1161,22 @@
 - [x] Copy new PDF file to project public directory
 - [x] Update all references to point to new PDF
 - [x] Test PDF download functionality
+
+## Replace Foreclosure Scams Guide PDF
+- [ ] Locate existing scams guide PDF references
+- [ ] Copy new PDF file to project public directory
+- [ ] Update all references to point to new PDF
+- [ ] Test PDF download functionality
+
+## Replace Foreclosure Scams Guide PDF (Completed)
+- [x] Locate existing scams guide PDF references
+- [x] Copy new PDF file to project public directory
+- [x] Update all references to point to new PDF
+- [x] Test PDF download functionality
+
+## Resource Library Refresh Complete
+All four PDF guides have been successfully updated with new versions:
+- [x] Foreclosure Survival Guide (2.2MB)
+- [x] Strategic Communication with Your Lender (975K)
+- [x] Navigating the Notice of Default (2.2MB)
+- [x] Spotting the Red Flags: Foreclosure Scams (1.2MB)

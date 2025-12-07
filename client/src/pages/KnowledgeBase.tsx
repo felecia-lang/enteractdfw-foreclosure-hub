@@ -84,8 +84,8 @@ const knowledgeBaseCategories = [
   },
   {
     icon: Shield,
-    title: "Avoiding Foreclosure Scams",
-    description: "Warning signs, red flags, and how to protect yourself from predatory companies.",
+    title: "Spotting the Red Flags: Foreclosure Scams",
+    description: "Recognize warning signs, identify red flags, and protect yourself from predatory scams.",
     href: "/knowledge-base/avoiding-scams",
     color: "text-red-600",
   },

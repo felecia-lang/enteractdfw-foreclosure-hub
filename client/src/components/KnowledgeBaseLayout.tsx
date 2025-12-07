@@ -35,7 +35,7 @@ const navigationItems = [
     href: "/faq",
   },
   {
-    title: "Avoiding Scams",
+    title: "Spotting the Red Flags: Foreclosure Scams",
     href: "/knowledge-base/avoiding-scams",
   },
   {
