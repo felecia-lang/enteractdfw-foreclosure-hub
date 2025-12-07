@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AlertTriangle, Shield, CheckCircle2, XCircle, Phone, Mail, ExternalLink, Download } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +7,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
+import { useState } from "react";
 
 export default function AvoidingScams() {
   const [showBookingModal, setShowBookingModal] = useState(false);
@@ -19,7 +19,13 @@ export default function AvoidingScams() {
     toast.success('PDF download started');
   };
   return (
-    <KnowledgeBaseLayout title="Avoiding Foreclosure Scams">
+    <KnowledgeBaseLayout 
+      title="Avoiding Foreclosure Scams"
+      breadcrumbs={[
+        { label: "Knowledge Base", href: "/knowledge-base" },
+        { label: "Spotting the Red Flags: Foreclosure Scams" }
+      ]}
+    >
       <div className="max-w-4xl mx-auto">
         {/* Hero Section */}
         <div className="mb-8">

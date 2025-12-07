@@ -8,6 +8,10 @@ export default function UnderstandingForeclosure() {
     <KnowledgeBaseLayout
       title="Understanding Foreclosure in Texas"
       description="Learn the basics of the foreclosure process, key terms, timelines, and what makes Texas different from other states."
+      breadcrumbs={[
+        { label: "Knowledge Base", href: "/knowledge-base" },
+        { label: "Understanding Foreclosure in Texas" }
+      ]}
     >
       <Alert className="mb-6">
         <AlertCircle className="h-5 w-5" />

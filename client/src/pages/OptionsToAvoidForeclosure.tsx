@@ -1,10 +1,10 @@
-import { useState } from "react";
 import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, AlertCircle, TrendingUp, Home, FileText, DollarSign, Scale, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { useState } from "react";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import CashOfferRequestModal from "@/components/CashOfferRequestModal";
 
@@ -13,6 +13,10 @@ export default function OptionsToAvoidForeclosure() {
   return (
     <KnowledgeBaseLayout
       title="Options to Avoid Foreclosure"
+      breadcrumbs={[
+        { label: "Knowledge Base", href: "/knowledge-base" },
+        { label: "Options to Avoid Foreclosure" }
+      ]}
       description="Explore all available alternatives to foreclosure, including loan modifications, repayment plans, short sales, and selling to EnterActDFW."
     >
       <Alert className="mb-8">

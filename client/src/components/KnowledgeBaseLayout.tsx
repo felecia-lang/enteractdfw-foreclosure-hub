@@ -4,6 +4,7 @@ import { Home, Phone, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import { Breadcrumb, BreadcrumbItem } from "@/components/Breadcrumb";
 
 const navigationItems = [
   {
@@ -48,9 +49,10 @@ interface KnowledgeBaseLayoutProps {
   children: React.ReactNode;
   title: string;
   description?: string;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-export default function KnowledgeBaseLayout({ children, title, description }: KnowledgeBaseLayoutProps) {
+export default function KnowledgeBaseLayout({ children, title, description, breadcrumbs }: KnowledgeBaseLayoutProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -148,6 +150,9 @@ export default function KnowledgeBaseLayout({ children, title, description }: Kn
 
           {/* Main Content */}
           <main className="min-w-0">
+            {breadcrumbs && breadcrumbs.length > 0 && (
+              <Breadcrumb items={breadcrumbs} />
+            )}
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">{title}</h1>
               {description && (

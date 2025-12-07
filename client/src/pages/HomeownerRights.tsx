@@ -8,6 +8,10 @@ export default function HomeownerRights() {
     <KnowledgeBaseLayout
       title="Your Rights as a Homeowner"
       description="Understand your federal and Texas-specific legal rights and protections during the foreclosure process."
+      breadcrumbs={[
+        { label: "Knowledge Base", href: "/knowledge-base" },
+        { label: "Your Rights as a Homeowner" }
+      ]}
     >
       <Alert className="mb-8 bg-primary/5 border-primary">
         <Shield className="h-5 w-5 text-primary" />
