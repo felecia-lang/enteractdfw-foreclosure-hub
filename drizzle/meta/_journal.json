@@ -169,6 +169,13 @@
       "when": 1765063458796,
       "tag": "0023_fat_praxagora",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1765066985885,
+      "tag": "0024_parallel_beyonder",
+      "breakpoints": true
     }
   ]
 }

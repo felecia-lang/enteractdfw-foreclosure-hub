@@ -1107,3 +1107,21 @@
 - [x] Include next steps and timeline in email content
 - [x] Integrate email sending into cash offer submission flow
 - [x] Add unit tests for email functionality
+
+## Cash Offer Photo Uploads
+- [ ] Update database schema to store photo URLs array
+- [ ] Create backend tRPC procedure for photo uploads to S3
+- [ ] Add photo upload UI component to cash offer modal
+- [ ] Implement client-side photo validation (size, format, count)
+- [ ] Display photo previews before submission
+- [ ] Include photos in owner notification email
+- [ ] Add unit tests for photo upload functionality
+
+## Property Photo Upload (Completed)
+- [x] Update database schema to store photo URLs as JSON array
+- [x] Create backend tRPC procedure for uploading photos to S3
+- [x] Build photo upload UI with drag-and-drop support
+- [x] Add photo preview thumbnails with remove functionality
+- [x] Implement 3-5 photo limit validation
+- [x] Integrate photo upload into cash offer submission flow
+- [x] Create comprehensive unit tests for photo upload

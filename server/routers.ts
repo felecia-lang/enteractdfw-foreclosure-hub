@@ -1593,6 +1593,42 @@ Email: info@enteractdfw.com
 
   // Cash Offer Requests
   cashOffers: router({
+    uploadPhoto: publicProcedure
+      .input(
+        z.object({
+          fileName: z.string(),
+          fileData: z.string(), // base64 encoded
+          contentType: z.string(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          const { storagePut } = await import("./storage");
+          
+          // Decode base64 data
+          const buffer = Buffer.from(input.fileData, 'base64');
+          
+          // Generate unique file key with timestamp to prevent collisions
+          const timestamp = Date.now();
+          const randomSuffix = Math.random().toString(36).substring(7);
+          const fileKey = `cash-offers/photos/${timestamp}-${randomSuffix}-${input.fileName}`;
+          
+          // Upload to S3
+          const { url } = await storagePut(fileKey, buffer, input.contentType);
+          
+          return {
+            success: true,
+            url,
+          };
+        } catch (error) {
+          console.error("[CashOffer] Photo upload failed:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to upload photo. Please try again.",
+          });
+        }
+      }),
+    
     submit: publicProcedure
       .input(
         z.object({
@@ -1609,6 +1645,7 @@ Email: info@enteractdfw.com
           yearBuilt: z.number().int().min(1900).max(new Date().getFullYear()),
           condition: z.enum(["excellent", "good", "fair", "poor", "needs_major_repairs"]),
           additionalNotes: z.string().optional(),
+          photoUrls: z.array(z.string()).optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -1638,6 +1675,7 @@ Email: info@enteractdfw.com
             yearBuilt: input.yearBuilt,
             condition: input.condition,
             additionalNotes: input.additionalNotes,
+            photoUrls: input.photoUrls ? JSON.stringify(input.photoUrls) : null,
             status: "new",
             ipAddress,
             userAgent,

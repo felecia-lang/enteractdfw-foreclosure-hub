@@ -472,6 +472,9 @@ export const cashOfferRequests = mysqlTable("cashOfferRequests", {
   // Additional details
   additionalNotes: text("additionalNotes"),
   
+  // Property photos (S3 URLs stored as JSON array)
+  photoUrls: text("photoUrls"),
+  
   // Status tracking
   status: mysqlEnum("status", [
     "new",
