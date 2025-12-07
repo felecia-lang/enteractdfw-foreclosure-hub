@@ -519,9 +519,9 @@ export default function Home() {
                     <FileText className="h-6 w-6 text-primary" />
                   </div>
                 </div>
-                <CardTitle className="text-lg">Foreclosure Survival Guide</CardTitle>
+                <CardTitle className="text-lg">Texas Foreclosure Survival Guide</CardTitle>
                 <CardDescription className="text-sm">
-                  Comprehensive guide to navigating foreclosure, understanding your rights, and exploring all available options.
+                  Your essential guide to navigating the foreclosure crisis in Texas with step-by-step strategies, timelines, and resources.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -530,7 +530,7 @@ export default function Home() {
                   size="lg"
                   onClick={() => {
                     setSelectedResource({
-                      name: "Foreclosure Survival Guide",
+                      name: "Texas Foreclosure Survival Guide",
                       file: "Foreclosure_Survival_Guide.pdf"
                     });
                     setShowResourceDialog(true);

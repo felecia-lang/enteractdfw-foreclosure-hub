@@ -74,7 +74,7 @@ export function ExitIntentPopup() {
       await downloadResourceMutation.mutateAsync({
         name: name.trim(),
         email: email.trim(),
-        resourceName: "Foreclosure Survival Guide",
+        resourceName: "Texas Foreclosure Survival Guide",
         resourceFile: "/pdfs/Foreclosure_Survival_Guide.pdf",
       });
 

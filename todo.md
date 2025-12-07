@@ -1180,3 +1180,18 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Strategic Communication with Your Lender (975K)
 - [x] Navigating the Notice of Default (2.2MB)
 - [x] Spotting the Red Flags: Foreclosure Scams (1.2MB)
+
+## Replace Foreclosure Survival Guide PDF (Updated Version)
+- [ ] Locate existing survival guide PDF references
+- [ ] Copy new PDF file to project public directory
+- [ ] Update all references to point to new PDF
+- [ ] Update title and description text
+- [ ] Test PDF download functionality
+
+## Replace Foreclosure Survival Guide PDF (Updated Version) - Completed
+- [x] Locate existing survival guide PDF references
+- [x] Copy new PDF file to project public directory (2.5MB)
+- [x] Update all references to point to new PDF
+- [x] Update title to "Texas Foreclosure Survival Guide"
+- [x] Update description with new content
+- [x] Test PDF download functionality
