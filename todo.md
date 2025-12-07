@@ -1149,3 +1149,15 @@
 - [x] Copy new PDF file to project public directory
 - [x] Update all references to point to new PDF
 - [x] Test PDF download functionality
+
+## Replace Notice of Default Guide PDF
+- [ ] Locate existing Notice of Default PDF references
+- [ ] Copy new PDF file to project public directory
+- [ ] Update all references to point to new PDF
+- [ ] Test PDF download functionality
+
+## Replace Notice of Default Guide PDF (Completed)
+- [x] Locate existing Notice of Default PDF references
+- [x] Copy new PDF file to project public directory
+- [x] Update all references to point to new PDF
+- [x] Test PDF download functionality

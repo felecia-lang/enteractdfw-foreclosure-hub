@@ -8,7 +8,7 @@ import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 const RESOURCE_TITLES: Record<string, string> = {
   "texas-foreclosure-survival-guide": "Texas Foreclosure Survival Guide",
   "action-guide-contacting-lender": "Strategic Communication with Your Lender",
-  "action-guide-notice-of-default": "Action Guide: Notice of Default",
+  "action-guide-notice-of-default": "Navigating the Notice of Default",
   "avoiding-foreclosure-scams": "Avoiding Foreclosure Scams Guide",
 };
 

@@ -19,7 +19,7 @@ const navigationItems = [
     href: "/knowledge-base/options",
   },
   {
-    title: "Action Guide: Notice of Default",
+    title: "Navigating the Notice of Default",
     href: "/knowledge-base/notice-of-default",
   },
   {

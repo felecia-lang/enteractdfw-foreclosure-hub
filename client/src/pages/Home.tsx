@@ -581,9 +581,9 @@ export default function Home() {
                     <AlertCircle className="h-6 w-6 text-primary" />
                   </div>
                 </div>
-                <CardTitle className="text-lg">Action Guide: Notice of Default</CardTitle>
+                <CardTitle className="text-lg">Navigating the Notice of Default</CardTitle>
                 <CardDescription className="text-sm">
-                  Step‑by‑step plan for homeowners after receiving a Notice of Default, including timelines and call scripts.
+                  A comprehensive homeowner's guide with step-by-step action plans, timelines, and call scripts after receiving a Notice of Default.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -592,8 +592,8 @@ export default function Home() {
                   size="lg"
                   onClick={() => {
                     setSelectedResource({
-                      name: "Action Guide: Notice of Default",
-                      file: "ActionGuideNoticeofDefault.pdf"
+                      name: "Navigating the Notice of Default",
+                      file: "Notice_Of_Default_Guide.pdf"
                     });
                     setShowResourceDialog(true);
                   }}

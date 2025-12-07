@@ -56,8 +56,8 @@ const knowledgeBaseCategories = [
   },
   {
     icon: FileText,
-    title: "Action Guide: Notice of Default",
-    description: "Step-by-step checklist for what to do when you receive a Notice of Default.",
+    title: "Navigating the Notice of Default",
+    description: "Comprehensive homeowner's guide with step-by-step action plans and timelines.",
     href: "/guides/notice-of-default",
     color: "text-orange-600",
   },
