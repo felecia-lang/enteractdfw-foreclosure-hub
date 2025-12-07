@@ -176,6 +176,13 @@
       "when": 1765066985885,
       "tag": "0024_parallel_beyonder",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1765086772805,
+      "tag": "0025_normal_loki",
+      "breakpoints": true
     }
   ]
 }

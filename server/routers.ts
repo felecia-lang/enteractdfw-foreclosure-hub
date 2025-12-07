@@ -1713,6 +1713,147 @@ Email: info@enteractdfw.com
           });
         }
       }),
+    
+    // Admin procedures
+    list: protectedProcedure
+      .input(
+        z.object({
+          status: z.enum(["new", "reviewing", "offer_sent", "accepted", "declined", "closed"]).optional(),
+        }).optional()
+      )
+      .query(async ({ input, ctx }) => {
+        // Check if user is admin
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const { getAllCashOfferRequests, getCashOfferRequestsByStatus } = await import("./db");
+          
+          if (input?.status) {
+            const requests = await getCashOfferRequestsByStatus(input.status);
+            return requests.map(req => ({
+              ...req,
+              photoUrls: req.photoUrls ? JSON.parse(req.photoUrls) : [],
+            }));
+          }
+          
+          const requests = await getAllCashOfferRequests();
+          return requests.map(req => ({
+            ...req,
+            photoUrls: req.photoUrls ? JSON.parse(req.photoUrls) : [],
+          }));
+        } catch (error) {
+          console.error("[CashOffer] Failed to list requests:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve cash offer requests",
+          });
+        }
+      }),
+    
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input, ctx }) => {
+        // Check if user is admin
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const { getCashOfferRequestById } = await import("./db");
+          const request = await getCashOfferRequestById(input.id);
+          
+          if (!request) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Cash offer request not found",
+            });
+          }
+          
+          return {
+            ...request,
+            photoUrls: request.photoUrls ? JSON.parse(request.photoUrls) : [],
+          };
+        } catch (error) {
+          console.error("[CashOffer] Failed to get request:", error);
+          throw error;
+        }
+      }),
+    
+    updateStatus: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          status: z.enum(["new", "reviewing", "offer_sent", "accepted", "declined", "closed"]),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        // Check if user is admin
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const { updateCashOfferRequestStatus } = await import("./db");
+          const success = await updateCashOfferRequestStatus(input.id, input.status);
+          
+          if (!success) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to update status",
+            });
+          }
+          
+          return { success: true };
+        } catch (error) {
+          console.error("[CashOffer] Failed to update status:", error);
+          throw error;
+        }
+      }),
+    
+    updateNotes: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          notes: z.string(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        // Check if user is admin
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+
+        try {
+          const { updateCashOfferInternalNotes } = await import("./db");
+          const success = await updateCashOfferInternalNotes(input.id, input.notes);
+          
+          if (!success) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to update notes",
+            });
+          }
+          
+          return { success: true };
+        } catch (error) {
+          console.error("[CashOffer] Failed to update notes:", error);
+          throw error;
+        }
+      }),
   }),
 });
 

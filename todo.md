@@ -1195,3 +1195,25 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Update title to "Texas Foreclosure Survival Guide"
 - [x] Update description with new content
 - [x] Test PDF download functionality
+
+## Admin Dashboard for Cash Offer Requests
+- [ ] Update database schema to add status and notes fields
+- [ ] Create backend tRPC procedures for listing, filtering, and updating requests
+- [ ] Build admin dashboard page with data table
+- [ ] Add status pipeline tracking (new/reviewing/offer-sent/closed)
+- [ ] Implement filtering by status, date, and location
+- [ ] Add detail view modal with property photos gallery
+- [ ] Implement internal notes functionality
+- [ ] Add admin-only route protection
+- [ ] Create unit tests for admin procedures
+
+## Admin Dashboard for Cash Offers
+- [x] Update database schema to add status and internal notes fields
+- [x] Create backend tRPC procedures for admin operations (list, updateStatus, updateNotes)
+- [x] Build admin dashboard UI with data table and status overview cards
+- [x] Add filtering by status functionality
+- [x] Create detail modal with property info and photo gallery
+- [x] Add internal notes textarea with auto-save
+- [x] Implement real-time status updates
+- [x] Add role-based access control (admin only)
+- [x] Create comprehensive unit tests for admin functionality

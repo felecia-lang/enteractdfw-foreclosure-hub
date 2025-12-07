@@ -1,0 +1,1 @@
+ALTER TABLE `cashOfferRequests` ADD `internalNotes` text;

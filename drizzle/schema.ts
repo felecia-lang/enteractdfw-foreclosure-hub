@@ -485,6 +485,9 @@ export const cashOfferRequests = mysqlTable("cashOfferRequests", {
     "closed"
   ]).default("new").notNull(),
   
+  // Admin internal notes
+  internalNotes: text("internalNotes"),
+  
   // Tracking metadata
   ipAddress: varchar("ipAddress", { length: 45 }),
   userAgent: text("userAgent"),

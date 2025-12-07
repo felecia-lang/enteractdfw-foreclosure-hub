@@ -34,6 +34,7 @@ import AdminLinkAnalytics from "@/pages/AdminLinkAnalytics";
 import AdminCampaigns from "@/pages/AdminCampaigns";
 import AdminExpiringLinks from "@/pages/AdminExpiringLinks";
 import ComparisonHistory from "@/pages/ComparisonHistory";
+import AdminCashOffers from "@/pages/AdminCashOffers";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/admin/link-analytics" component={AdminLinkAnalytics} />
       <Route path="/admin/campaigns" component={AdminCampaigns} />
       <Route path="/admin/expiring-links" component={AdminExpiringLinks} />
+      <Route path="/admin/cash-offers" component={AdminCashOffers} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />

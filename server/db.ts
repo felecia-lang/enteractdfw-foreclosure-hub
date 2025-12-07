@@ -2175,3 +2175,51 @@ export async function updateCashOfferRequestStatus(
     return false;
   }
 }
+
+export async function updateCashOfferInternalNotes(
+  id: number,
+  internalNotes: string
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update cash offer internal notes: database not available");
+    return false;
+  }
+
+  try {
+    const { cashOfferRequests } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    await db
+      .update(cashOfferRequests)
+      .set({ internalNotes, updatedAt: new Date() })
+      .where(eq(cashOfferRequests.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update cash offer internal notes:", error);
+    return false;
+  }
+}
+
+export async function getCashOfferRequestsByStatus(
+  status: "new" | "reviewing" | "offer_sent" | "accepted" | "declined" | "closed"
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get cash offer requests by status: database not available");
+    return [];
+  }
+
+  try {
+    const { cashOfferRequests } = await import("../drizzle/schema");
+    const { eq, desc } = await import("drizzle-orm");
+    const results = await db
+      .select()
+      .from(cashOfferRequests)
+      .where(eq(cashOfferRequests.status, status))
+      .orderBy(desc(cashOfferRequests.createdAt));
+    return results;
+  } catch (error) {
+    console.error("[Database] Failed to get cash offer requests by status:", error);
+    return [];
+  }
+}
