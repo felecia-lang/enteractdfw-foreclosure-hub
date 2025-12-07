@@ -206,10 +206,10 @@ export default function ContactingYourLenderGuide() {
         <div className="container max-w-4xl">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 print:text-3xl">
-              Guide: Contacting Your Lender
+              Strategic Communication with Your Lender
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Phone scripts, questions to ask, and templates to help you communicate effectively with your mortgage servicer
+              Professional strategies, proven scripts, and templates for effective communication with your mortgage servicer during foreclosure
             </p>
           </div>
           

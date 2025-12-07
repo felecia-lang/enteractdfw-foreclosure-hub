@@ -75,14 +75,18 @@ async function startServer() {
   
   app.get("/api/pdf/contacting-lender-guide", (req, res) => {
     try {
-      const doc = generateContactingLenderPDF();
+      const pdfPath = path.join(process.cwd(), 'client/public/pdfs/Strategic_Communication_Lender_Guide.pdf');
+      
+      if (!fs.existsSync(pdfPath)) {
+        return res.status(404).json({ error: 'PDF not found' });
+      }
+      
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename="Contacting_Your_Lender_Guide.pdf"');
-      doc.pipe(res);
-      doc.end();
+      res.setHeader('Content-Disposition', 'attachment; filename="Strategic_Communication_Lender_Guide.pdf"');
+      fs.createReadStream(pdfPath).pipe(res);
     } catch (error) {
-      console.error('PDF generation error:', error);
-      res.status(500).json({ error: 'Failed to generate PDF' });
+      console.error('PDF serving error:', error);
+      res.status(500).json({ error: 'Failed to serve PDF' });
     }
   });
   

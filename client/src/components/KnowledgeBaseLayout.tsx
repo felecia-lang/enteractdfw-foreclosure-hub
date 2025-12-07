@@ -23,7 +23,7 @@ const navigationItems = [
     href: "/knowledge-base/notice-of-default",
   },
   {
-    title: "Action Guide: Contacting Your Lender",
+    title: "Strategic Communication with Your Lender",
     href: "/knowledge-base/contact-lender",
   },
   {

@@ -550,9 +550,9 @@ export default function Home() {
                     <Phone className="h-6 w-6 text-primary" />
                   </div>
                 </div>
-                <CardTitle className="text-lg">Action Guide: Contacting Your Lender</CardTitle>
+                <CardTitle className="text-lg">Strategic Communication with Your Lender</CardTitle>
                 <CardDescription className="text-sm">
-                  Scripts, templates, and strategies for effective communication with mortgage servicers.
+                  Professional strategies and proven scripts for effective communication with mortgage servicers during foreclosure.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -561,8 +561,8 @@ export default function Home() {
                   size="lg"
                   onClick={() => {
                     setSelectedResource({
-                      name: "Action Guide: Contacting Your Lender",
-                      file: "ActionGuideContactingYourLender.pdf"
+                      name: "Strategic Communication with Your Lender",
+                      file: "Strategic_Communication_Lender_Guide.pdf"
                     });
                     setShowResourceDialog(true);
                   }}

@@ -63,8 +63,8 @@ const knowledgeBaseCategories = [
   },
   {
     icon: Phone,
-    title: "Action Guide: Contacting Your Lender",
-    description: "Phone scripts, questions to ask, call log template, and hardship letter samples.",
+    title: "Strategic Communication with Your Lender",
+    description: "Professional strategies, proven scripts, call log template, and hardship letter samples.",
     href: "/contacting-lender-guide",
     color: "text-teal-600",
   },

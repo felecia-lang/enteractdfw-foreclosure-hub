@@ -1137,3 +1137,15 @@
 - [x] Copy new PDF file to project public directory
 - [x] Update all references to point to new PDF
 - [x] Test PDF download functionality
+
+## Replace Lender Communication Guide PDF
+- [ ] Locate existing ActionGuideContactingYourLender.pdf references
+- [ ] Copy new PDF file to project public directory
+- [ ] Update all references to point to new PDF
+- [ ] Test PDF download functionality
+
+## Replace Lender Communication Guide PDF (Completed)
+- [x] Locate existing ActionGuideContactingYourLender.pdf references
+- [x] Copy new PDF file to project public directory
+- [x] Update all references to point to new PDF
+- [x] Test PDF download functionality
