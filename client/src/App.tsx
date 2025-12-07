@@ -55,6 +55,7 @@ function Router() {
       <Route path="/guides/notice-of-default" component={NoticeOfDefaultGuide} />
       <Route path="/notice-of-default-checklist" component={NoticeOfDefaultChecklist} />
       <Route path="/contacting-lender-guide" component={ContactingYourLenderGuide} />
+      <Route path="/knowledge-base/contact-lender" component={ContactingYourLenderGuide} />
       <Route path="/knowledge-base/avoiding-scams" component={AvoidingScams} />
       <Route path="/success-stories" component={SuccessStories} />
       <Route path="/admin" component={Admin} />

@@ -1217,3 +1217,6 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Implement real-time status updates
 - [x] Add role-based access control (admin only)
 - [x] Create comprehensive unit tests for admin functionality
+
+## Recent Bug Fixes
+- [x] Fix 404 error for /knowledge-base/contact-lender route (added missing route to App.tsx)
