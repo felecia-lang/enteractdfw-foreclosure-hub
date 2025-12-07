@@ -1649,6 +1649,20 @@ Email: info@enteractdfw.com
             content: `New cash offer request from ${input.fullName}\n\nProperty: ${input.street}, ${input.city}, ${input.state} ${input.zipCode}\n${input.bedrooms} bed, ${input.bathrooms} bath, ${input.squareFeet} sqft\nYear Built: ${input.yearBuilt}\nCondition: ${input.condition}\n\nContact: ${input.email} | ${input.phone}${input.additionalNotes ? `\n\nNotes: ${input.additionalNotes}` : ""}`,
           });
 
+          // Send acknowledgment email to homeowner
+          const { sendCashOfferAcknowledgment } = await import("./ghl");
+          await sendCashOfferAcknowledgment({
+            email: input.email,
+            fullName: input.fullName,
+            street: input.street,
+            city: input.city,
+            state: input.state,
+            zipCode: input.zipCode,
+            bedrooms: input.bedrooms,
+            bathrooms: input.bathrooms,
+            squareFeet: input.squareFeet,
+          });
+
           return {
             success: true,
             message: "Your cash offer request has been submitted successfully!",

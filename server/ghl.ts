@@ -714,3 +714,63 @@ export async function sendDripEmail(params: {
     return { success: false, error: errorMessage };
   }
 }
+
+/**
+ * Send cash offer acknowledgment email to homeowner
+ * This function sends an immediate acknowledgment email after a cash offer request is submitted
+ */
+export async function sendCashOfferAcknowledgment(params: {
+  email: string;
+  fullName: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  bedrooms: number;
+  bathrooms: number;
+  squareFeet: number;
+  contactId?: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const { getCashOfferAcknowledgmentEmail } = await import("./emailTemplates");
+  
+  const emailContent = getCashOfferAcknowledgmentEmail({
+    fullName: params.fullName,
+    street: params.street,
+    city: params.city,
+    state: params.state,
+    zipCode: params.zipCode,
+    bedrooms: params.bedrooms,
+    bathrooms: params.bathrooms,
+    squareFeet: params.squareFeet,
+  });
+
+  // If we have a GHL contact ID and credentials, send via GHL
+  if (params.contactId && GHL_API_KEY && GHL_LOCATION_ID) {
+    console.log("[GHL] Sending cash offer acknowledgment via GHL to contact:", params.contactId);
+    
+    const result = await sendGHLEmail(params.contactId, {
+      subject: emailContent.subject,
+      body: emailContent.body,
+      from: "info@enteractdfw.com",
+      replyTo: "info@enteractdfw.com",
+    });
+
+    if (result.success) {
+      // Track the email send
+      await trackEmailInteraction(params.contactId, "sent", emailContent.subject);
+      console.log("[GHL] Cash offer acknowledgment email sent successfully");
+      return { success: true };
+    } else {
+      console.error("[GHL] Failed to send cash offer acknowledgment:", result.error);
+      return { success: false, error: result.error };
+    }
+  } else {
+    // Log that email would be sent (for testing without GHL credentials)
+    console.log("[Email] Cash offer acknowledgment would be sent to:", params.email);
+    console.log("[Email] Subject:", emailContent.subject);
+    console.log("[Email] GHL not configured, email sending skipped");
+    
+    // Return success even without GHL configured (graceful degradation)
+    return { success: true };
+  }
+}

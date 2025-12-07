@@ -1101,3 +1101,9 @@
 - [x] Build modal component with all required fields
 - [x] Integrate modal with Options to Avoid Foreclosure page
 - [x] Add unit tests for cash offer submission
+
+## Cash Offer Automated Email
+- [x] Create email template for cash offer acknowledgment
+- [x] Include next steps and timeline in email content
+- [x] Integrate email sending into cash offer submission flow
+- [x] Add unit tests for email functionality

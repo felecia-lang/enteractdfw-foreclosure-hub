@@ -283,3 +283,87 @@ export function getOwnerNotificationEmail(leadData: {
     `,
   };
 }
+
+/**
+ * Cash Offer Request Acknowledgment Email
+ * Sent immediately after homeowner submits cash offer request form
+ */
+export function getCashOfferAcknowledgmentEmail(data: {
+  fullName: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  bedrooms: number;
+  bathrooms: number;
+  squareFeet: number;
+}): { subject: string; body: string } {
+  return {
+    subject: "We Received Your Cash Offer Request - Next Steps",
+    body: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>${EMAIL_STYLES}</style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Thank You for Your Request</h1>
+          </div>
+          <div class="content">
+            <p>Hi ${data.fullName},</p>
+            
+            <p>Thank you for requesting a cash offer for your property at <strong>${data.street}, ${data.city}, ${data.state} ${data.zipCode}</strong>.</p>
+            
+            <p>We've received your information and our team is already reviewing your property details:</p>
+            <ul>
+              <li><strong>Property:</strong> ${data.bedrooms} bed, ${data.bathrooms} bath, ${data.squareFeet} sqft</li>
+              <li><strong>Location:</strong> ${data.city}, ${data.state} ${data.zipCode}</li>
+            </ul>
+            
+            <div class="highlight">
+              <strong>⏰ What Happens Next?</strong>
+              <ol style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>Property Evaluation (24-48 hours):</strong> Our team will research comparable sales, assess market conditions, and evaluate your property details</li>
+                <li><strong>Cash Offer Presentation (2-3 business days):</strong> We'll call you to discuss our fair, no-obligation cash offer and answer any questions</li>
+                <li><strong>Your Decision (No Pressure):</strong> Take your time to review the offer. There's absolutely no obligation to accept</li>
+                <li><strong>Fast Closing (7-10 days):</strong> If you accept, we can close in as little as 7-10 days—or on your timeline</li>
+              </ol>
+            </div>
+            
+            <p><strong>Why Choose a Cash Offer?</strong></p>
+            <ul>
+              <li>✅ <strong>Fast closing</strong> - Avoid foreclosure with quick sale (7-10 days typical)</li>
+              <li>✅ <strong>No repairs needed</strong> - We buy houses in any condition</li>
+              <li>✅ <strong>No commissions or fees</strong> - Keep more of your equity</li>
+              <li>✅ <strong>Avoid foreclosure</strong> - Protect your credit and move forward</li>
+              <li>✅ <strong>Flexible closing date</strong> - Close on your schedule</li>
+              <li>✅ <strong>Fair, transparent offers</strong> - No games, no hidden costs</li>
+            </ul>
+            
+            <p><strong>Questions Before We Call?</strong></p>
+            <p>Feel free to reach out anytime:</p>
+            <ul>
+              <li><strong>Call/Text:</strong> 832-932-7585</li>
+              <li><strong>Email:</strong> info@enteractdfw.com</li>
+            </ul>
+            
+            <p>We understand this is a difficult time, and we're here to help you explore all your options without pressure or judgment.</p>
+            
+            <a href="https://enteractdfw-foreclosure-hub.manus.space/knowledge-base/options-to-avoid-foreclosure" class="cta-button">Learn More About Your Options</a>
+            
+            <p>We'll be in touch soon with your personalized cash offer.</p>
+            
+            <p>Best regards,<br>
+            <strong>Felecia Fair</strong><br>
+            Licensed Texas Real Estate Broker<br>
+            832-932-7585</p>
+          </div>
+          ${EMAIL_FOOTER}
+        </div>
+      </body>
+      </html>
+    `,
+  };
+}
