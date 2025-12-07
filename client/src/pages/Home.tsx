@@ -49,7 +49,7 @@ export default function Home() {
       // Trigger PDF download
       const link = document.createElement('a');
       link.href = '/api/pdf/foreclosure-survival-guide';
-      link.download = 'Texas_Foreclosure_Survival_Guide.pdf';
+      link.download = 'Foreclosure_Survival_Guide.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -519,9 +519,9 @@ export default function Home() {
                     <FileText className="h-6 w-6 text-primary" />
                   </div>
                 </div>
-                <CardTitle className="text-lg">Texas Foreclosure Survival Guide</CardTitle>
+                <CardTitle className="text-lg">Foreclosure Survival Guide</CardTitle>
                 <CardDescription className="text-sm">
-                  Comprehensive overview of the Texas foreclosure process, homeowner rights, and options to avoid foreclosure.
+                  Comprehensive guide to navigating foreclosure, understanding your rights, and exploring all available options.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -530,8 +530,8 @@ export default function Home() {
                   size="lg"
                   onClick={() => {
                     setSelectedResource({
-                      name: "Texas Foreclosure Survival Guide",
-                      file: "Texas_Foreclosure_Survival_Guide.pdf"
+                      name: "Foreclosure Survival Guide",
+                      file: "Foreclosure_Survival_Guide.pdf"
                     });
                     setShowResourceDialog(true);
                   }}

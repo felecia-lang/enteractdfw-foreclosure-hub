@@ -1125,3 +1125,15 @@
 - [x] Implement 3-5 photo limit validation
 - [x] Integrate photo upload into cash offer submission flow
 - [x] Create comprehensive unit tests for photo upload
+
+## Replace Foreclosure Survival Guide PDF
+- [ ] Locate existing PDF reference on landing page
+- [ ] Copy new PDF file to project public directory
+- [ ] Update all references to point to new PDF
+- [ ] Test PDF download functionality
+
+## Replace Foreclosure Survival Guide PDF (Completed)
+- [x] Locate existing PDF reference on landing page
+- [x] Copy new PDF file to project public directory
+- [x] Update all references to point to new PDF
+- [x] Test PDF download functionality

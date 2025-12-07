@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
+import fs from "fs";
+import path from "path";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
@@ -86,14 +88,18 @@ async function startServer() {
   
   app.get("/api/pdf/foreclosure-survival-guide", (req, res) => {
     try {
-      const doc = generateForeclosureGuidePDF();
+      const pdfPath = path.join(process.cwd(), 'client/public/pdfs/Foreclosure_Survival_Guide.pdf');
+      
+      if (!fs.existsSync(pdfPath)) {
+        return res.status(404).json({ error: 'PDF not found' });
+      }
+      
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename="Texas_Foreclosure_Survival_Guide.pdf"');
-      doc.pipe(res);
-      doc.end();
+      res.setHeader('Content-Disposition', 'attachment; filename="Foreclosure_Survival_Guide.pdf"');
+      fs.createReadStream(pdfPath).pipe(res);
     } catch (error) {
-      console.error('PDF generation error:', error);
-      res.status(500).json({ error: 'Failed to generate PDF' });
+      console.error('PDF serving error:', error);
+      res.status(500).json({ error: 'Failed to serve PDF' });
     }
   });
   

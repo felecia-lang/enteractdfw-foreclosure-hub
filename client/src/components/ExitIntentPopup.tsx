@@ -74,8 +74,8 @@ export function ExitIntentPopup() {
       await downloadResourceMutation.mutateAsync({
         name: name.trim(),
         email: email.trim(),
-        resourceName: "Texas Foreclosure Survival Guide",
-        resourceFile: "/pdfs/Texas_Foreclosure_Survival_Guide.pdf",
+        resourceName: "Foreclosure Survival Guide",
+        resourceFile: "/pdfs/Foreclosure_Survival_Guide.pdf",
       });
 
       toast.success("Success! Check your email for the guide.");
@@ -111,7 +111,7 @@ export function ExitIntentPopup() {
             <DialogTitle className="text-2xl">Wait! Don't Leave Empty-Handed</DialogTitle>
           </div>
           <DialogDescription className="text-base">
-            Get your FREE Texas Foreclosure Survival Guide before you go. Learn your rights, explore your options, and take control of your situation.
+            Get your FREE Foreclosure Survival Guide before you go. Learn your rights, explore your options, and take control of your situation.
           </DialogDescription>
         </DialogHeader>
 
