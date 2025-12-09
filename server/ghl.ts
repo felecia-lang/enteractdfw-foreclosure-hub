@@ -774,3 +774,114 @@ export async function sendCashOfferAcknowledgment(params: {
     return { success: true };
   }
 }
+
+/**
+ * Send Survival Guide download email with PDF link
+ */
+export async function sendSurvivalGuideEmail(
+  contactId: string,
+  firstName: string
+): Promise<void> {
+  const pdfUrl = "https://foreclosurehub-ljpdyh45.manus.space/pdfs/texas-foreclosure-survival-guide.pdf";
+  
+  const emailBody = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: 'Open Sans', Arial, sans-serif; line-height: 1.6; color: #333333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #0A2342; color: white; padding: 30px; text-align: center; }
+        .content { background-color: #F5F5F5; padding: 30px; }
+        .cta-button { display: inline-block; background-color: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+        .secondary-button { display: inline-block; background-color: #00A6A6; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; margin: 10px 0; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+        .highlight-box { background-color: #FFF3E0; border-left: 4px solid #FF6B35; padding: 15px; margin: 20px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>📘 Your FREE Texas Foreclosure Survival Guide</h1>
+        </div>
+        <div class="content">
+          <p>Hi ${firstName},</p>
+          
+          <p>Thank you for downloading your <strong>FREE Texas Foreclosure Survival Guide</strong> from EnterActDFW.</p>
+          
+          <p>I understand that facing foreclosure can feel overwhelming and stressful. You're not alone, and you have options. This comprehensive guide will help you understand your rights, explore your options, and take action to protect your home.</p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${pdfUrl}" class="cta-button">📥 Download Your Guide Now</a>
+          </div>
+          
+          <div class="highlight-box">
+            <p><strong>⏰ Time is Critical</strong></p>
+            <p>In Texas, you typically have 20-30 days from receiving a Notice of Default to take action. Don't wait—start reading your guide today and take the first steps to protect your home.</p>
+          </div>
+          
+          <p><strong>What you'll find in your guide:</strong></p>
+          <ul>
+            <li>Understanding the Texas foreclosure timeline (page 3)</li>
+            <li>Your legal rights and federal protections (page 8)</li>
+            <li>7 options to avoid foreclosure (page 12)</li>
+            <li>Step-by-step action plans and checklists (page 18)</li>
+            <li>How to communicate effectively with your lender (page 22)</li>
+            <li>Spotting and avoiding foreclosure scams (page 26)</li>
+          </ul>
+          
+          <p><strong>What's Next?</strong></p>
+          <p>Over the next few days, I'll send you additional resources and tools to help you navigate this situation with confidence:</p>
+          <ul>
+            <li>Day 2: Foreclosure Timeline Calculator</li>
+            <li>Day 5: Property Value Estimator Tool</li>
+            <li>Day 7: Strategic Communication Scripts for Your Lender</li>
+          </ul>
+          
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+          
+          <p><strong>Need Immediate Help?</strong></p>
+          <p>I'm here to answer your questions and discuss your specific situation—with no pressure and no judgment. As a licensed Texas real estate broker specializing in foreclosure assistance, I've helped over 200 families in the DFW area protect their homes and find the best path forward.</p>
+          
+          <div style="text-align: center;">
+            <a href="tel:832-932-7585" class="secondary-button">📞 Call Me: (832) 932-7585</a>
+          </div>
+          
+          <p style="text-align: center; margin-top: 20px;">
+            <a href="https://foreclosurehub-ljpdyh45.manus.space/knowledge-base" style="color: #00A6A6; text-decoration: none;">📚 Browse Our Knowledge Base</a>
+          </p>
+          
+          <p style="margin-top: 30px;">Best regards,<br>
+          <strong>Felecia Fair</strong><br>
+          Licensed Texas Real Estate Broker<br>
+          EnterActDFW<br>
+          📞 (832) 932-7585<br>
+          ✉️ info@enteractdfw.com</p>
+        </div>
+        <div class="footer">
+          <p>EnterActDFW Real Estate Brokerage<br>
+          4400 State Hwy 121, Suite 300 | Lewisville, Texas 75056</p>
+          <p style="margin-top: 15px; font-size: 11px; color: #999;">
+            <strong>Legal Disclaimer:</strong> This information is for educational purposes only and does not constitute legal or financial advice. 
+            For personalized guidance, please consult with a licensed attorney or financial advisor.
+          </p>
+          <p style="margin-top: 10px;">
+            <a href="https://foreclosurehub-ljpdyh45.manus.space/privacy-policy" style="color: #00A6A6;">Privacy Policy</a> | 
+            <a href="https://foreclosurehub-ljpdyh45.manus.space/terms" style="color: #00A6A6;">Terms of Service</a>
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  await sendGHLEmail(contactId, {
+    subject: "📘 Your FREE Texas Foreclosure Survival Guide is Ready",
+    body: emailBody,
+    from: "info@enteractdfw.com",
+    replyTo: "info@enteractdfw.com",
+  });
+
+  // Track the email send
+  await trackEmailInteraction(contactId, "sent", "Texas Foreclosure Survival Guide");
+}

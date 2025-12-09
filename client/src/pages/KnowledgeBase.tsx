@@ -22,6 +22,7 @@ import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import SurvivalGuideModal from "@/components/SurvivalGuideModal";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
 import { searchContent } from "@/data/searchData";
@@ -207,6 +208,7 @@ export default function KnowledgeBase() {
   ]);
   const [showLeadCapture, setShowLeadCapture] = useState(false);
   const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const [showSurvivalGuideModal, setShowSurvivalGuideModal] = useState(false);
   const [leadFormData, setLeadFormData] = useState({
     firstName: "",
     email: "",
@@ -582,10 +584,12 @@ export default function KnowledgeBase() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Download survival guide
                 </p>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/#guide-form">
-                    <span>Download Now</span>
-                  </Link>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setShowSurvivalGuideModal(true)}
+                >
+                  Download Now
                 </Button>
               </CardContent>
             </Card>
@@ -657,6 +661,12 @@ export default function KnowledgeBase() {
           </div>
         </div>
       </footer>
+
+      {/* Survival Guide Modal */}
+      <SurvivalGuideModal 
+        open={showSurvivalGuideModal} 
+        onOpenChange={setShowSurvivalGuideModal} 
+      />
     </div>
   );
 }

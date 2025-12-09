@@ -26,6 +26,7 @@ import TermsOfService from "@/pages/TermsOfService";
 import TimelineCalculator from "@/pages/TimelineCalculator";
 import PropertyValueEstimator from "@/pages/PropertyValueEstimator";
 import ThankYou from "@/pages/ThankYou";
+import ThankYouGuide from "@/pages/ThankYouGuide";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ChatEngagementTracker } from "@/components/ChatEngagementTracker";
 import ConversionFunnel from "@/pages/ConversionFunnel";
@@ -73,6 +74,7 @@ function Router() {
       <Route path="/property-value-estimator" component={PropertyValueEstimator} />
       <Route path="/comparison-history" component={ComparisonHistory} />
       <Route path="/thank-you" component={ThankYou} />
+      <Route path="/thank-you-guide" component={ThankYouGuide} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

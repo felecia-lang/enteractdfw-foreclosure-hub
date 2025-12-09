@@ -1241,3 +1241,13 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Implement search functionality on Knowledge Base hub page
 - [x] Add keyword highlighting in search results
 - [x] Show breadcrumb paths in search results
+
+
+## Texas Foreclosure Survival Guide Download Form
+- [x] Create SurvivalGuideModal component with 5 form fields (First Name, Email, Phone, ZIP, Consent checkbox)
+- [x] Create backend tRPC procedure for form submission with GHL CRM integration
+- [x] Add 'Survival Guide Download' tag to CRM contact
+- [x] Trigger automated email with PDF download link
+- [x] Create /thank-you-guide confirmation page
+- [x] Integrate modal into Knowledge Base page "Get Free Guide" button
+- [x] Test complete flow from form submission to thank you page

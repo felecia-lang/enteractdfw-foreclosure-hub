@@ -7,7 +7,7 @@ import { z } from "zod";
 import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage } from "./db";
 import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
 import { notifyOwner } from "./_core/notification";
-import { syncLeadToGHL, sendWelcomeEmail } from "./ghl";
+import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
 import { linksRouter } from "./routers/links";
 import { campaignsRouter } from "./routers/campaigns";
@@ -155,6 +155,82 @@ Email: info@enteractdfw.com
         } catch (error) {
           console.error("Failed to create lead:", error);
           throw new Error("Failed to submit lead. Please try again.");
+        }
+      }),
+
+    // Public procedure for Survival Guide download
+    submitSurvivalGuideRequest: publicProcedure
+      .input(
+        z.object({
+          firstName: z.string().min(1, "First name is required"),
+          email: z.string().email("Valid email is required"),
+          phone: z.string().optional(),
+          zipCode: z.string().optional(),
+          consentToContact: z.boolean(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          // Create lead in database
+          const leadResult = await createLead({
+            firstName: input.firstName,
+            email: input.email,
+            phone: input.phone || "",
+            propertyZip: input.zipCode || "",
+            smsConsent: input.consentToContact ? "yes" : "no",
+            source: "survival_guide_download",
+            status: "new",
+          });
+
+          const leadId = leadResult?.[0]?.insertId;
+
+          // Notify owner of new guide download
+          await notifyOwner({
+            title: "New Survival Guide Download",
+            content: `${input.firstName} downloaded the Texas Foreclosure Survival Guide\nEmail: ${input.email}${input.phone ? `\nPhone: ${input.phone}` : ""}${input.zipCode ? `\nZIP: ${input.zipCode}` : ""}`,
+          });
+
+          // Sync lead to Go HighLevel CRM with specific tag
+          const ghlResult = await syncContactToGHL({
+            firstName: input.firstName,
+            email: input.email,
+            phone: input.phone,
+            postalCode: input.zipCode,
+            tags: ["Survival Guide Download", "Website Lead", "Foreclosure Lead"],
+            customFields: {
+              property_zip: input.zipCode || "",
+              lead_source: "Survival Guide Download",
+              foreclosure_stage: "Initial Contact",
+            },
+            source: "EnterActDFW Foreclosure Hub - Survival Guide",
+          });
+
+          if (ghlResult.success && ghlResult.contactId) {
+            console.log("[Survival Guide] Successfully synced to GHL:", ghlResult.contactId);
+            
+            // Add note about guide download
+            await addGHLNote({
+              contactId: ghlResult.contactId,
+              body: `Downloaded Texas Foreclosure Survival Guide via website.${input.zipCode ? `\n\nProperty ZIP: ${input.zipCode}` : ""}${input.phone ? `\nPhone: ${input.phone}` : ""}\n\nConsent to contact: ${input.consentToContact ? "Yes" : "No"}`,
+            });
+
+            // Send email with PDF download link
+            try {
+              await sendSurvivalGuideEmail(ghlResult.contactId, input.firstName);
+              console.log("[Survival Guide] Email sent to:", input.email);
+            } catch (emailError) {
+              console.warn("[Survival Guide] Failed to send email:", emailError);
+              // Don't fail the request if email fails
+            }
+          } else {
+            console.warn("[Survival Guide] Failed to sync to GHL:", ghlResult.error);
+            // Don't fail the request if GHL sync fails - lead is still captured in our DB
+          }
+
+          return { success: true };
+        } catch (error) {
+          console.error("Failed to process survival guide request:", error);
+          throw new Error("Failed to submit your request. Please try again.");
         }
       }),
 
