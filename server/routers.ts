@@ -1931,6 +1931,60 @@ Email: info@enteractdfw.com
         }
       }),
   }),
+
+  // LeadConnector Webhook Integration
+  webhook: router({
+    submitLeadConnector: publicProcedure
+      .input(
+        z.object({
+          name: z.string().min(1, "Name is required"),
+          email: z.string().email("Valid email is required"),
+          phone: z.string().min(1, "Phone is required"),
+          message: z.string().min(1, "Message is required"),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const webhookUrl = "https://services.leadconnectorhq.com/hooks/osAdvkBAK96qwKch9fZJ/webhook-trigger/06581439-5d02-42ee-9ef6-5de691fc7b99";
+
+        try {
+          // Send data to LeadConnector webhook
+          const response = await fetch(webhookUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: input.name,
+              email: input.email,
+              phone: input.phone,
+              message: input.message,
+              timestamp: new Date().toISOString(),
+            }),
+          });
+
+          if (!response.ok) {
+            console.error("[Webhook] Failed to send to LeadConnector:", response.status, response.statusText);
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to send message to webhook",
+            });
+          }
+
+          console.log("[Webhook] Successfully sent to LeadConnector:", input.email);
+
+          return {
+            success: true,
+            message: "Message sent successfully",
+          };
+        } catch (error) {
+          console.error("[Webhook] Error sending to LeadConnector:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to send message. Please try again later.",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

@@ -26,6 +26,7 @@ import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
 import { PropertyValueLeadCaptureModal } from "@/components/PropertyValueLeadCaptureModal";
+import LeadConnectorContactForm from "@/components/LeadConnectorContactForm";
 
 export default function Home() {
   const [showPropertyValueModal, setShowPropertyValueModal] = useState(false);
@@ -635,6 +636,19 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-16 bg-gradient-to-b from-background to-muted/20">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Have questions about your foreclosure situation? We're here to help. Send us a message and we'll respond promptly.
+            </p>
+          </div>
+          <LeadConnectorContactForm />
         </div>
       </section>
 

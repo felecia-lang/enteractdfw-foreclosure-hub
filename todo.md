@@ -1251,3 +1251,11 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Create /thank-you-guide confirmation page
 - [x] Integrate modal into Knowledge Base page "Get Free Guide" button
 - [x] Test complete flow from form submission to thank you page
+
+## LeadConnector Webhook Integration
+- [x] Create contact form component with Name, Email, Phone, Message fields
+- [x] Add email validation to contact form
+- [x] Create backend tRPC endpoint to proxy webhook requests
+- [x] Send form data to LeadConnector webhook URL via HTTP POST in JSON format
+- [x] Integrate contact form into homepage
+- [x] Test webhook submission and verify data delivery
