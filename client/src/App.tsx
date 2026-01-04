@@ -38,6 +38,7 @@ import ComparisonHistory from "@/pages/ComparisonHistory";
 import AdminCashOffers from "@/pages/AdminCashOffers";
 import FormAnalytics from "@/pages/FormAnalytics";
 import FormHeatmap from "@/pages/FormHeatmap";
+import ABTestingDashboard from "@/pages/admin/ABTestingDashboard";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -72,6 +73,7 @@ function Router() {
       <Route path="/admin/cash-offers" component={AdminCashOffers} />
       <Route path="/admin/form-analytics" component={FormAnalytics} />
       <Route path="/admin/form-heatmap" component={FormHeatmap} />
+      <Route path="/admin/ab-testing" component={ABTestingDashboard} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />

@@ -248,6 +248,14 @@ export default function Admin() {
               <Button
                 variant="outline"
                 className="bg-white text-[#0A2342] hover:bg-gray-100"
+                onClick={() => window.location.href = "/admin/ab-testing"}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                A/B Testing
+              </Button>
+              <Button
+                variant="outline"
+                className="bg-white text-[#0A2342] hover:bg-gray-100"
                 onClick={() => window.location.href = "/admin/testimonials"}
               >
                 <FileText className="h-4 w-4 mr-2" />

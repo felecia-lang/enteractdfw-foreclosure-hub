@@ -572,3 +572,88 @@ export const formFieldInteractions = mysqlTable("formFieldInteractions", {
 
 export type FormFieldInteraction = typeof formFieldInteractions.$inferSelect;
 export type InsertFormFieldInteraction = typeof formFieldInteractions.$inferInsert;
+
+/**
+ * A/B Tests table - defines field-level A/B tests
+ * Each test can have multiple variants to compare different field configurations
+ */
+export const abTests = mysqlTable("abTests", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(), // e.g., "Phone Field Label Test"
+  description: text("description"), // What we're testing and why
+  formName: varchar("formName", { length: 100 }).notNull(), // e.g., "contact_form", "lead_capture"
+  fieldName: varchar("fieldName", { length: 100 }).notNull(), // e.g., "phone", "email"
+  status: mysqlEnum("status", ["draft", "active", "paused", "completed"]).default("draft").notNull(),
+  trafficAllocation: int("trafficAllocation").default(100).notNull(), // Percentage of traffic to include (0-100)
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ABTest = typeof abTests.$inferSelect;
+export type InsertABTest = typeof abTests.$inferInsert;
+
+/**
+ * A/B Test Variants table - defines the different versions being tested
+ * Each test has 2+ variants (control + treatment(s))
+ */
+export const abTestVariants = mysqlTable("abTestVariants", {
+  id: int("id").autoincrement().primaryKey(),
+  testId: int("testId").notNull(),
+  name: varchar("name", { length: 100 }).notNull(), // e.g., "Control", "Variant A", "Variant B"
+  isControl: mysqlEnum("isControl", ["yes", "no"]).default("no").notNull(),
+  trafficWeight: int("trafficWeight").default(50).notNull(), // Percentage split (must sum to 100 across variants)
+  
+  // Field configuration
+  fieldLabel: varchar("fieldLabel", { length: 200 }), // e.g., "Phone" vs "Mobile Number"
+  fieldPlaceholder: varchar("fieldPlaceholder", { length: 200 }), // Placeholder text
+  fieldRequired: mysqlEnum("fieldRequired", ["yes", "no"]).default("yes").notNull(), // Required vs optional
+  fieldHelperText: varchar("fieldHelperText", { length: 500 }), // Help text below field
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ABTestVariant = typeof abTestVariants.$inferSelect;
+export type InsertABTestVariant = typeof abTestVariants.$inferInsert;
+
+/**
+ * A/B Test Assignments table - tracks which variant each user was assigned
+ * Uses session ID to maintain consistent experience across page loads
+ */
+export const abTestAssignments = mysqlTable("abTestAssignments", {
+  id: int("id").autoincrement().primaryKey(),
+  testId: int("testId").notNull(),
+  variantId: int("variantId").notNull(),
+  sessionId: varchar("sessionId", { length: 64 }).notNull(), // Browser session identifier
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+});
+
+export type ABTestAssignment = typeof abTestAssignments.$inferSelect;
+export type InsertABTestAssignment = typeof abTestAssignments.$inferInsert;
+
+/**
+ * A/B Test Events table - tracks all interactions with tested fields
+ * Records focus, blur, input, validation errors, and form submissions
+ */
+export const abTestEvents = mysqlTable("abTestEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  testId: int("testId").notNull(),
+  variantId: int("variantId").notNull(),
+  sessionId: varchar("sessionId", { length: 64 }).notNull(),
+  eventType: mysqlEnum("eventType", [
+    "impression", // Field was shown
+    "focus", // User focused on field
+    "blur", // User left field
+    "input", // User typed something
+    "validation_error", // Field validation failed
+    "form_submit", // Form was submitted
+    "form_success", // Form submission succeeded
+    "form_error" // Form submission failed
+  ]).notNull(),
+  eventData: text("eventData"), // JSON data for additional context
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ABTestEvent = typeof abTestEvents.$inferSelect;
+export type InsertABTestEvent = typeof abTestEvents.$inferInsert;
