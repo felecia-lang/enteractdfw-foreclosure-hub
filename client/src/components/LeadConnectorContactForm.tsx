@@ -31,6 +31,8 @@ export default function LeadConnectorContactForm() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
   // Auto-dismiss success banner after 10 seconds
   useEffect(() => {
@@ -44,6 +46,34 @@ export default function LeadConnectorContactForm() {
     }
   }, [isSubmitted]);
 
+  // Analytics tracking
+  const trackEvent = trpc.formAnalytics.trackEvent.useMutation();
+
+  // Track form view on mount
+  useEffect(() => {
+    trackEvent.mutate({
+      eventType: "view",
+      formName: "contact_form",
+      sessionId,
+      pagePath: window.location.pathname,
+      userAgent: navigator.userAgent,
+    });
+  }, []);
+
+  // Track form start when user begins typing
+  const handleFormStart = () => {
+    if (!hasStarted) {
+      setHasStarted(true);
+      trackEvent.mutate({
+        eventType: "start",
+        formName: "contact_form",
+        sessionId,
+        pagePath: window.location.pathname,
+        userAgent: navigator.userAgent,
+      });
+    }
+  };
+
   const submitWebhook = trpc.webhook.submitLeadConnector.useMutation({
     onSuccess: () => {
       toast.success("Message sent successfully!", {
@@ -51,6 +81,15 @@ export default function LeadConnectorContactForm() {
       });
       // Show success state
       setIsSubmitted(true);
+      // Track completion
+      trackEvent.mutate({
+        eventType: "complete",
+        formName: "contact_form",
+        sessionId,
+        userEmail: formData.email,
+        pagePath: window.location.pathname,
+        userAgent: navigator.userAgent,
+      });
       // Reset form
       setFormData({
         name: "",
@@ -60,10 +99,22 @@ export default function LeadConnectorContactForm() {
         website: "",
       });
       setErrors({});
+      setHasStarted(false);
     },
     onError: (error) => {
       toast.error("Failed to send message", {
         description: error.message || "Please try again later.",
+      });
+      // Track error
+      trackEvent.mutate({
+        eventType: "error",
+        formName: "contact_form",
+        sessionId,
+        userEmail: formData.email,
+        errorType: "submission",
+        errorMessage: error.message || "Unknown error",
+        pagePath: window.location.pathname,
+        userAgent: navigator.userAgent,
       });
     },
   });
@@ -151,6 +202,8 @@ export default function LeadConnectorContactForm() {
         return newErrors;
       });
     }
+    // Track form start on first input
+    handleFormStart();
   };
 
   return (

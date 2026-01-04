@@ -183,6 +183,13 @@
       "when": 1765086772805,
       "tag": "0025_normal_loki",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1767553994294,
+      "tag": "0026_round_lilandra",
+      "breakpoints": true
     }
   ]
 }

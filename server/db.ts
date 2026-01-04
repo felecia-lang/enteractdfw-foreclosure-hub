@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users, emailCampaigns, emailDeliveryLog, InsertEmailCampaign, InsertEmailDeliveryLog } from "../drizzle/schema";
+import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users, emailCampaigns, emailDeliveryLog, InsertEmailCampaign, InsertEmailDeliveryLog, InsertFormAnalyticsEvent } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -2220,6 +2220,56 @@ export async function getCashOfferRequestsByStatus(
     return results;
   } catch (error) {
     console.error("[Database] Failed to get cash offer requests by status:", error);
+    return [];
+  }
+}
+
+// Form analytics functions
+export async function trackFormEvent(event: InsertFormAnalyticsEvent) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot track form event: database not available");
+    return undefined;
+  }
+
+  try {
+    const { formAnalyticsEvents: formAnalyticsEventsTable } = await import("../drizzle/schema");
+    const result = await db.insert(formAnalyticsEventsTable).values(event);
+    console.log(`[Analytics] Tracked ${event.eventType} event for ${event.formName}`);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to track form event:", error);
+    throw error;
+  }
+}
+
+export async function getFormAnalytics(formName: string = "contact_form", days: number = 30) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get form analytics: database not available");
+    return [];
+  }
+
+  try {
+    const { formAnalyticsEvents: formAnalyticsEventsTable } = await import("../drizzle/schema");
+    const { and, gte } = await import("drizzle-orm");
+    
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
+    const events = await db
+      .select()
+      .from(formAnalyticsEventsTable)
+      .where(
+        and(
+          eq(formAnalyticsEventsTable.formName, formName),
+          gte(formAnalyticsEventsTable.createdAt, cutoffDate)
+        )
+      );
+
+    return events;
+  } catch (error) {
+    console.error("[Database] Failed to get form analytics:", error);
     return [];
   }
 }

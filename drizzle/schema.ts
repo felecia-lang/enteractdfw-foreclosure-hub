@@ -499,3 +499,41 @@ export const cashOfferRequests = mysqlTable("cashOfferRequests", {
 
 export type CashOfferRequest = typeof cashOfferRequests.$inferSelect;
 export type InsertCashOfferRequest = typeof cashOfferRequests.$inferInsert;
+
+/**
+ * Form analytics events table for tracking contact form engagement metrics.
+ * Captures views, starts, completions, and errors for conversion analysis.
+ */
+export const formAnalyticsEvents = mysqlTable("formAnalyticsEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Event details
+  eventType: mysqlEnum("eventType", ["view", "start", "complete", "error"]).notNull(),
+  formName: varchar("formName", { length: 100 }).default("contact_form").notNull(),
+  
+  // Session tracking
+  sessionId: varchar("sessionId", { length: 64 }), // Browser session identifier
+  
+  // User information (if available)
+  userEmail: varchar("userEmail", { length: 320 }), // Email if user is logged in
+  
+  // Error tracking (for error events)
+  errorType: varchar("errorType", { length: 100 }), // e.g., "validation", "network", "recaptcha"
+  errorMessage: text("errorMessage"),
+  
+  // Metadata
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  pagePath: varchar("pagePath", { length: 255 }),
+  
+  // UTM parameters for attribution
+  utmSource: varchar("utmSource", { length: 255 }),
+  utmMedium: varchar("utmMedium", { length: 255 }),
+  utmCampaign: varchar("utmCampaign", { length: 255 }),
+  
+  // Timestamp
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FormAnalyticsEvent = typeof formAnalyticsEvents.$inferSelect;
+export type InsertFormAnalyticsEvent = typeof formAnalyticsEvents.$inferInsert;

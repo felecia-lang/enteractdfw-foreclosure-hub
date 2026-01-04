@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage, trackFormEvent, getFormAnalytics } from "./db";
 import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail } from "./ghl";
@@ -2017,6 +2017,93 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to send message. Please try again later.",
+          });
+        }
+      }),
+  }),
+
+  // Form Analytics
+  formAnalytics: router({
+    trackEvent: publicProcedure
+      .input(
+        z.object({
+          eventType: z.enum(["view", "start", "complete", "error"]),
+          formName: z.string().default("contact_form"),
+          sessionId: z.string().optional(),
+          userEmail: z.string().email().optional(),
+          errorType: z.string().optional(),
+          errorMessage: z.string().optional(),
+          ipAddress: z.string().optional(),
+          userAgent: z.string().optional(),
+          pagePath: z.string().optional(),
+          utmSource: z.string().optional(),
+          utmMedium: z.string().optional(),
+          utmCampaign: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          await trackFormEvent({
+            eventType: input.eventType,
+            formName: input.formName,
+            sessionId: input.sessionId,
+            userEmail: input.userEmail,
+            errorType: input.errorType,
+            errorMessage: input.errorMessage,
+            ipAddress: input.ipAddress,
+            userAgent: input.userAgent,
+            pagePath: input.pagePath,
+            utmSource: input.utmSource,
+            utmMedium: input.utmMedium,
+            utmCampaign: input.utmCampaign,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("[Analytics] Failed to track form event:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to track analytics event",
+          });
+        }
+      }),
+
+    getMetrics: protectedProcedure
+      .input(
+        z.object({
+          formName: z.string().default("contact_form"),
+          days: z.number().default(30),
+        })
+      )
+      .query(async ({ input }) => {
+        try {
+          const events = await getFormAnalytics(input.formName, input.days);
+
+          // Calculate metrics
+          const views = events.filter((e) => e.eventType === "view").length;
+          const starts = events.filter((e) => e.eventType === "start").length;
+          const completions = events.filter((e) => e.eventType === "complete").length;
+          const errors = events.filter((e) => e.eventType === "error").length;
+
+          const startRate = views > 0 ? (starts / views) * 100 : 0;
+          const completionRate = starts > 0 ? (completions / starts) * 100 : 0;
+          const overallConversionRate = views > 0 ? (completions / views) * 100 : 0;
+
+          return {
+            views,
+            starts,
+            completions,
+            errors,
+            startRate: Math.round(startRate * 10) / 10,
+            completionRate: Math.round(completionRate * 10) / 10,
+            overallConversionRate: Math.round(overallConversionRate * 10) / 10,
+            events,
+          };
+        } catch (error) {
+          console.error("[Analytics] Failed to get form metrics:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve analytics metrics",
           });
         }
       }),
