@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users, emailCampaigns, emailDeliveryLog, InsertEmailCampaign, InsertEmailDeliveryLog, InsertFormAnalyticsEvent } from "../drizzle/schema";
+import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users, emailCampaigns, emailDeliveryLog, InsertEmailCampaign, InsertEmailDeliveryLog, InsertFormAnalyticsEvent, InsertFormFieldInteraction } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -2270,6 +2270,56 @@ export async function getFormAnalytics(formName: string = "contact_form", days: 
     return events;
   } catch (error) {
     console.error("[Database] Failed to get form analytics:", error);
+    return [];
+  }
+}
+
+// Form field interaction functions for heatmap
+export async function trackFieldInteraction(interaction: InsertFormFieldInteraction) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot track field interaction: database not available");
+    return undefined;
+  }
+
+  try {
+    const { formFieldInteractions: formFieldInteractionsTable } = await import("../drizzle/schema");
+    const result = await db.insert(formFieldInteractionsTable).values(interaction);
+    console.log(`[Heatmap] Tracked ${interaction.interactionType} on ${interaction.fieldName} for ${interaction.formName}`);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to track field interaction:", error);
+    throw error;
+  }
+}
+
+export async function getFieldInteractions(formName: string = "contact_form", days: number = 30) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get field interactions: database not available");
+    return [];
+  }
+
+  try {
+    const { formFieldInteractions: formFieldInteractionsTable } = await import("../drizzle/schema");
+    const { and, gte } = await import("drizzle-orm");
+    
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
+    const interactions = await db
+      .select()
+      .from(formFieldInteractionsTable)
+      .where(
+        and(
+          eq(formFieldInteractionsTable.formName, formName),
+          gte(formFieldInteractionsTable.createdAt, cutoffDate)
+        )
+      );
+
+    return interactions;
+  } catch (error) {
+    console.error("[Database] Failed to get field interactions:", error);
     return [];
   }
 }

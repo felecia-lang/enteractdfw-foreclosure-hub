@@ -537,3 +537,38 @@ export const formAnalyticsEvents = mysqlTable("formAnalyticsEvents", {
 
 export type FormAnalyticsEvent = typeof formAnalyticsEvents.$inferSelect;
 export type InsertFormAnalyticsEvent = typeof formAnalyticsEvents.$inferInsert;
+
+/**
+ * Form field interactions table for heatmap visualization.
+ * Tracks individual field-level engagement: focus, blur, time spent, abandonment.
+ */
+export const formFieldInteractions = mysqlTable("formFieldInteractions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Form and field identification
+  formName: varchar("formName", { length: 100 }).default("contact_form").notNull(),
+  fieldName: varchar("fieldName", { length: 100 }).notNull(), // e.g., "name", "email", "phone", "message"
+  
+  // Session tracking
+  sessionId: varchar("sessionId", { length: 64 }).notNull(), // Links to formAnalyticsEvents
+  
+  // Interaction details
+  interactionType: mysqlEnum("interactionType", ["focus", "blur", "change", "abandon"]).notNull(),
+  timeSpentMs: int("timeSpentMs"), // Time spent on field in milliseconds (for blur events)
+  fieldValue: text("fieldValue"), // Current field value (for change events, anonymized for privacy)
+  fieldCompleted: int("fieldCompleted").default(0), // 1 if field has value when blurred, 0 if empty
+  
+  // User information (if available)
+  userEmail: varchar("userEmail", { length: 320 }),
+  
+  // Metadata
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  pagePath: varchar("pagePath", { length: 255 }),
+  
+  // Timestamp
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FormFieldInteraction = typeof formFieldInteractions.$inferSelect;
+export type InsertFormFieldInteraction = typeof formFieldInteractions.$inferInsert;

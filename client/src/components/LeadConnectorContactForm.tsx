@@ -48,6 +48,10 @@ export default function LeadConnectorContactForm() {
 
   // Analytics tracking
   const trackEvent = trpc.formAnalytics.trackEvent.useMutation();
+  const trackInteraction = trpc.formHeatmap.trackInteraction.useMutation();
+  
+  // Track field focus times for heatmap
+  const [fieldFocusTimes, setFieldFocusTimes] = useState<Record<string, number>>({});
 
   // Track form view on mount
   useEffect(() => {
@@ -192,8 +196,63 @@ export default function LeadConnectorContactForm() {
     }
   };
 
+  // Handle field focus for heatmap tracking
+  const handleFieldFocus = (fieldName: string) => {
+    // Record focus time
+    setFieldFocusTimes((prev) => ({
+      ...prev,
+      [fieldName]: Date.now(),
+    }));
+
+    // Track focus event
+    trackInteraction.mutate({
+      formName: "contact_form",
+      fieldName,
+      sessionId,
+      interactionType: "focus",
+      pagePath: window.location.pathname,
+      userAgent: navigator.userAgent,
+    });
+
+    // Trigger form start tracking
+    handleFormStart();
+  };
+
+  // Handle field blur for heatmap tracking
+  const handleFieldBlur = (fieldName: string) => {
+    const focusTime = fieldFocusTimes[fieldName];
+    if (focusTime) {
+      const timeSpentMs = Date.now() - focusTime;
+      const fieldValue = formData[fieldName as keyof typeof formData];
+      const fieldCompleted = fieldValue && fieldValue.trim().length > 0 ? 1 : 0;
+
+      // Track blur event with time spent
+      trackInteraction.mutate({
+        formName: "contact_form",
+        fieldName,
+        sessionId,
+        interactionType: "blur",
+        timeSpentMs,
+        fieldCompleted,
+        pagePath: window.location.pathname,
+        userAgent: navigator.userAgent,
+      });
+    }
+  };
+
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    
+    // Track change event for heatmap
+    trackInteraction.mutate({
+      formName: "contact_form",
+      fieldName: field,
+      sessionId,
+      interactionType: "change",
+      pagePath: window.location.pathname,
+      userAgent: navigator.userAgent,
+    });
+    
     // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors((prev) => {
@@ -262,6 +321,8 @@ export default function LeadConnectorContactForm() {
               placeholder="Your full name"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
+              onFocus={() => handleFieldFocus("name")}
+              onBlur={() => handleFieldBlur("name")}
               className={errors.name ? "border-red-500" : ""}
               disabled={submitWebhook.isPending}
             />
@@ -281,6 +342,8 @@ export default function LeadConnectorContactForm() {
               placeholder="your.email@example.com"
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
+              onFocus={() => handleFieldFocus("email")}
+              onBlur={() => handleFieldBlur("email")}
               className={errors.email ? "border-red-500" : ""}
               disabled={submitWebhook.isPending}
             />
@@ -300,6 +363,8 @@ export default function LeadConnectorContactForm() {
               placeholder="(555) 123-4567"
               value={formData.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
+              onFocus={() => handleFieldFocus("phone")}
+              onBlur={() => handleFieldBlur("phone")}
               className={errors.phone ? "border-red-500" : ""}
               disabled={submitWebhook.isPending}
             />
@@ -332,6 +397,8 @@ export default function LeadConnectorContactForm() {
               placeholder="Tell us about your situation and how we can help..."
               value={formData.message}
               onChange={(e) => handleChange("message", e.target.value)}
+              onFocus={() => handleFieldFocus("message")}
+              onBlur={() => handleFieldBlur("message")}
               className={errors.message ? "border-red-500" : ""}
               disabled={submitWebhook.isPending}
               rows={5}

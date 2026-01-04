@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage, trackFormEvent, getFormAnalytics } from "./db";
+import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage, trackFormEvent, getFormAnalytics, trackFieldInteraction, getFieldInteractions } from "./db";
 import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail } from "./ghl";
@@ -2104,6 +2104,139 @@ Email: info@enteractdfw.com
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to retrieve analytics metrics",
+          });
+        }
+      }),
+  }),
+
+  // Form Heatmap
+  formHeatmap: router({
+    trackInteraction: publicProcedure
+      .input(
+        z.object({
+          formName: z.string().default("contact_form"),
+          fieldName: z.string(),
+          sessionId: z.string(),
+          interactionType: z.enum(["focus", "blur", "change", "abandon"]),
+          timeSpentMs: z.number().optional(),
+          fieldValue: z.string().optional(),
+          fieldCompleted: z.number().optional(),
+          userEmail: z.string().email().optional(),
+          ipAddress: z.string().optional(),
+          userAgent: z.string().optional(),
+          pagePath: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          await trackFieldInteraction({
+            formName: input.formName,
+            fieldName: input.fieldName,
+            sessionId: input.sessionId,
+            interactionType: input.interactionType,
+            timeSpentMs: input.timeSpentMs,
+            fieldValue: input.fieldValue ? "[REDACTED]" : undefined, // Privacy: don't store actual values
+            fieldCompleted: input.fieldCompleted,
+            userEmail: input.userEmail,
+            ipAddress: input.ipAddress,
+            userAgent: input.userAgent,
+            pagePath: input.pagePath,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("[Heatmap] Failed to track field interaction:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to track field interaction",
+          });
+        }
+      }),
+
+    getHeatmapData: protectedProcedure
+      .input(
+        z.object({
+          formName: z.string().default("contact_form"),
+          days: z.number().default(30),
+        })
+      )
+      .query(async ({ input }) => {
+        try {
+          const interactions = await getFieldInteractions(input.formName, input.days);          
+          // Aggregate data by field
+          const fieldStats: Record<string, any> = {};
+
+          interactions.forEach((interaction) => {
+            const fieldName = interaction.fieldName;
+            
+            if (!fieldStats[fieldName]) {
+              fieldStats[fieldName] = {
+                fieldName,
+                focusCount: 0,
+                blurCount: 0,
+                changeCount: 0,
+                abandonCount: 0,
+                totalTimeMs: 0,
+                completedCount: 0,
+                sessions: new Set(),
+              };
+            }
+
+            const stats = fieldStats[fieldName];
+            stats.sessions.add(interaction.sessionId);
+
+            switch (interaction.interactionType) {
+              case "focus":
+                stats.focusCount++;
+                break;
+              case "blur":
+                stats.blurCount++;
+                if (interaction.timeSpentMs) {
+                  stats.totalTimeMs += interaction.timeSpentMs;
+                }
+                if (interaction.fieldCompleted === 1) {
+                  stats.completedCount++;
+                }
+                break;
+              case "change":
+                stats.changeCount++;
+                break;
+              case "abandon":
+                stats.abandonCount++;
+                break;
+            }
+          });
+
+          // Calculate metrics for each field
+          const fieldMetrics = Object.values(fieldStats).map((stats: any) => {
+            const uniqueSessions = stats.sessions.size;
+            const avgTimeMs = stats.blurCount > 0 ? stats.totalTimeMs / stats.blurCount : 0;
+            const completionRate = stats.blurCount > 0 ? (stats.completedCount / stats.blurCount) * 100 : 0;
+            const abandonmentRate = stats.focusCount > 0 ? (stats.abandonCount / stats.focusCount) * 100 : 0;
+
+            return {
+              fieldName: stats.fieldName,
+              focusCount: stats.focusCount,
+              blurCount: stats.blurCount,
+              changeCount: stats.changeCount,
+              abandonCount: stats.abandonCount,
+              uniqueSessions,
+              avgTimeMs: Math.round(avgTimeMs),
+              avgTimeSec: Math.round(avgTimeMs / 1000 * 10) / 10,
+              completionRate: Math.round(completionRate * 10) / 10,
+              abandonmentRate: Math.round(abandonmentRate * 10) / 10,
+            };
+          });
+
+          return {
+            fieldMetrics,
+            totalInteractions: interactions.length,
+          };
+        } catch (error) {
+          console.error("[Heatmap] Failed to get heatmap data:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to retrieve heatmap data",
           });
         }
       }),
