@@ -1281,3 +1281,9 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Create prominent confirmation message UI
 - [x] Display confirmation after successful submission
 - [x] Test confirmation message display
+
+## Auto-Dismiss Timer for Success Banner
+- [x] Add useEffect hook to trigger timer when isSubmitted becomes true
+- [x] Set 10-second timeout to automatically dismiss success banner
+- [x] Clean up timer on component unmount or state change
+- [x] Test auto-dismiss functionality

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Send } from "lucide-react";
 import { RECAPTCHA_SITE_KEY } from "@/const";
+import { useEffect } from "react";
 
 // Declare grecaptcha type
 declare global {
@@ -30,6 +31,18 @@ export default function LeadConnectorContactForm() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Auto-dismiss success banner after 10 seconds
+  useEffect(() => {
+    if (isSubmitted) {
+      const timer = setTimeout(() => {
+        setIsSubmitted(false);
+      }, 10000); // 10 seconds
+
+      // Cleanup timer on unmount or when isSubmitted changes
+      return () => clearTimeout(timer);
+    }
+  }, [isSubmitted]);
 
   const submitWebhook = trpc.webhook.submitLeadConnector.useMutation({
     onSuccess: () => {
