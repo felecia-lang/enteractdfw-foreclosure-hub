@@ -86,8 +86,8 @@ function SearchBar() {
         <div className="absolute top-full left-0 right-0 mt-2 bg-card border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
           {results.map((result) => (
             <Link key={result.id} href={result.href}>
-              <a
-                className="block p-4 hover:bg-muted transition-colors border-b last:border-b-0"
+              <div
+                className="block p-4 hover:bg-muted transition-colors border-b last:border-b-0 cursor-pointer"
                 onClick={clearSearch}
               >
                 <div className="flex items-start gap-3">
@@ -106,7 +106,7 @@ function SearchBar() {
                     </span>
                   </div>
                 </div>
-              </a>
+              </div>
             </Link>
           ))}
         </div>
@@ -302,9 +302,9 @@ export default function KnowledgeBase() {
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/">
-            <a className="flex items-center gap-3">
+            <div className="flex items-center gap-3 cursor-pointer">
               <img src={APP_LOGO} alt="EnterActDFW" className="h-10" />
-            </a>
+            </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/">
@@ -520,7 +520,7 @@ export default function KnowledgeBase() {
                   className="hover:shadow-lg transition-shadow cursor-pointer group relative"
                 >
                   <Link href={category.href}>
-                    <a className="block">
+                    <div className="block">
                       <CardHeader>
                         <div className="flex items-start gap-4">
                           <div className={cn(
@@ -541,7 +541,7 @@ export default function KnowledgeBase() {
                           {category.description}
                         </p>
                       </CardContent>
-                    </a>
+                    </div>
                   </Link>
                 </Card>
               );

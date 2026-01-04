@@ -1312,3 +1312,7 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Show field-by-field conversion funnel
 - [x] Add time range filtering for heatmap data
 - [x] Test heatmap tracking end-to-end
+
+
+## Bug Fixes - Nested Anchor Tags
+- [x] Fix nested anchor tag error on Knowledge Base page (/knowledge-base)
