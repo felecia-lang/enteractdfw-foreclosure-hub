@@ -14,6 +14,7 @@ export default function LeadConnectorContactForm() {
     email: "",
     phone: "",
     message: "",
+    website: "", // Honeypot field
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -29,6 +30,7 @@ export default function LeadConnectorContactForm() {
         email: "",
         phone: "",
         message: "",
+        website: "",
       });
       setErrors({});
     },
@@ -46,6 +48,12 @@ export default function LeadConnectorContactForm() {
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
+
+    // Check honeypot field - if filled, it's likely a bot
+    if (formData.website) {
+      toast.error("Spam detected");
+      return false;
+    }
 
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
@@ -157,6 +165,20 @@ export default function LeadConnectorContactForm() {
             {errors.phone && (
               <p className="text-sm text-red-500">{errors.phone}</p>
             )}
+          </div>
+
+          {/* Honeypot Field - Hidden from users, visible to bots */}
+          <div className="hidden" aria-hidden="true">
+            <Label htmlFor="website">Website</Label>
+            <Input
+              id="website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.website}
+              onChange={(e) => handleChange("website", e.target.value)}
+            />
           </div>
 
           {/* Message Field */}

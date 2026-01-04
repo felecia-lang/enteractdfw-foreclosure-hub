@@ -39,6 +39,7 @@ describe("LeadConnector Webhook Integration", () => {
       email: "john@example.com",
       phone: "(555) 123-4567",
       message: "I need help with foreclosure",
+      website: "", // Empty honeypot field
     });
 
     expect(result.success).toBe(true);
@@ -67,6 +68,66 @@ describe("LeadConnector Webhook Integration", () => {
     expect(bodyData.timestamp).toBeDefined();
   });
 
+  it("should reject submission with filled honeypot field", async () => {
+    const ctx = createMockContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.webhook.submitLeadConnector({
+        name: "John Doe",
+        email: "john@example.com",
+        phone: "(555) 123-4567",
+        message: "I need help",
+        website: "https://spam-site.com", // Filled honeypot = spam
+      })
+    ).rejects.toThrow("Invalid submission");
+
+    // Fetch should not be called if honeypot is filled
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it("should accept submission with empty honeypot field", async () => {
+    const ctx = createMockContext();
+    const caller = appRouter.createCaller(ctx);
+
+    (global.fetch as any).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+    });
+
+    const result = await caller.webhook.submitLeadConnector({
+      name: "John Doe",
+      email: "john@example.com",
+      phone: "(555) 123-4567",
+      message: "I need help",
+      website: "", // Empty honeypot = legitimate
+    });
+
+    expect(result.success).toBe(true);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("should accept submission with undefined honeypot field", async () => {
+    const ctx = createMockContext();
+    const caller = appRouter.createCaller(ctx);
+
+    (global.fetch as any).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+    });
+
+    const result = await caller.webhook.submitLeadConnector({
+      name: "John Doe",
+      email: "john@example.com",
+      phone: "(555) 123-4567",
+      message: "I need help",
+      // website field omitted
+    });
+
+    expect(result.success).toBe(true);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
   it("should reject submission with invalid email", async () => {
     const ctx = createMockContext();
     const caller = appRouter.createCaller(ctx);
@@ -77,6 +138,7 @@ describe("LeadConnector Webhook Integration", () => {
         email: "invalid-email",
         phone: "(555) 123-4567",
         message: "I need help",
+        website: "",
       })
     ).rejects.toThrow();
 
@@ -94,6 +156,7 @@ describe("LeadConnector Webhook Integration", () => {
         email: "john@example.com",
         phone: "(555) 123-4567",
         message: "I need help",
+        website: "",
       })
     ).rejects.toThrow();
 
@@ -110,6 +173,7 @@ describe("LeadConnector Webhook Integration", () => {
         email: "john@example.com",
         phone: "",
         message: "I need help",
+        website: "",
       })
     ).rejects.toThrow();
 
@@ -126,6 +190,7 @@ describe("LeadConnector Webhook Integration", () => {
         email: "john@example.com",
         phone: "(555) 123-4567",
         message: "",
+        website: "",
       })
     ).rejects.toThrow();
 
@@ -149,6 +214,7 @@ describe("LeadConnector Webhook Integration", () => {
         email: "john@example.com",
         phone: "(555) 123-4567",
         message: "I need help",
+        website: "",
       })
     ).rejects.toThrow("Failed to send message. Please try again later.");
 
@@ -168,6 +234,7 @@ describe("LeadConnector Webhook Integration", () => {
         email: "john@example.com",
         phone: "(555) 123-4567",
         message: "I need help",
+        website: "",
       })
     ).rejects.toThrow("Failed to send message. Please try again later.");
 
@@ -190,6 +257,7 @@ describe("LeadConnector Webhook Integration", () => {
       email: "jane@example.com",
       phone: "(555) 987-6543",
       message: "Question about options",
+      website: "",
     });
 
     const afterTime = new Date().toISOString();

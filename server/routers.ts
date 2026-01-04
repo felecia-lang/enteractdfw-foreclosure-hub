@@ -1941,9 +1941,18 @@ Email: info@enteractdfw.com
           email: z.string().email("Valid email is required"),
           phone: z.string().min(1, "Phone is required"),
           message: z.string().min(1, "Message is required"),
+          website: z.string().optional(), // Honeypot field
         })
       )
       .mutation(async ({ input }) => {
+        // Honeypot spam check - reject if website field is filled
+        if (input.website && input.website.trim() !== "") {
+          console.log("[Webhook] Spam detected - honeypot field filled:", input.email);
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid submission",
+          });
+        }
         const webhookUrl = "https://services.leadconnectorhq.com/hooks/osAdvkBAK96qwKch9fZJ/webhook-trigger/06581439-5d02-42ee-9ef6-5de691fc7b99";
 
         try {
