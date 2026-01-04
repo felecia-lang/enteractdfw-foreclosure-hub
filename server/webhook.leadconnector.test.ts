@@ -5,6 +5,23 @@ import type { TrpcContext } from "./_core/context";
 // Mock fetch globally
 global.fetch = vi.fn();
 
+// Mock recaptcha module
+vi.mock("./recaptcha", () => ({
+  verifyRecaptchaToken: vi.fn(async (token: string) => {
+    if (token === "valid-recaptcha-token") {
+      return { success: true, score: 0.9, action: "contact_form" };
+    }
+    if (token === "low-score-token") {
+      return { success: true, score: 0.3, action: "contact_form" };
+    }
+    if (token === "invalid-token") {
+      return { success: false, score: 0, error: "Invalid token" };
+    }
+    return { success: true, score: 0.9, action: "contact_form" };
+  }),
+  isScoreAcceptable: vi.fn((score: number, threshold: number = 0.5) => score >= threshold),
+}));
+
 function createMockContext(): TrpcContext {
   return {
     user: null,
@@ -40,6 +57,7 @@ describe("LeadConnector Webhook Integration", () => {
       phone: "(555) 123-4567",
       message: "I need help with foreclosure",
       website: "", // Empty honeypot field
+      recaptchaToken: "valid-recaptcha-token",
     });
 
     expect(result.success).toBe(true);
@@ -238,6 +256,64 @@ describe("LeadConnector Webhook Integration", () => {
       })
     ).rejects.toThrow("Failed to send message. Please try again later.");
 
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("should reject submission with low reCAPTCHA score", async () => {
+    const ctx = createMockContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.webhook.submitLeadConnector({
+        name: "John Doe",
+        email: "john@example.com",
+        phone: "(555) 123-4567",
+        message: "I need help",
+        website: "",
+        recaptchaToken: "low-score-token", // Score 0.3 < threshold 0.5
+      })
+    ).rejects.toThrow("Suspicious activity detected");
+
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it("should reject submission with invalid reCAPTCHA token", async () => {
+    const ctx = createMockContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.webhook.submitLeadConnector({
+        name: "John Doe",
+        email: "john@example.com",
+        phone: "(555) 123-4567",
+        message: "I need help",
+        website: "",
+        recaptchaToken: "invalid-token",
+      })
+    ).rejects.toThrow("Security verification failed");
+
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it("should accept submission without reCAPTCHA token (fallback)", async () => {
+    const ctx = createMockContext();
+    const caller = appRouter.createCaller(ctx);
+
+    (global.fetch as any).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+    });
+
+    const result = await caller.webhook.submitLeadConnector({
+      name: "John Doe",
+      email: "john@example.com",
+      phone: "(555) 123-4567",
+      message: "I need help",
+      website: "",
+      // No recaptchaToken - should still work
+    });
+
+    expect(result.success).toBe(true);
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 

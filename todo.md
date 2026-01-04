@@ -1265,3 +1265,13 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Add backend validation to reject submissions with honeypot filled
 - [x] Update tests to verify honeypot functionality
 - [x] Test spam prevention with filled honeypot field
+
+## Google reCAPTCHA v3 Integration
+- [x] Request RECAPTCHA_SITE_KEY and RECAPTCHA_SECRET_KEY from user
+- [x] Add reCAPTCHA script to HTML head
+- [x] Implement token generation on form submission
+- [x] Create backend reCAPTCHA verification function
+- [x] Integrate verification with webhook endpoint
+- [x] Add score threshold validation (reject if score < 0.5)
+- [x] Update tests to mock reCAPTCHA verification
+- [x] Test complete flow with reCAPTCHA protection

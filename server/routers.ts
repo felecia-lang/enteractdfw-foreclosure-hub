@@ -1942,6 +1942,7 @@ Email: info@enteractdfw.com
           phone: z.string().min(1, "Phone is required"),
           message: z.string().min(1, "Message is required"),
           website: z.string().optional(), // Honeypot field
+          recaptchaToken: z.string().optional(), // reCAPTCHA v3 token
         })
       )
       .mutation(async ({ input }) => {
@@ -1952,6 +1953,32 @@ Email: info@enteractdfw.com
             code: "BAD_REQUEST",
             message: "Invalid submission",
           });
+        }
+
+        // reCAPTCHA verification
+        if (input.recaptchaToken) {
+          const { verifyRecaptchaToken, isScoreAcceptable } = await import("./recaptcha");
+          const verification = await verifyRecaptchaToken(input.recaptchaToken, 'contact_form');
+          
+          if (!verification.success) {
+            console.warn("[Webhook] reCAPTCHA verification failed:", input.email, verification.error);
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Security verification failed",
+            });
+          }
+
+          if (!isScoreAcceptable(verification.score, 0.5)) {
+            console.warn("[Webhook] reCAPTCHA score too low:", input.email, "score:", verification.score);
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Suspicious activity detected",
+            });
+          }
+
+          console.log("[Webhook] reCAPTCHA passed:", input.email, "score:", verification.score);
+        } else {
+          console.warn("[Webhook] No reCAPTCHA token provided:", input.email);
         }
         const webhookUrl = "https://services.leadconnectorhq.com/hooks/osAdvkBAK96qwKch9fZJ/webhook-trigger/06581439-5d02-42ee-9ef6-5de691fc7b99";
 

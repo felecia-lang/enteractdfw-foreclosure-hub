@@ -7,6 +7,17 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Send } from "lucide-react";
+import { RECAPTCHA_SITE_KEY } from "@/const";
+
+// Declare grecaptcha type
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (callback: () => void) => void;
+      execute: (siteKey: string, options: { action: string }) => Promise<string>;
+    };
+  }
+}
 
 export default function LeadConnectorContactForm() {
   const [formData, setFormData] = useState({
@@ -85,7 +96,33 @@ export default function LeadConnectorContactForm() {
       return;
     }
 
-    submitWebhook.mutate(formData);
+    // Generate reCAPTCHA token
+    try {
+      if (!window.grecaptcha || !RECAPTCHA_SITE_KEY) {
+        console.warn("[reCAPTCHA] Not loaded or site key missing");
+        // Proceed without reCAPTCHA if not available
+        submitWebhook.mutate({ ...formData, recaptchaToken: undefined });
+        return;
+      }
+
+      window.grecaptcha.ready(async () => {
+        try {
+          const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
+            action: 'contact_form',
+          });
+          
+          // Submit with reCAPTCHA token
+          submitWebhook.mutate({ ...formData, recaptchaToken: token });
+        } catch (error) {
+          console.error("[reCAPTCHA] Token generation failed:", error);
+          toast.error("Security verification failed. Please try again.");
+        }
+      });
+    } catch (error) {
+      console.error("[reCAPTCHA] Error:", error);
+      // Proceed without reCAPTCHA on error
+      submitWebhook.mutate({ ...formData, recaptchaToken: undefined });
+    }
   };
 
   const handleChange = (field: string, value: string) => {
