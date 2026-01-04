@@ -29,12 +29,15 @@ export default function LeadConnectorContactForm() {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const submitWebhook = trpc.webhook.submitLeadConnector.useMutation({
     onSuccess: () => {
       toast.success("Message sent successfully!", {
         description: "We'll get back to you as soon as possible.",
       });
+      // Show success state
+      setIsSubmitted(true);
       // Reset form
       setFormData({
         name: "",
@@ -140,12 +143,47 @@ export default function LeadConnectorContactForm() {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Contact Us</CardTitle>
+        <CardTitle className="text-2xl">Get in Touch</CardTitle>
         <CardDescription>
-          Have questions about foreclosure or need assistance? Send us a message and we'll get back to you promptly.
+          Have questions? We're here to help. Send us a message and we'll respond as soon as possible.
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {isSubmitted && (
+          <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-green-600 dark:text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-green-800 dark:text-green-200">
+                  Message Sent Successfully!
+                </h3>
+                <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+                  Thank you for reaching out. We've received your message and will get back to you as soon as possible.
+                </p>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  className="mt-2 text-sm font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300"
+                >
+                  Send another message
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name Field */}
           <div className="space-y-2">
