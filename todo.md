@@ -1334,3 +1334,12 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Add statistical significance calculations
 - [x] Test A/B testing system end-to-end
 - [x] Write vitest tests for A/B testing logic
+
+## Embedded Timeline Calculator in Notice of Default Guide
+- [x] Locate Action Item 2 in Notice of Default guide
+- [x] Create embedded timeline calculator component
+- [x] Integrate calculator with Texas foreclosure milestone logic
+- [x] Add PDF download functionality
+- [x] Test embedded calculator functionality
+- [x] Ensure EnterActDFW branding and styling
+- [x] Remove debug logging and finalize implementation

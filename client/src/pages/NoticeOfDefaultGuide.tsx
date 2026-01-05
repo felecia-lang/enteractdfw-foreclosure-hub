@@ -11,6 +11,7 @@ import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
 import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
 import RelatedArticles, { relatedArticlesMap } from "@/components/RelatedArticles";
+import EmbeddedTimelineCalculator from "@/components/EmbeddedTimelineCalculator";
 
 const actionSteps = [
   {
@@ -412,29 +413,37 @@ export default function NoticeOfDefaultGuide() {
                     </div>
                   </CardHeader>
                   <CardContent className="p-6">
-                    <h4 className="font-semibold text-foreground mb-3">Action Items:</h4>
-                    <ul className="space-y-3">
-                      {step.actions.map((action, index) => {
-                        const itemKey = `step-${step.step}-action-${index}`;
-                        const isChecked = checkedItems[itemKey] || false;
-                        return (
-                          <li key={index} className="flex items-start gap-3">
-                            <Checkbox 
-                              id={itemKey}
-                              checked={isChecked}
-                              onCheckedChange={(checked) => handleCheckItem(itemKey, checked as boolean)}
-                              className="mt-0.5"
-                            />
-                            <label 
-                              htmlFor={itemKey}
-                              className={`text-muted-foreground cursor-pointer flex-1 ${isChecked ? 'line-through opacity-60' : ''}`}
-                            >
-                              {action}
-                            </label>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                    {step.step === 2 ? (
+                      // Embedded timeline calculator for Action Item 2
+                      <EmbeddedTimelineCalculator />
+                    ) : (
+                      // Regular checklist for other action items
+                      <>
+                        <h4 className="font-semibold text-foreground mb-3">Action Items:</h4>
+                        <ul className="space-y-3">
+                          {step.actions.map((action, index) => {
+                            const itemKey = `step-${step.step}-action-${index}`;
+                            const isChecked = checkedItems[itemKey] || false;
+                            return (
+                              <li key={index} className="flex items-start gap-3">
+                                <Checkbox 
+                                  id={itemKey}
+                                  checked={isChecked}
+                                  onCheckedChange={(checked) => handleCheckItem(itemKey, checked as boolean)}
+                                  className="mt-0.5"
+                                />
+                                <label 
+                                  htmlFor={itemKey}
+                                  className={`text-muted-foreground cursor-pointer flex-1 ${isChecked ? 'line-through opacity-60' : ''}`}
+                                >
+                                  {action}
+                                </label>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
               );
