@@ -16,6 +16,9 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
+import { useLocation } from "wouter";
 
 interface TimelineMilestone {
   id: string;
@@ -35,7 +38,10 @@ export default function EmbeddedTimelineCalculator() {
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [emailAddress, setEmailAddress] = useState("");
   
+  const { isAuthenticated } = useAuth();
+  const [, navigate] = useLocation();
   const emailTimelineMutation = trpc.timeline.emailPDF.useMutation();
+  const saveTimelineMutation = trpc.userTimeline.save.useMutation();
 
   const calculateTimeline = (noticeDateStr: string): TimelineMilestone[] => {
     const notice = new Date(noticeDateStr);
@@ -215,19 +221,55 @@ export default function EmbeddedTimelineCalculator() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'My_Foreclosure_Timeline.pdf';
+      a.download = `foreclosure-timeline-${noticeDate}.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+      
       toast.success("PDF downloaded successfully");
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      toast.error('Failed to download PDF. Please try again.');
+      toast.error("Failed to download PDF. Please try again.");
     }
   };
 
-  const getUrgencyColor = (urgency: "critical" | "warning" | "safe") => {
+  const handleSaveTimeline = async () => {
+    if (!timeline || !noticeDate) {
+      toast.error("Please calculate your timeline first");
+      return;
+    }
+
+    if (!isAuthenticated) {
+      toast.info("Please sign in to save your timeline");
+      window.location.href = getLoginUrl();
+      return;
+    }
+
+    try {
+      await saveTimelineMutation.mutateAsync({
+        noticeDate,
+        milestones: timeline.map(m => ({
+          id: m.id,
+          title: m.title,
+          date: m.date.toISOString().split('T')[0],
+          daysFromNotice: m.daysFromNotice,
+          description: m.description,
+          actionItems: m.actionItems,
+          urgency: m.urgency === 'warning' ? 'medium' : m.urgency === 'safe' ? 'low' : m.urgency,
+          status: m.status,
+        })),
+      });
+
+      toast.success("Timeline saved! Redirecting to My Timeline...");
+      setTimeout(() => {
+        navigate("/my-timeline");
+      }, 1000);
+    } catch (error: any) {
+      console.error('Error saving timeline:', error);
+      toast.error(error.message || "Failed to save timeline. Please try again.");
+    }
+  };  const getUrgencyColor = (urgency: "critical" | "warning" | "safe") => {
     switch (urgency) {
       case "critical":
         return "border-l-4 border-l-red-500 bg-red-50/50";
@@ -343,7 +385,15 @@ export default function EmbeddedTimelineCalculator() {
           )}
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-end gap-3 flex-wrap">
+            <Button
+              onClick={handleSaveTimeline}
+              disabled={saveTimelineMutation.isPending}
+              className="bg-[#00A6A6] hover:bg-[#008B8B] text-white"
+            >
+              <CheckCircle2 className="mr-2 h-4 w-4" />
+              {saveTimelineMutation.isPending ? "Saving..." : "Save My Timeline"}
+            </Button>
             <Button
               onClick={() => setShowEmailDialog(true)}
               variant="outline"

@@ -39,6 +39,7 @@ import AdminCashOffers from "@/pages/AdminCashOffers";
 import FormAnalytics from "@/pages/FormAnalytics";
 import FormHeatmap from "@/pages/FormHeatmap";
 import ABTestingDashboard from "@/pages/admin/ABTestingDashboard";
+import MyTimeline from "@/pages/MyTimeline";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -78,6 +79,7 @@ function Router() {
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />
       <Route path="/property-value-estimator" component={PropertyValueEstimator} />
+      <Route path="/my-timeline" component={MyTimeline} />
       <Route path="/comparison-history" component={ComparisonHistory} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/thank-you-guide" component={ThankYouGuide} />

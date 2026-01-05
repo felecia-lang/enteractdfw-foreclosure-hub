@@ -1352,3 +1352,22 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Add email validation and error handling
 - [x] Test email delivery with sample timeline data
 - [x] Write vitest tests for email timeline endpoint
+
+
+## My Timeline Dashboard Feature
+- [x] Design database schema for user timelines (notice date, milestones, created date)
+- [x] Design database schema for user action progress tracking
+- [x] Create backend API to save user timeline data
+- [x] Create backend API to retrieve user timeline with progress
+- [x] Create backend API to update action item completion status
+- [x] Create backend API to generate personalized recommendations
+- [x] Build My Timeline dashboard page with authentication
+- [x] Add timeline progress visualization (progress bar, completion percentage)
+- [x] Add milestone cards with action item checkboxes
+- [x] Add "days remaining" countdown for upcoming milestones
+- [x] Add personalized next-step recommendations based on current status
+- [x] Add navigation link to My Timeline from main navigation
+- [x] Add "Save My Timeline" button to embedded calculator
+- [x] Write vitest tests for timeline CRUD operations
+- [x] Write vitest tests for progress tracking logic
+- [x] Test My Timeline dashboard end-to-end

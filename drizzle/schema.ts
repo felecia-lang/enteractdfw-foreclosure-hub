@@ -657,3 +657,38 @@ export const abTestEvents = mysqlTable("abTestEvents", {
 
 export type ABTestEvent = typeof abTestEvents.$inferSelect;
 export type InsertABTestEvent = typeof abTestEvents.$inferInsert;
+
+
+/**
+ * User timelines table for storing personalized foreclosure timelines.
+ * Each user can have one active timeline based on their Notice of Default date.
+ */
+export const userTimelines = mysqlTable("userTimelines", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(), // Foreign key to users table
+  noticeDate: varchar("noticeDate", { length: 10 }).notNull(), // YYYY-MM-DD format
+  milestones: text("milestones").notNull(), // JSON string of milestone data
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserTimeline = typeof userTimelines.$inferSelect;
+export type InsertUserTimeline = typeof userTimelines.$inferInsert;
+
+/**
+ * Timeline action progress table for tracking completed action items.
+ * Records which actions users have completed for each milestone.
+ */
+export const timelineActionProgress = mysqlTable("timelineActionProgress", {
+  id: int("id").autoincrement().primaryKey(),
+  timelineId: int("timelineId").notNull(), // Foreign key to userTimelines table
+  milestoneId: varchar("milestoneId", { length: 100 }).notNull(), // e.g., "notice-received", "reinstatement-deadline"
+  actionIndex: int("actionIndex").notNull(), // Index of the action item in the milestone's actionItems array
+  completed: mysqlEnum("completed", ["yes", "no"]).default("no").notNull(),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TimelineActionProgress = typeof timelineActionProgress.$inferSelect;
+export type InsertTimelineActionProgress = typeof timelineActionProgress.$inferInsert;
