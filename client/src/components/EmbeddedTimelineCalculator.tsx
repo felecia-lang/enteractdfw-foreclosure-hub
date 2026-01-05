@@ -10,8 +10,11 @@ import {
   AlertTriangle,
   CheckCircle2,
   Download,
-  ArrowRight
+  ArrowRight,
+  Mail
 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
 interface TimelineMilestone {
@@ -29,6 +32,10 @@ export default function EmbeddedTimelineCalculator() {
   const [noticeDate, setNoticeDate] = useState<string>("");
   const [timeline, setTimeline] = useState<TimelineMilestone[] | null>(null);
   const [daysUntilSale, setDaysUntilSale] = useState<number | null>(null);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
+  const [emailAddress, setEmailAddress] = useState("");
+  
+  const emailTimelineMutation = trpc.timeline.emailPDF.useMutation();
 
   const calculateTimeline = (noticeDateStr: string): TimelineMilestone[] => {
     const notice = new Date(noticeDateStr);
@@ -153,6 +160,36 @@ export default function EmbeddedTimelineCalculator() {
     }
 
     toast.success("Timeline calculated successfully");
+  };
+
+  const handleEmailTimeline = async () => {
+    if (!emailAddress || !emailAddress.includes('@')) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (!timeline || !noticeDate) {
+      toast.error("Please calculate your timeline first");
+      return;
+    }
+
+    try {
+      await emailTimelineMutation.mutateAsync({
+        email: emailAddress,
+        noticeDate,
+        milestones: timeline.map(m => ({
+          ...m,
+          date: m.date.toISOString(),
+        })),
+      });
+      
+      toast.success(`Timeline sent to ${emailAddress}`);
+      setShowEmailDialog(false);
+      setEmailAddress("");
+    } catch (error) {
+      console.error('Error emailing timeline:', error);
+      toast.error('Failed to send email. Please try again.');
+    }
   };
 
   const handleDownloadPDF = async () => {
@@ -305,15 +342,23 @@ export default function EmbeddedTimelineCalculator() {
             </Alert>
           )}
 
-          {/* Download PDF Button */}
-          <div className="flex justify-end">
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-3">
+            <Button
+              onClick={() => setShowEmailDialog(true)}
+              variant="outline"
+              className="border-[#00A6A6] text-[#00A6A6] hover:bg-[#00A6A6] hover:text-white"
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              Email to Me
+            </Button>
             <Button
               onClick={handleDownloadPDF}
               variant="outline"
               className="border-[#00A6A6] text-[#00A6A6] hover:bg-[#00A6A6] hover:text-white"
             >
               <Download className="mr-2 h-4 w-4" />
-              Download PDF Timeline
+              Download PDF
             </Button>
           </div>
 
@@ -379,6 +424,53 @@ export default function EmbeddedTimelineCalculator() {
           </Card>
         </div>
       )}
+
+      {/* Email Dialog */}
+      <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Email Your Timeline</DialogTitle>
+            <DialogDescription>
+              Enter your email address to receive your personalized foreclosure timeline as a PDF attachment.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={emailAddress}
+                onChange={(e) => setEmailAddress(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleEmailTimeline();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowEmailDialog(false);
+                setEmailAddress("");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleEmailTimeline}
+              disabled={emailTimelineMutation.isPending}
+              className="bg-[#00A6A6] hover:bg-[#008888] text-white"
+            >
+              {emailTimelineMutation.isPending ? "Sending..." : "Send Email"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

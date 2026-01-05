@@ -1343,3 +1343,12 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Test embedded calculator functionality
 - [x] Ensure EnterActDFW branding and styling
 - [x] Remove debug logging and finalize implementation
+
+
+## Email Timeline PDF Feature
+- [x] Create backend API endpoint to email timeline PDF to user
+- [x] Add email input dialog to embedded timeline calculator
+- [x] Implement "Email to Me" button functionality
+- [x] Add email validation and error handling
+- [x] Test email delivery with sample timeline data
+- [x] Write vitest tests for email timeline endpoint
