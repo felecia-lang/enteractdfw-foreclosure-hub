@@ -293,6 +293,8 @@ export async function syncLeadToGHL(leadData: {
   email: string;
   phone: string;
   propertyZip: string;
+  propertyAddress?: string;
+  foreclosureStage?: string;
   source?: string;
 }): Promise<{
   success: boolean;
@@ -300,18 +302,23 @@ export async function syncLeadToGHL(leadData: {
   error?: string;
 }> {
   try {
-    // Step 1: Create/update contact
+    // Step 1: Create/update contact with proper field mapping
     const contactResult = await syncContactToGHL({
       firstName: leadData.firstName,
       lastName: leadData.lastName,
       email: leadData.email,
       phone: leadData.phone,
       postalCode: leadData.propertyZip,
-      tags: ["Foreclosure Lead", "Website Lead", leadData.source || "Direct"],
+      address1: leadData.propertyAddress,
+      // REQUIRED: Add Foreclosure_Hub_Lead tag to all contacts
+      tags: ["Foreclosure_Hub_Lead", "Website Lead", leadData.source || "Direct"],
       customFields: {
-        property_zip: leadData.propertyZip,
+        // Map website fields to GHL custom fields
+        property_address: leadData.propertyAddress || "",
+        property_zip_code: leadData.propertyZip,
+        foreclosure_stage: leadData.foreclosureStage || "Initial Contact",
         lead_source: leadData.source || "Website Form",
-        foreclosure_stage: "Initial Contact",
+        submission_date: new Date().toISOString(),
       },
       source: "EnterActDFW Foreclosure Hub",
     });

@@ -40,6 +40,7 @@ import FormAnalytics from "@/pages/FormAnalytics";
 import FormHeatmap from "@/pages/FormHeatmap";
 import ABTestingDashboard from "@/pages/admin/ABTestingDashboard";
 import MyTimeline from "@/pages/MyTimeline";
+import GHLTest from "@/pages/admin/GHLTest";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -75,6 +76,7 @@ function Router() {
       <Route path="/admin/form-analytics" component={FormAnalytics} />
       <Route path="/admin/form-heatmap" component={FormHeatmap} />
       <Route path="/admin/ab-testing" component={ABTestingDashboard} />
+      <Route path="/admin/ghl-test" component={GHLTest} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/timeline-calculator" component={TimelineCalculator} />

@@ -47,6 +47,26 @@ export const userTimelineRouter = router({
         throw new Error("Failed to save timeline");
       }
 
+      // Sync to GHL when user saves timeline (high engagement signal)
+      try {
+        const { trackTimelineSaved } = await import("../ghlEnhanced");
+        await trackTimelineSaved({
+          email: ctx.user.email || "",
+          noticeDate: input.noticeDate,
+          milestones: input.milestones.map(m => ({
+            title: m.title,
+            date: m.date,
+            daysFromNotice: m.daysFromNotice,
+            urgency: m.urgency,
+            status: m.status === "past" ? "passed" as const : m.status,
+            actions: m.actionItems,
+          })),
+        });
+      } catch (ghlError) {
+        console.error("[Timeline Save] Failed to sync to GHL:", ghlError);
+        // Don't fail the request if GHL sync fails
+      }
+
       return {
         success: true,
         timelineId: timeline.id,
@@ -136,6 +156,32 @@ export const userTimelineRouter = router({
 
       if (!progress) {
         throw new Error("Failed to update action progress");
+      }
+
+      // Track progress in GHL when user completes actions
+      if (input.completed && ctx.user.email) {
+        try {
+          const milestones = JSON.parse(timeline.milestones);
+          const milestone = milestones.find((m: any) => m.id === input.milestoneId);
+          const actionCompleted = milestone?.actionItems?.[input.actionIndex] || "Action item";
+
+          // Calculate completion percentage
+          const progressData = await getTimelineActionProgress(timeline.id);
+          const totalActions = milestones.reduce((sum: number, m: any) => sum + (m.actionItems?.length || 0), 0);
+          const completedCount = progressData.filter(p => p.completed === "yes").length;
+          const completionPercentage = totalActions > 0 ? Math.round((completedCount / totalActions) * 100) : 0;
+
+          const { trackTimelineProgress } = await import("../ghlEnhanced");
+          await trackTimelineProgress({
+            email: ctx.user.email,
+            actionCompleted,
+            milestoneTitle: milestone?.title || "Unknown milestone",
+            completionPercentage,
+          });
+        } catch (ghlError) {
+          console.error("[Timeline Progress] Failed to track in GHL:", ghlError);
+          // Don't fail the request if GHL tracking fails
+        }
       }
 
       return {

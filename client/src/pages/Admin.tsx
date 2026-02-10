@@ -256,6 +256,14 @@ export default function Admin() {
               <Button
                 variant="outline"
                 className="bg-white text-[#0A2342] hover:bg-gray-100"
+                onClick={() => window.location.href = "/admin/ghl-test"}
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                GHL Integration Test
+              </Button>
+              <Button
+                variant="outline"
+                className="bg-white text-[#0A2342] hover:bg-gray-100"
                 onClick={() => window.location.href = "/admin/testimonials"}
               >
                 <FileText className="h-4 w-4 mr-2" />

@@ -13,6 +13,7 @@ import { linksRouter } from "./routers/links";
 import { campaignsRouter } from "./routers/campaigns";
 import { abTestingRouter } from "./routers/abTesting";
 import { userTimelineRouter } from "./routers/userTimeline";
+import { ghlTestRouter } from "./routers/ghlTest";
 
 
 export const appRouter = router({
@@ -20,6 +21,7 @@ export const appRouter = router({
   system: systemRouter,
   abTesting: abTestingRouter,
   userTimeline: userTimelineRouter,
+  ghlTest: ghlTestRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -552,6 +554,21 @@ Email: info@enteractdfw.com
           
           // Generate PDF buffer
           const pdfBuffer = await generatePersonalizedTimelinePDF(noticeDate, milestonesWithDates);
+          
+          // Sync to GHL with timeline data BEFORE sending email
+          const { syncTimelineToGHL } = await import("./ghlEnhanced");
+          await syncTimelineToGHL({
+            email,
+            noticeDate,
+            milestones: milestones.map(m => ({
+              title: m.title,
+              date: m.date,
+              daysFromNotice: m.daysFromNotice,
+              urgency: m.urgency === "critical" ? "critical" : m.urgency === "warning" ? "high" : "medium",
+              status: m.status === "past" ? "passed" : m.status === "current" ? "current" : "upcoming",
+              actions: m.actionItems,
+            })),
+          });
           
           // Import GHL email function
           const { sendTimelineEmail } = await import("./ghl");
