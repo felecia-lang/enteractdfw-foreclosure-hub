@@ -148,7 +148,7 @@ export default function BookingModal({ open, onOpenChange }: BookingModalProps) 
 
             {/* Contact info */}
             <div className="mt-6 pt-6 border-t text-sm text-gray-600">
-              <p>Questions? Call us at <strong>(832) 932-7585</strong></p>
+              <p>Questions? Call us at <strong>(844) 981-2937</strong></p>
             </div>
           </div>
         )}

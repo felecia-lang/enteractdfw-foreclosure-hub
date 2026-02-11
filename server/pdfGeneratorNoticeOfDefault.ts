@@ -130,7 +130,7 @@ export function generateNoticeOfDefaultPDF(): typeof PDFDocument.prototype {
   addCheckbox('Consider a short sale if you owe more than your home is worth and can\'t afford to stay.');
   addCheckbox('Explore deed in lieu of foreclosure as a last resort to avoid foreclosure on your credit report.');
   addCheckbox('Consult with a real estate agent about your home\'s current market value.');
-  addCheckbox('If selling, contact EnterActDFW for a free, no-obligation cash offer: (832) 932-7585.');
+  addCheckbox('If selling, contact EnterActDFW for a free, no-obligation cash offer: (844) 981-2937.');
   addCheckbox('Review any offers carefully. Ensure you understand all terms, fees, and timelines.');
   addCheckbox('Consult with your housing counselor or attorney before accepting any offer or signing any agreement.');
   doc.moveDown(1);
@@ -193,7 +193,7 @@ export function generateNoticeOfDefaultPDF(): typeof PDFDocument.prototype {
   doc.moveDown(1);
 
   addSubsectionHeader('EnterActDFW - Licensed Texas Real Estate Brokerage');
-  addBodyText('Phone: (832) 932-7585');
+  addBodyText('Phone: (844) 981-2937');
   addBodyText('Email: info@enteractdfw.com');
   addBodyText('Address: 4440 State Hwy 121, Suite 300, Lewisville, TX 75056');
   addBodyText('Website: www.enteractdfw.com');

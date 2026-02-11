@@ -76,7 +76,7 @@ describe("tracking.trackPhoneCall", () => {
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.tracking.trackPhoneCall({
-      phoneNumber: "832-346-9569",
+      phoneNumber: "844-981-2937",
       pagePath: "/",
       pageTitle: "EnterActDFW - Home",
     });
@@ -89,7 +89,7 @@ describe("tracking.trackPhoneCall", () => {
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.tracking.trackPhoneCall({
-      phoneNumber: "832-346-9569",
+      phoneNumber: "844-981-2937",
       pagePath: "/property-value-estimator",
       pageTitle: "Property Value Estimator",
     });
@@ -102,7 +102,7 @@ describe("tracking.trackPhoneCall", () => {
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.tracking.trackPhoneCall({
-      phoneNumber: "832-346-9569",
+      phoneNumber: "844-981-2937",
       pagePath: "/knowledge-base",
     });
 
@@ -123,7 +123,7 @@ describe("tracking.trackPhoneCall", () => {
 
     for (const page of pages) {
       const result = await caller.tracking.trackPhoneCall({
-        phoneNumber: "832-346-9569",
+        phoneNumber: "844-981-2937",
         pagePath: page.path,
         pageTitle: page.title,
       });
@@ -137,10 +137,10 @@ describe("tracking.trackPhoneCall", () => {
     const caller = appRouter.createCaller(ctx);
 
     const phoneFormats = [
-      "832-346-9569",
-      "(832) 932-7585",
-      "8329327585",
-      "+1-832-346-9569",
+      "844-981-2937",
+      "(844) 981-2937",
+      "8449812937",
+      "+1-844-981-2937",
     ];
 
     for (const phone of phoneFormats) {
@@ -162,13 +162,13 @@ describe("tracking.getCallStats", () => {
 
     // First, track some calls
     await caller.tracking.trackPhoneCall({
-      phoneNumber: "832-346-9569",
+      phoneNumber: "844-981-2937",
       pagePath: "/",
       pageTitle: "Home",
     });
 
     await caller.tracking.trackPhoneCall({
-      phoneNumber: "832-346-9569",
+      phoneNumber: "844-981-2937",
       pagePath: "/property-value-estimator",
       pageTitle: "Property Value Estimator",
     });
@@ -208,7 +208,7 @@ describe("tracking.getRecentCalls", () => {
 
     // Track a call first
     await caller.tracking.trackPhoneCall({
-      phoneNumber: "832-346-9569",
+      phoneNumber: "844-981-2937",
       pagePath: "/timeline-calculator",
       pageTitle: "Timeline Calculator",
     });

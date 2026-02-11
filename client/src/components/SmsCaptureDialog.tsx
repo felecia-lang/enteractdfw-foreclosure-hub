@@ -112,7 +112,7 @@ export default function SmsCaptureDialog({
               <Input
                 id="phone"
                 type="tel"
-                placeholder="(832) 932-7585"
+                placeholder="(844) 981-2937"
                 value={phone}
                 onChange={handlePhoneChange}
                 maxLength={14} // (XXX) XXX-XXXX = 14 chars

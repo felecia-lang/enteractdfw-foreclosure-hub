@@ -52,7 +52,7 @@ export async function sendResourceEmail(params: SendResourceEmailParams): Promis
             <h3 style="color: #1e40af;">Need Help?</h3>
             <p>If you have questions or would like to discuss your specific situation, we're here to help:</p>
             <ul>
-              <li><strong>Phone:</strong> (832) 932-7585</li>
+              <li><strong>Phone:</strong> (844) 981-2937</li>
               <li><strong>Email:</strong> info@enteractdfw.com</li>
             </ul>
             <p>We offer free consultations with no obligation. Our team is ready to answer your questions and explore your options.</p>

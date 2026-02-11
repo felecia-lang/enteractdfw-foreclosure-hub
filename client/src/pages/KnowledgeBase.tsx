@@ -203,7 +203,7 @@ export default function KnowledgeBase() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "👋 Hello! I'm here to help answer your questions about foreclosure in Texas. I can explain the process, your rights, and the options available to you.\n\n**Please note**: I provide educational information only, not legal or financial advice. For personalized guidance, please consult with an attorney or call our team at **(832) 932-7585**.\n\nWhat would you like to know?",
+      content: "👋 Hello! I'm here to help answer your questions about foreclosure in Texas. I can explain the process, your rights, and the options available to you.\n\n**Please note**: I provide educational information only, not legal or financial advice. For personalized guidance, please consult with an attorney or call our team at **(844) 981-2937**.\n\nWhat would you like to know?",
     },
   ]);
   const [showLeadCapture, setShowLeadCapture] = useState(false);
@@ -257,7 +257,7 @@ export default function KnowledgeBase() {
       // Add error message to chat
       const errorMessage: Message = {
         role: "assistant",
-        content: "I apologize, but I'm having trouble responding right now. Please call us at **(832) 932-7585** for immediate assistance.",
+        content: "I apologize, but I'm having trouble responding right now. Please call us at **(844) 981-2937** for immediate assistance.",
       };
       setMessages((prev) => [...prev, errorMessage]);
     }
@@ -318,7 +318,7 @@ export default function KnowledgeBase() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
+              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -340,7 +340,7 @@ export default function KnowledgeBase() {
           <SearchBar />
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
+              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
                 Get Free Consultation
               </TrackablePhoneLink>
             </Button>
@@ -440,7 +440,7 @@ export default function KnowledgeBase() {
                               value={leadFormData.phone}
                               onChange={(e) => setLeadFormData(prev => ({ ...prev, phone: e.target.value }))}
                               className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-                              placeholder="(832) 932-7585"
+                              placeholder="(844) 981-2937"
                             />
                           </div>
                         </div>
@@ -570,7 +570,7 @@ export default function KnowledgeBase() {
                   Speak with Agent Felecia Fair
                 </p>
                 <Button variant="outline" className="w-full" asChild>
-                  <TrackablePhoneLink phoneNumber="832-346-9569">(832) 932-7585</TrackablePhoneLink>
+                  <TrackablePhoneLink phoneNumber="844-981-2937">(844) 981-2937</TrackablePhoneLink>
                 </Button>
               </CardContent>
             </Card>
@@ -645,7 +645,7 @@ export default function KnowledgeBase() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: <TrackablePhoneLink phoneNumber="832-346-9569" className="hover:text-primary">(832) 932-7585</TrackablePhoneLink></li>
+                <li>Phone: <TrackablePhoneLink phoneNumber="844-981-2937" className="hover:text-primary">(844) 981-2937</TrackablePhoneLink></li>
                 <li>Email: <a href="mailto:info@enteractdfw.com" className="hover:text-primary">info@enteractdfw.com</a></li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

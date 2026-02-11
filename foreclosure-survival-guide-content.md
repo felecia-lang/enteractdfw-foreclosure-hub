@@ -386,7 +386,7 @@ We are a licensed Texas real estate brokerage with deep roots in the Dallas-Fort
 
 If you are facing foreclosure and need help, contact us today for a free consultation.
 
-**Phone:** (832) 932-7585  
+**Phone:** (844) 981-2937  
 **Email:** info@enteractdfw.com  
 **Address:** 4400 State Hwy 121, Suite 300, Lewisville, Texas 75056
 
@@ -469,7 +469,7 @@ Whether you choose to modify your loan, sell your home, or pursue another soluti
 **EnterActDFW Real Estate Brokerage**  
 4400 State Hwy 121, Suite 300  
 Lewisville, Texas 75056  
-Phone: (832) 932-7585  
+Phone: (844) 981-2937  
 Email: info@enteractdfw.com
 
 *Licensed Texas Real Estate Brokerage | Serving the Dallas-Fort Worth Area Since 2015*

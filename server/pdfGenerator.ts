@@ -257,7 +257,7 @@ export function generateAvoidingScamsPDF(): typeof PDFDocument.prototype {
   doc.moveDown(1);
   doc.fontSize(11).fillColor(primaryColor).font('Helvetica-Bold').text('Contact Us:');
   doc.fontSize(10).fillColor('#000000').font('Helvetica')
-    .text('Phone: (832) 932-7585')
+    .text('Phone: (844) 981-2937')
     .text('Email: info@enteractdfw.com')
     .text('Address: 4400 State Hwy 121, Suite 300, Lewisville, TX 75056');
   doc.moveDown(2);
@@ -517,7 +517,7 @@ export function generateForeclosureGuidePDF(): typeof PDFDocument.prototype {
   doc.fillColor(accentColor).fontSize(14).font('Helvetica-Bold')
     .text('Contact Us Today', doc.x, doc.y + 10);
   doc.fillColor('#000000').fontSize(11).font('Helvetica')
-    .text('Phone: (832) 932-7585', doc.x, doc.y + 10)
+    .text('Phone: (844) 981-2937', doc.x, doc.y + 10)
     .text('Email: info@enteractdfw.com', doc.x, doc.y + 5)
     .text('Address: 4400 State Hwy 121, Suite 300, Lewisville, Texas 75056', doc.x, doc.y + 5, { width: doc.page.width - 120 });
   doc.moveDown(2);
@@ -655,7 +655,7 @@ export async function generatePersonalizedTimelinePDF(
     doc.moveDown(1.5);
 
     doc.fontSize(12).fillColor('#000000')
-       .text('Phone: (832) 932-7585', { align: 'center' });
+       .text('Phone: (844) 981-2937', { align: 'center' });
     doc.text('Email: info@enteractdfw.com', { align: 'center' });
     doc.text('Lewisville, Texas 75056', { align: 'center' });
     

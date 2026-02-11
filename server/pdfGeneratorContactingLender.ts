@@ -349,7 +349,7 @@ export function generateContactingLenderPDF(): typeof PDFDocument.prototype {
   addBodyText('If you\'re considering selling to avoid foreclosure, we offer free consultations and fair cash offers.');
   doc.moveDown(0.3);
   doc.fontSize(10).fillColor('#000000').font('Helvetica')
-    .text('Phone: (832) 932-7585')
+    .text('Phone: (844) 981-2937')
     .text('Email: info@enteractdfw.com')
     .text('Address: 4400 State Hwy 121, Suite 300, Lewisville, TX 75056');
   doc.moveDown(2);

@@ -32,7 +32,7 @@ export default function PrivacyPolicy() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now
+              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Now
               </TrackablePhoneLink>
             </Button>
           </nav>
@@ -173,7 +173,7 @@ export default function PrivacyPolicy() {
               <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground">
                 <li>Reply <strong>STOP</strong> to any text message you receive from us</li>
                 <li>Email us at info@enteractdfw.com with your phone number and request to unsubscribe</li>
-                <li>Call us at (832) 932-7585 and request to be removed from SMS communications</li>
+                <li>Call us at (844) 981-2937 and request to be removed from SMS communications</li>
               </ul>
               <p className="mt-3 text-sm">
                 After you opt out, you will receive one final confirmation message, and then no further messages will be sent unless you re-subscribe.
@@ -183,7 +183,7 @@ export default function PrivacyPolicy() {
             <div>
               <h3 className="font-semibold mb-2">Help and Support</h3>
               <p className="text-muted-foreground">
-                For help or questions about text messages, reply <strong>HELP</strong> to any message or contact us at (832) 932-7585 or info@enteractdfw.com.
+                For help or questions about text messages, reply <strong>HELP</strong> to any message or contact us at (844) 981-2937 or info@enteractdfw.com.
               </p>
             </div>
 
@@ -401,8 +401,8 @@ export default function PrivacyPolicy() {
                 <Phone className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="font-semibold">Phone</p>
-                  <TrackablePhoneLink phoneNumber="832-346-9569" className="text-primary hover:underline">
-                    (832) 932-7585
+                  <TrackablePhoneLink phoneNumber="844-981-2937" className="text-primary hover:underline">
+                    (844) 981-2937
                   </TrackablePhoneLink>
                 </div>
               </div>
@@ -490,7 +490,7 @@ export default function PrivacyPolicy() {
             <div>
               <h3 className="font-semibold mb-3">Contact</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: (832) 932-7585</li>
+                <li>Phone: (844) 981-2937</li>
                 <li>Email: info@enteractdfw.com</li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

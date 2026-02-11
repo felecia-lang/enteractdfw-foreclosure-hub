@@ -87,7 +87,7 @@ export function getWelcomeGuideEmail(data: EmailTemplateData) {
               </ul>
               
               <p style="color: #4b5563; line-height: 1.6; margin: 0 0 20px 0; font-size: 16px;">
-                In the meantime, if you have urgent questions or want to discuss your situation right away, don't hesitate to call us at <strong>(832) 932-7585</strong>. We're here to help.
+                In the meantime, if you have urgent questions or want to discuss your situation right away, don't hesitate to call us at <strong>(844) 981-2937</strong>. We're here to help.
               </p>
               
               <p style="color: #4b5563; line-height: 1.6; margin: 30px 0 0 0; font-size: 16px;">
@@ -106,7 +106,7 @@ export function getWelcomeGuideEmail(data: EmailTemplateData) {
                 Lewisville, Texas 75056
               </p>
               <p style="color: #6b7280; margin: 10px 0; font-size: 14px;">
-                Phone: (832) 932-7585<br>
+                Phone: (844) 981-2937<br>
                 Email: info@enteractdfw.com
               </p>
               <p style="color: #9ca3af; margin: 20px 0 0 0; font-size: 12px;">
@@ -187,7 +187,7 @@ export function getTimelineCalculatorEmail(data: EmailTemplateData) {
               </div>
               
               <p style="color: #4b5563; line-height: 1.6; margin: 0 0 20px 0; font-size: 16px;">
-                If you have questions about your timeline or want to discuss your options, call us at <strong>(832) 932-7585</strong>. We're here to help you navigate every step.
+                If you have questions about your timeline or want to discuss your options, call us at <strong>(844) 981-2937</strong>. We're here to help you navigate every step.
               </p>
               
               <p style="color: #4b5563; line-height: 1.6; margin: 30px 0 0 0; font-size: 16px;">
@@ -206,7 +206,7 @@ export function getTimelineCalculatorEmail(data: EmailTemplateData) {
                 Lewisville, Texas 75056
               </p>
               <p style="color: #6b7280; margin: 10px 0; font-size: 14px;">
-                Phone: (832) 932-7585<br>
+                Phone: (844) 981-2937<br>
                 Email: info@enteractdfw.com
               </p>
               <p style="color: #9ca3af; margin: 20px 0 0 0; font-size: 12px;">
@@ -292,8 +292,8 @@ export function getSuccessStoryEmail(data: EmailTemplateData) {
               </p>
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="tel:8329327585" style="display: inline-block; background-color: #0d9488; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-                  Call Us Today: (832) 932-7585
+                <a href="tel:8449812937" style="display: inline-block; background-color: #0d9488; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                  Call Us Today: (844) 981-2937
                 </a>
               </div>
               
@@ -317,7 +317,7 @@ export function getSuccessStoryEmail(data: EmailTemplateData) {
                 Lewisville, Texas 75056
               </p>
               <p style="color: #6b7280; margin: 10px 0; font-size: 14px;">
-                Phone: (832) 932-7585<br>
+                Phone: (844) 981-2937<br>
                 Email: info@enteractdfw.com
               </p>
               <p style="color: #9ca3af; margin: 20px 0 0 0; font-size: 12px;">
@@ -393,8 +393,8 @@ export function getConsultationReminderEmail(data: EmailTemplateData) {
               </ul>
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="tel:8329327585" style="display: inline-block; background-color: #dc2626; color: #ffffff; text-decoration: none; padding: 18px 36px; border-radius: 6px; font-size: 18px; font-weight: bold;">
-                  Call Now: (832) 932-7585
+                <a href="tel:8449812937" style="display: inline-block; background-color: #dc2626; color: #ffffff; text-decoration: none; padding: 18px 36px; border-radius: 6px; font-size: 18px; font-weight: bold;">
+                  Call Now: (844) 981-2937
                 </a>
               </div>
               
@@ -418,7 +418,7 @@ export function getConsultationReminderEmail(data: EmailTemplateData) {
                 Lewisville, Texas 75056
               </p>
               <p style="color: #6b7280; margin: 10px 0; font-size: 14px;">
-                Phone: (832) 932-7585<br>
+                Phone: (844) 981-2937<br>
                 Email: info@enteractdfw.com
               </p>
               <p style="color: #9ca3af; margin: 20px 0 0 0; font-size: 12px;">

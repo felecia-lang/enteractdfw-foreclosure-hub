@@ -36,7 +36,7 @@ const DRIP_TEMPLATES: DripEmailTemplate[] = [
             </ol>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="tel:8329327585" style="display: inline-block; background: #1e40af; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Call (832) 932-7585</a>
+              <a href="tel:8449812937" style="display: inline-block; background: #1e40af; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Call (844) 981-2937</a>
             </div>
             
             <p style="background: #e0f2fe; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
@@ -45,7 +45,7 @@ const DRIP_TEMPLATES: DripEmailTemplate[] = [
             
             <p>Looking forward to speaking with you,</p>
             <p><strong>The EnterActDFW Team</strong><br>
-            (832) 932-7585</p>
+            (844) 981-2937</p>
           </div>
           
           <div style="background: #1f2937; color: #9ca3af; padding: 20px; text-align: center; font-size: 12px;">
@@ -97,14 +97,14 @@ const DRIP_TEMPLATES: DripEmailTemplate[] = [
             <p>Every homeowner's situation is different, but one thing is constant: <strong>the sooner you act, the more options you have.</strong></p>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="tel:8329327585" style="display: inline-block; background: #1e40af; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Schedule Your Free Consultation</a>
+              <a href="tel:8449812937" style="display: inline-block; background: #1e40af; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Schedule Your Free Consultation</a>
             </div>
             
             <p>Let's discuss your situation and create a personalized action plan.</p>
             
             <p>Best regards,</p>
             <p><strong>The EnterActDFW Team</strong><br>
-            (832) 932-7585</p>
+            (844) 981-2937</p>
           </div>
           
           <div style="background: #1f2937; color: #9ca3af; padding: 20px; text-align: center; font-size: 12px;">
@@ -154,7 +154,7 @@ const DRIP_TEMPLATES: DripEmailTemplate[] = [
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="tel:8329327585" style="display: inline-block; background: #dc2626; color: white; padding: 18px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;">Call Now: (832) 932-7585</a>
+              <a href="tel:8449812937" style="display: inline-block; background: #dc2626; color: white; padding: 18px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;">Call Now: (844) 981-2937</a>
             </div>
             
             <p style="background: #e0f2fe; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
@@ -167,7 +167,7 @@ const DRIP_TEMPLATES: DripEmailTemplate[] = [
             
             <p>Wishing you the best,</p>
             <p><strong>The EnterActDFW Team</strong><br>
-            (832) 932-7585</p>
+            (844) 981-2937</p>
           </div>
           
           <div style="background: #1f2937; color: #9ca3af; padding: 20px; text-align: center; font-size: 12px;">

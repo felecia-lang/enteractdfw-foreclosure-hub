@@ -21,7 +21,7 @@ const EMAIL_FOOTER = `
   <div class="footer">
     <p><strong>Felecia Fair</strong> | Licensed Texas Real Estate Broker</p>
     <p>EnterActDFW | 4400 State Hwy 121, Suite 300, Lewisville, TX 75056</p>
-    <p>Phone: 832-346-9569 | Email: info@enteractdfw.com</p>
+    <p>Phone: 844-981-2937 | Email: info@enteractdfw.com</p>
     <p style="margin-top: 20px; font-style: italic;">This is educational information only and not legal advice. For legal guidance, consult an attorney or HUD-approved housing counselor.</p>
   </div>
 `;
@@ -75,7 +75,7 @@ export function getDay2Email(firstName: string): { subject: string; body: string
             
             <p>Best regards,<br>
             <strong>Felecia Fair</strong><br>
-            832-346-9569</p>
+            844-981-2937</p>
           </div>
           ${EMAIL_FOOTER}
         </div>
@@ -140,7 +140,7 @@ export function getDay5Email(firstName: string): { subject: string; body: string
             
             <p>Best regards,<br>
             <strong>Felecia Fair</strong><br>
-            832-346-9569</p>
+            844-981-2937</p>
           </div>
           ${EMAIL_FOOTER}
         </div>
@@ -197,7 +197,7 @@ export function getDay10Email(firstName: string): { subject: string; body: strin
             
             <p><strong>Let's talk about your situation—no cost, no obligation, no pressure.</strong></p>
             
-            <a href="tel:832-346-9569" class="cta-button">Call Me: 832-346-9569</a>
+            <a href="tel:844-981-2937" class="cta-button">Call Me: 844-981-2937</a>
             
             <p>Or reply to this email with your phone number and the best time to reach you. I'll call you personally.</p>
             
@@ -206,7 +206,7 @@ export function getDay10Email(firstName: string): { subject: string; body: strin
             <p>Best regards,<br>
             <strong>Felecia Fair</strong><br>
             Licensed Texas Real Estate Broker<br>
-            832-346-9569<br>
+            844-981-2937<br>
             info@enteractdfw.com</p>
           </div>
           ${EMAIL_FOOTER}
@@ -345,7 +345,7 @@ export function getCashOfferAcknowledgmentEmail(data: {
             <p><strong>Questions Before We Call?</strong></p>
             <p>Feel free to reach out anytime:</p>
             <ul>
-              <li><strong>Call/Text:</strong> 832-346-9569</li>
+              <li><strong>Call/Text:</strong> 844-981-2937</li>
               <li><strong>Email:</strong> info@enteractdfw.com</li>
             </ul>
             
@@ -358,7 +358,7 @@ export function getCashOfferAcknowledgmentEmail(data: {
             <p>Best regards,<br>
             <strong>Felecia Fair</strong><br>
             Licensed Texas Real Estate Broker<br>
-            832-346-9569</p>
+            844-981-2937</p>
           </div>
           ${EMAIL_FOOTER}
         </div>

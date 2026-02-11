@@ -83,7 +83,7 @@ export async function sendResumeEmail(data: SaveResumeEmailData): Promise<void> 
         <li>✅ Option to schedule a free consultation with our licensed broker</li>
       </ul>
       
-      <p><strong>Questions?</strong> Call us at <a href="tel:832-346-9569" style="color: #2563eb;">832-346-9569</a></p>
+      <p><strong>Questions?</strong> Call us at <a href="tel:844-981-2937" style="color: #2563eb;">844-981-2937</a></p>
       
       <p style="margin-top: 30px;">
         Best regards,<br>

@@ -256,7 +256,7 @@ export default function NoticeOfDefaultGuide() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now
+              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Now
               </TrackablePhoneLink>
             </Button>
           </nav>
@@ -525,7 +525,7 @@ export default function NoticeOfDefaultGuide() {
           </div>
           <div className="text-center mt-8">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Felecia Fair: (832) 932-7585
+              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Felecia Fair: (844) 981-2937
               </TrackablePhoneLink>
             </Button>
           </div>
@@ -596,7 +596,7 @@ export default function NoticeOfDefaultGuide() {
                 className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
                 asChild
               >
-                <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now: (832) 932-7585
+                <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Now: (844) 981-2937
                 </TrackablePhoneLink>
               </Button>
               <Button 
@@ -636,7 +636,7 @@ export default function NoticeOfDefaultGuide() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: (832) 932-7585</li>
+                <li>Phone: (844) 981-2937</li>
                 <li>Email: info@enteractdfw.com</li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

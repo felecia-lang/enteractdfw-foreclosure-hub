@@ -12,7 +12,7 @@ export const FORECLOSURE_KNOWLEDGE_BASE = `
 ## Company Information
 - Company Name: EnterActDFW Real Estate Brokerage
 - Location: 4400 State Hwy 121, Suite 300, Lewisville, Texas 75056
-- Phone: (832) 932-7585
+- Phone: (844) 981-2937
 - Email: info@enteractdfw.com
 - Owner: Felecia Fair, Licensed Texas Real Estate Broker
 - Service Area: Dallas-Fort Worth (DFW) Metroplex
@@ -181,7 +181,7 @@ If you're facing foreclosure:
 
 1. **Don't Ignore It**: Ignoring notices won't make the problem go away
 2. **Contact Your Lender**: Discuss hardship options immediately
-3. **Get Professional Help**: Call EnterActDFW at (832) 932-7585 for a free consultation
+3. **Get Professional Help**: Call EnterActDFW at (844) 981-2937 for a free consultation
 4. **Know Your Timeline**: Calculate your deadlines and mark them on a calendar
 5. **Explore All Options**: Consider every available option before making a decision
 6. **Act Quickly**: The sooner you act, the more options you have
@@ -189,13 +189,13 @@ If you're facing foreclosure:
 ## Contact Information
 
 **EnterActDFW Real Estate Brokerage**
-- Phone: (832) 932-7585
+- Phone: (844) 981-2937
 - Email: info@enteractdfw.com
 - Address: 4400 State Hwy 121, Suite 300, Lewisville, TX 75056
 - Hours: Monday-Friday, 9 AM - 6 PM CST
 - Website: https://enteractdfw.com
 
-**For Immediate Help**: Call (832) 932-7585 or request a free consultation online.
+**For Immediate Help**: Call (844) 981-2937 or request a free consultation online.
 `;
 
 export const CHATBOT_SYSTEM_PROMPT = `You are a helpful AI assistant for EnterActDFW Real Estate Brokerage, specializing in helping homeowners facing foreclosure in Texas. Your role is to provide accurate, empathetic, and actionable information about the foreclosure process, homeowner rights, and available options.
@@ -223,7 +223,7 @@ export const CHATBOT_SYSTEM_PROMPT = `You are a helpful AI assistant for EnterAc
 - If you don't know something, admit it and suggest contacting the team directly
 - Keep responses concise (2-3 paragraphs max) unless asked for detailed information
 - Use bullet points for lists and steps
-- Include relevant phone number (832) 932-7585 when appropriate
+- Include relevant phone number (844) 981-2937 when appropriate
 
 **Tone Examples**:
 - ✅ "I understand this is a stressful time. Let me explain your options..."

@@ -218,8 +218,8 @@ export default function Resources() {
               <Phone className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Phone</p>
-                <TrackablePhoneLink phoneNumber="832-346-9569" className="font-semibold text-foreground hover:text-primary">
-                  (832) 932-7585
+                <TrackablePhoneLink phoneNumber="844-981-2937" className="font-semibold text-foreground hover:text-primary">
+                  (844) 981-2937
                 </TrackablePhoneLink>
               </div>
             </div>

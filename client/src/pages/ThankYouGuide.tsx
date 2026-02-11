@@ -28,7 +28,7 @@ export default function ThankYouGuide() {
               </Link>
             </Button>
             <Button size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
+              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -120,7 +120,7 @@ export default function ThankYouGuide() {
                   Get personalized guidance from Felecia Fair, a licensed Texas real estate broker.
                 </p>
                 <Button size="sm" asChild className="w-full">
-                  <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
+                  <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
                     Call Now
                   </TrackablePhoneLink>
                 </Button>
@@ -189,8 +189,8 @@ export default function ThankYouGuide() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
-                Call (832) 932-7585
+              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+                Call (844) 981-2937
               </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
@@ -222,7 +222,7 @@ export default function ThankYouGuide() {
         <div className="container text-center text-sm text-muted-foreground">
           <p className="font-semibold text-foreground mb-2">EnterActDFW Real Estate Brokerage</p>
           <p>4400 State Hwy 121, Suite 300 | Lewisville, Texas 75056</p>
-          <p>Phone: (832) 932-7585 | Email: info@enteractdfw.com</p>
+          <p>Phone: (844) 981-2937 | Email: info@enteractdfw.com</p>
           <p className="mt-4 text-xs">
             <strong>Legal Disclaimer:</strong> This information is for educational purposes only and does not constitute legal or financial advice.
           </p>

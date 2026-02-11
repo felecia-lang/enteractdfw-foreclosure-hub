@@ -59,7 +59,7 @@ ${checklistData.checkedItems.map((item, idx) => `${idx + 1}. ${item}`).join('\n'
 
 Next Steps:
 - Continue working through your checklist
-- Contact EnterActDFW for personalized assistance: (832) 932-7585
+- Contact EnterActDFW for personalized assistance: (844) 981-2937
 - Visit our knowledge base for more resources
 
 Remember: Time is critical. You typically have 20-30 days from receiving a Notice of Default to take action.
@@ -68,7 +68,7 @@ Remember: Time is critical. You typically have 20-30 days from receiving a Notic
 EnterActDFW Real Estate Brokerage
 4400 State Hwy 121, Suite 300
 Lewisville, Texas 75056
-Phone: (832) 932-7585
+Phone: (844) 981-2937
 Email: info@enteractdfw.com
         `;
 
@@ -1045,7 +1045,7 @@ Email: info@enteractdfw.com
           // Call LLM API
           const response = await invokeLLM({ messages });
           
-          const assistantMessage = response.choices[0]?.message?.content || "I apologize, but I'm having trouble responding right now. Please call us at (832) 932-7585 for immediate assistance.";
+          const assistantMessage = response.choices[0]?.message?.content || "I apologize, but I'm having trouble responding right now. Please call us at (844) 981-2937 for immediate assistance.";
           
           return {
             success: true,
@@ -1055,7 +1055,7 @@ Email: info@enteractdfw.com
           console.error("[Chatbot] Failed to process message:", error);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to process your message. Please try again or call us at (832) 932-7585.",
+            message: "Failed to process your message. Please try again or call us at (844) 981-2937.",
           });
         }
       }),
