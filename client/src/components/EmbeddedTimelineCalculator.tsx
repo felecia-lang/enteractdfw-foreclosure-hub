@@ -465,7 +465,7 @@ export default function EmbeddedTimelineCalculator() {
                   size="lg"
                   asChild
                 >
-                  <a href="tel:832-932-7585">
+                  <a href="tel:832-346-9569">
                     Call Us Now: (832) 932-7585
                   </a>
                 </Button>

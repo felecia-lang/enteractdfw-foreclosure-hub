@@ -109,7 +109,7 @@ export default function Home() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>

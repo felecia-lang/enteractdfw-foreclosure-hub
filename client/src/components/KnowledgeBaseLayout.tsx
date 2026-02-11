@@ -68,7 +68,7 @@ export default function KnowledgeBaseLayout({ children, title, description, brea
           </Link>
           <div className="flex items-center gap-4">
             <Button variant="outline" size="sm" asChild className="hidden sm:flex">
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -117,7 +117,7 @@ export default function KnowledgeBaseLayout({ children, title, description, brea
                   Talk to our team for a free, no-obligation consultation.
                 </p>
                 <Button size="sm" className="w-full" asChild>
-                  <TrackablePhoneLink phoneNumber="832-932-7585">
+                  <TrackablePhoneLink phoneNumber="832-346-9569">
                     <span>Call Now</span>
                   </TrackablePhoneLink>
                 </Button>

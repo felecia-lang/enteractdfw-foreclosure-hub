@@ -72,7 +72,7 @@ Traditional Sale: ${formatCurrency(comparison.options.find(o => o.type === 'trad
 Cash Offer: ${formatCurrency(comparison.options.find(o => o.type === 'cash_offer')?.netProceeds || 0)}
 Short Sale: ${formatCurrency(comparison.options.find(o => o.type === 'short_sale')?.netProceeds || 0)}
 
-📞 Schedule Free Call: 832-932-7585
+📞 Schedule Free Call: 832-346-9569
 Or text SCHEDULE to this number
 
 - Felecia Fair, EnterActDFW`;

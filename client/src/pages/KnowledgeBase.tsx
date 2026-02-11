@@ -318,7 +318,7 @@ export default function KnowledgeBase() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -340,7 +340,7 @@ export default function KnowledgeBase() {
           <SearchBar />
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Get Free Consultation
               </TrackablePhoneLink>
             </Button>
@@ -570,7 +570,7 @@ export default function KnowledgeBase() {
                   Speak with Agent Felecia Fair
                 </p>
                 <Button variant="outline" className="w-full" asChild>
-                  <TrackablePhoneLink phoneNumber="832-932-7585">(832) 932-7585</TrackablePhoneLink>
+                  <TrackablePhoneLink phoneNumber="832-346-9569">(832) 932-7585</TrackablePhoneLink>
                 </Button>
               </CardContent>
             </Card>
@@ -645,7 +645,7 @@ export default function KnowledgeBase() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: <TrackablePhoneLink phoneNumber="832-932-7585" className="hover:text-primary">(832) 932-7585</TrackablePhoneLink></li>
+                <li>Phone: <TrackablePhoneLink phoneNumber="832-346-9569" className="hover:text-primary">(832) 932-7585</TrackablePhoneLink></li>
                 <li>Email: <a href="mailto:info@enteractdfw.com" className="hover:text-primary">info@enteractdfw.com</a></li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

@@ -478,7 +478,7 @@ export default function OptionsToAvoidForeclosure() {
                     Get Free Offer
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call (832) 932-7585
+                    <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call (832) 932-7585
                     </TrackablePhoneLink>
                   </Button>
                 </div>

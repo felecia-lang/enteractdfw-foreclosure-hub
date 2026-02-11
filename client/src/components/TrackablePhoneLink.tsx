@@ -15,9 +15,9 @@ interface TrackablePhoneLinkProps {
  * TrackablePhoneLink - Wraps phone number links with click tracking
  * 
  * Usage:
- * <TrackablePhoneLink phoneNumber="832-932-7585" />
- * <TrackablePhoneLink phoneNumber="832-932-7585" displayText="Call Us Now" showIcon />
- * <TrackablePhoneLink phoneNumber="832-932-7585" className="custom-class">
+ * <TrackablePhoneLink phoneNumber="832-346-9569" />
+ * <TrackablePhoneLink phoneNumber="832-346-9569" displayText="Call Us Now" showIcon />
+ * <TrackablePhoneLink phoneNumber="832-346-9569" className="custom-class">
  *   <span>Custom content</span>
  * </TrackablePhoneLink>
  */

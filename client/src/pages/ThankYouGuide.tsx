@@ -28,7 +28,7 @@ export default function ThankYouGuide() {
               </Link>
             </Button>
             <Button size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -120,7 +120,7 @@ export default function ThankYouGuide() {
                   Get personalized guidance from Felecia Fair, a licensed Texas real estate broker.
                 </p>
                 <Button size="sm" asChild className="w-full">
-                  <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                  <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                     Call Now
                   </TrackablePhoneLink>
                 </Button>
@@ -189,7 +189,7 @@ export default function ThankYouGuide() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call (832) 932-7585
               </TrackablePhoneLink>
             </Button>

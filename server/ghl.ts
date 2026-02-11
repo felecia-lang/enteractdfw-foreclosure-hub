@@ -516,13 +516,13 @@ export async function sendWelcomeEmail(
           
           <p><strong>Need immediate help?</strong> I'm here to answer your questions and discuss your specific situation—with no pressure and no judgment.</p>
           
-          <a href="tel:832-932-7585" class="cta-button">Call Me: 832-932-7585</a>
+          <a href="tel:832-346-9569" class="cta-button">Call Me: 832-346-9569</a>
           
           <p>Best regards,<br>
           <strong>Felecia Fair</strong><br>
           Licensed Texas Real Estate Broker<br>
           EnterActDFW<br>
-          832-932-7585<br>
+          832-346-9569<br>
           info@enteractdfw.com</p>
         </div>
         <div class="footer">
@@ -620,13 +620,13 @@ export async function sendTimelineEmail(params: {
           
           <p><strong>Need personalized help?</strong> I'm here to discuss your specific situation and explore all available options—with no pressure and no judgment.</p>
           
-          <a href="tel:832-932-7585" class="cta-button">Call Me: 832-932-7585</a>
+          <a href="tel:832-346-9569" class="cta-button">Call Me: 832-346-9569</a>
           
           <p>Best regards,<br>
           <strong>Felecia Fair</strong><br>
           Licensed Texas Real Estate Broker<br>
           EnterActDFW<br>
-          832-932-7585<br>
+          832-346-9569<br>
           info@enteractdfw.com</p>
         </div>
         <div class="footer">
@@ -851,7 +851,7 @@ export async function sendSurvivalGuideEmail(
           <p>I'm here to answer your questions and discuss your specific situation—with no pressure and no judgment. As a licensed Texas real estate broker specializing in foreclosure assistance, I've helped over 200 families in the DFW area protect their homes and find the best path forward.</p>
           
           <div style="text-align: center;">
-            <a href="tel:832-932-7585" class="secondary-button">📞 Call Me: (832) 932-7585</a>
+            <a href="tel:832-346-9569" class="secondary-button">📞 Call Me: (832) 932-7585</a>
           </div>
           
           <p style="text-align: center; margin-top: 20px;">

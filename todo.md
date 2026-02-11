@@ -1386,3 +1386,13 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Verify tags are applied correctly
 - [x] Verify timeline notes appear in GHL dashboard
 - [x] Write vitest tests for GHL integration
+
+
+## Update Primary Contact Phone Number to 832-346-9569
+- [x] Search for all phone number instances in codebase
+- [x] Update phone in UI headers
+- [x] Update phone in UI footers
+- [x] Update phone on landing page
+- [x] Update phone in GHL integration files
+- [x] Update all tel: links
+- [x] Verify all changes are complete

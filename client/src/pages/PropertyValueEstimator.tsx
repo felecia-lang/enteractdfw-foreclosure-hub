@@ -779,21 +779,21 @@ export default function PropertyValueEstimator() {
                           {/* CTA Button */}
                           {option.type === 'cash_offer' && (
                             <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
-                              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                                 Get Cash Offer
                               </TrackablePhoneLink>
                             </Button>
                           )}
                           {option.type === 'traditional' && (
                             <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
-                              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                                 List with Agent
                               </TrackablePhoneLink>
                             </Button>
                           )}
                           {option.type === 'short_sale' && (
                             <Button asChild className="w-full" variant={option.recommended ? "default" : "outline"}>
-                              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                                 Discuss Options
                               </TrackablePhoneLink>
                             </Button>
@@ -818,7 +818,7 @@ export default function PropertyValueEstimator() {
                             size="lg"
                             className="bg-white text-blue-600 hover:bg-blue-50 font-bold whitespace-nowrap"
                           >
-                            <TrackablePhoneLink phoneNumber="832-932-7585" className="flex items-center">
+                            <TrackablePhoneLink phoneNumber="832-346-9569" className="flex items-center">
                               <Calendar className="h-5 w-5 mr-2" />
                               Schedule Free Call
                             </TrackablePhoneLink>
@@ -898,8 +898,8 @@ export default function PropertyValueEstimator() {
                       <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                         <p className="text-sm text-blue-900 dark:text-blue-200 text-center">
                           <strong>Questions?</strong> Call us at{" "}
-                          <TrackablePhoneLink phoneNumber="832-932-7585" className="underline font-semibold">
-                            832-932-7585
+                          <TrackablePhoneLink phoneNumber="832-346-9569" className="underline font-semibold">
+                            832-346-9569
                           </TrackablePhoneLink>{" "}
                           for immediate assistance
                         </p>
@@ -925,7 +925,7 @@ export default function PropertyValueEstimator() {
                       Calculate Another Property
                     </Button>
                     <Button asChild className="flex-1">
-                      <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>
+                      <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                         Get Professional Appraisal
                       </TrackablePhoneLink>
                     </Button>

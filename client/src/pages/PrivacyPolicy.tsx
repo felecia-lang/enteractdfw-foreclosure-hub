@@ -32,7 +32,7 @@ export default function PrivacyPolicy() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="832-932-7585" showIcon>Call Now
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now
               </TrackablePhoneLink>
             </Button>
           </nav>
@@ -401,7 +401,7 @@ export default function PrivacyPolicy() {
                 <Phone className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <p className="font-semibold">Phone</p>
-                  <TrackablePhoneLink phoneNumber="832-932-7585" className="text-primary hover:underline">
+                  <TrackablePhoneLink phoneNumber="832-346-9569" className="text-primary hover:underline">
                     (832) 932-7585
                   </TrackablePhoneLink>
                 </div>
