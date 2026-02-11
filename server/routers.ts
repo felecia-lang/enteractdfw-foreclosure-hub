@@ -2029,6 +2029,39 @@ Email: info@enteractdfw.com
 
           console.log("[Webhook] Successfully sent to LeadConnector:", input.email);
 
+          // Sync contact to GHL CRM with Foreclosure_Hub_Lead tag
+          const nameParts = input.name.trim().split(" ");
+          const firstName = nameParts[0];
+          const lastName = nameParts.slice(1).join(" ") || undefined;
+          
+          const ghlResult = await syncContactToGHL({
+            firstName,
+            lastName,
+            email: input.email,
+            phone: input.phone,
+            tags: ["Foreclosure_Hub_Lead", "Contact_Form", "Website_Lead"],
+            customFields: {
+              lead_source: "Contact Form",
+              message_preview: input.message.substring(0, 100),
+              form_submitted_date: new Date().toISOString(),
+            },
+            source: "EnterActDFW Foreclosure Hub - Contact Form",
+          });
+
+          if (ghlResult.success) {
+            console.log("[Webhook] Successfully synced to GHL:", ghlResult.contactId);
+            
+            // Add the message as a note in GHL
+            if (ghlResult.contactId) {
+              await addGHLNote({
+                contactId: ghlResult.contactId,
+                body: `📧 Contact Form Message\n\nFrom: ${input.name}\nEmail: ${input.email}\nPhone: ${input.phone}\n\nMessage:\n${input.message}\n\nSubmitted: ${new Date().toLocaleString()}`,
+              });
+            }
+          } else {
+            console.warn("[Webhook] Failed to sync to GHL:", ghlResult.error);
+          }
+
           return {
             success: true,
             message: "Message sent successfully",
