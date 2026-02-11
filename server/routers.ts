@@ -203,11 +203,20 @@ Email: info@enteractdfw.com
             phone: input.phone,
             postalCode: input.zipCode,
             tags: ["Survival Guide Download", "Website Lead", "Foreclosure Lead"],
-            customFields: {
-              property_zip: input.zipCode || "",
-              lead_source: "Survival Guide Download",
-              foreclosure_stage: "Initial Contact",
-            },
+            customFields: [
+              {
+                key: "property_zip",
+                field_value: input.zipCode || "",
+              },
+              {
+                key: "lead_source",
+                field_value: "Survival Guide Download",
+              },
+              {
+                key: "foreclosure_stage",
+                field_value: "Initial Contact",
+              },
+            ],
             source: "EnterActDFW Foreclosure Hub - Survival Guide",
           });
 
@@ -2040,11 +2049,20 @@ Email: info@enteractdfw.com
             email: input.email,
             phone: input.phone,
             tags: ["Foreclosure_Hub_Lead", "Contact_Form", "Website_Lead"],
-            customFields: {
-              lead_source: "Contact Form",
-              message_preview: input.message.substring(0, 100),
-              form_submitted_date: new Date().toISOString(),
-            },
+            customFields: [
+              {
+                key: "lead_source",
+                field_value: "Contact Form",
+              },
+              {
+                key: "message_preview",
+                field_value: input.message.substring(0, 100),
+              },
+              {
+                key: "form_submitted_date",
+                field_value: new Date().toISOString(),
+              },
+            ],
             source: "EnterActDFW Foreclosure Hub - Contact Form",
           });
 

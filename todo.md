@@ -142,8 +142,9 @@
 - [x] Track email opens and clicks in GHL (infrastructure ready)
 - [x] Track guide downloads in GHL timeline (infrastructure ready)
 - [x] Add GHL custom fields for property ZIP and foreclosure stage
-- [ ] Configure valid GHL API credentials to activate integration
-- [ ] Test end-to-end GHL integration with valid credentials
+- [x] Configure valid GHL API credentials to activate integration
+- [x] Test end-to-end GHL integration with valid credentials
+- [x] Fix GHL API custom fields format (convert from object to array format for API v2)
 
 ## Admin Dashboard
 - [x] Update database schema to add lead notes and status history

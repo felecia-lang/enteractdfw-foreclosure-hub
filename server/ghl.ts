@@ -28,7 +28,11 @@ interface GHLContact {
   postalCode?: string;
   website?: string;
   tags?: string[];
-  customFields?: Record<string, string>;
+  customFields?: Array<{
+    id?: string;
+    key: string;
+    field_value: string;
+  }>;
   source?: string;
 }
 
@@ -84,7 +88,7 @@ async function makeGHLRequest(
       headers: {
         "Authorization": `Bearer ${GHL_API_KEY}`,
         "Content-Type": "application/json",
-        "Version": "2021-07-28", // GHL API version
+        "Version": "2021-07-28", // GHL API v2 required version header
       },
       body: body ? JSON.stringify(body) : undefined,
     });
@@ -118,55 +122,23 @@ export async function syncContactToGHL(contact: GHLContact): Promise<{
   contactId?: string;
   error?: string;
 }> {
-  console.log("[GHL] Syncing contact:", contact.email);
+  console.log("[GHL] Upserting contact:", contact.email);
 
-  // First, search for existing contact by email
-  const searchResult = await makeGHLRequest(
-    `/contacts/?locationId=${GHL_LOCATION_ID}&email=${encodeURIComponent(contact.email)}`,
-    "GET"
+  // Use the upsert endpoint which handles both create and update
+  const upsertResult = await makeGHLRequest(
+    `/contacts/upsert`,
+    "POST",
+    {
+      ...contact,
+      locationId: GHL_LOCATION_ID,
+    }
   );
 
-  if (!searchResult.success) {
-    return { success: false, error: searchResult.error };
+  if (!upsertResult.success) {
+    return { success: false, error: upsertResult.error };
   }
 
-  const existingContact = searchResult.data?.contacts?.[0];
-
-  if (existingContact) {
-    // Update existing contact
-    console.log("[GHL] Updating existing contact:", existingContact.id);
-    const updateResult = await makeGHLRequest(
-      `/contacts/${existingContact.id}`,
-      "PUT",
-      {
-        ...contact,
-        locationId: GHL_LOCATION_ID,
-      }
-    );
-
-    if (!updateResult.success) {
-      return { success: false, error: updateResult.error };
-    }
-
-    return { success: true, contactId: existingContact.id };
-  } else {
-    // Create new contact
-    console.log("[GHL] Creating new contact");
-    const createResult = await makeGHLRequest(
-      `/contacts/`,
-      "POST",
-      {
-        ...contact,
-        locationId: GHL_LOCATION_ID,
-      }
-    );
-
-    if (!createResult.success) {
-      return { success: false, error: createResult.error };
-    }
-
-    return { success: true, contactId: createResult.data?.contact?.id };
-  }
+  return { success: true, contactId: upsertResult.data?.contact?.id };
 }
 
 /**
@@ -312,14 +284,28 @@ export async function syncLeadToGHL(leadData: {
       address1: leadData.propertyAddress,
       // REQUIRED: Add Foreclosure_Hub_Lead tag to all contacts
       tags: ["Foreclosure_Hub_Lead", "Website Lead", leadData.source || "Direct"],
-      customFields: {
-        // Map website fields to GHL custom fields
-        property_address: leadData.propertyAddress || "",
-        property_zip_code: leadData.propertyZip,
-        foreclosure_stage: leadData.foreclosureStage || "Initial Contact",
-        lead_source: leadData.source || "Website Form",
-        submission_date: new Date().toISOString(),
-      },
+      customFields: [
+        {
+          key: "property_address",
+          field_value: leadData.propertyAddress || "",
+        },
+        {
+          key: "property_zip_code",
+          field_value: leadData.propertyZip,
+        },
+        {
+          key: "foreclosure_stage",
+          field_value: leadData.foreclosureStage || "Initial Contact",
+        },
+        {
+          key: "lead_source",
+          field_value: leadData.source || "Website Form",
+        },
+        {
+          key: "submission_date",
+          field_value: new Date().toISOString(),
+        },
+      ],
       source: "EnterActDFW Foreclosure Hub",
     });
 

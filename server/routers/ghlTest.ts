@@ -33,10 +33,16 @@ export const ghlTestRouter = router({
           email: testEmail,
           phone: "555-0100",
           tags: ["Foreclosure_Hub_Lead", "API_Test", "Delete_Me"],
-          customFields: {
-            test_field: "API Connection Test",
-            test_timestamp: new Date().toISOString(),
-          },
+          customFields: [
+            {
+              key: "test_field",
+              field_value: "API Connection Test",
+            },
+            {
+              key: "test_timestamp",
+              field_value: new Date().toISOString(),
+            },
+          ],
           source: "EnterActDFW Foreclosure Hub - API Test",
         });
 
@@ -113,13 +119,28 @@ export const ghlTestRouter = router({
           address1: input.propertyAddress,
           // REQUIRED: Foreclosure_Hub_Lead tag
           tags: ["Foreclosure_Hub_Lead", "Field_Mapping_Test"],
-          customFields: {
-            property_address: input.propertyAddress || "",
-            property_zip_code: input.propertyZip,
-            foreclosure_stage: input.foreclosureStage || "Test",
-            lead_source: "Field Mapping Test",
-            test_timestamp: new Date().toISOString(),
-          },
+          customFields: [
+            {
+              key: "property_address",
+              field_value: input.propertyAddress || "",
+            },
+            {
+              key: "property_zip_code",
+              field_value: input.propertyZip,
+            },
+            {
+              key: "foreclosure_stage",
+              field_value: input.foreclosureStage || "Test",
+            },
+            {
+              key: "lead_source",
+              field_value: "Field Mapping Test",
+            },
+            {
+              key: "test_timestamp",
+              field_value: new Date().toISOString(),
+            },
+          ],
           source: "EnterActDFW Foreclosure Hub - Field Mapping Test",
         });
 

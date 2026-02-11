@@ -44,11 +44,20 @@ export async function syncTimelineToGHL(data: {
       phone: data.phone,
       // REQUIRED: Add Foreclosure_Hub_Lead tag
       tags: ["Foreclosure_Hub_Lead", "Timeline_Calculator", "Active_Timeline"],
-      customFields: {
-        notice_of_default_date: data.noticeDate,
-        timeline_calculated_date: new Date().toISOString(),
-        foreclosure_stage: "Notice of Default Received",
-      },
+      customFields: [
+        {
+          key: "notice_of_default_date",
+          field_value: data.noticeDate,
+        },
+        {
+          key: "timeline_calculated_date",
+          field_value: new Date().toISOString(),
+        },
+        {
+          key: "foreclosure_stage",
+          field_value: "Notice of Default Received",
+        },
+      ],
       source: "EnterActDFW Foreclosure Hub - Timeline Calculator",
     });
 
@@ -139,11 +148,20 @@ export async function trackTimelineSaved(data: {
       firstName: data.email.split("@")[0],
       email: data.email,
       tags: ["Foreclosure_Hub_Lead", "Timeline_Saved", "Registered_User"],
-      customFields: {
-        notice_of_default_date: data.noticeDate,
-        timeline_saved_date: new Date().toISOString(),
-        user_engagement: "High - Saved Timeline",
-      },
+      customFields: [
+        {
+          key: "notice_of_default_date",
+          field_value: data.noticeDate,
+        },
+        {
+          key: "timeline_saved_date",
+          field_value: new Date().toISOString(),
+        },
+        {
+          key: "user_engagement",
+          field_value: "High - Saved Timeline",
+        },
+      ],
       source: "EnterActDFW Foreclosure Hub - My Timeline Dashboard",
     });
 
@@ -182,10 +200,16 @@ export async function trackTimelineProgress(data: {
       firstName: data.email.split("@")[0],
       email: data.email,
       tags: ["Foreclosure_Hub_Lead", "Active_User"],
-      customFields: {
-        timeline_progress: `${data.completionPercentage}%`,
-        last_activity_date: new Date().toISOString(),
-      },
+      customFields: [
+        {
+          key: "timeline_progress",
+          field_value: `${data.completionPercentage}%`,
+        },
+        {
+          key: "last_activity_date",
+          field_value: new Date().toISOString(),
+        },
+      ],
       source: "EnterActDFW Foreclosure Hub",
     });
 
