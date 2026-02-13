@@ -174,10 +174,13 @@ export async function addGHLNote(note: GHLNote): Promise<{
 }> {
   console.log("[GHL] Adding note to contact:", note.contactId);
 
+  // GHL API v2 expects contact ID in URL path only, not in request body
+  const { contactId, ...noteBody } = note;
+  
   const result = await makeGHLRequest(
-    `/contacts/${note.contactId}/notes`,
+    `/contacts/${contactId}/notes`,
     "POST",
-    note
+    noteBody
   );
 
   if (!result.success) {

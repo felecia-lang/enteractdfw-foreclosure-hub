@@ -1417,3 +1417,12 @@ All four PDF guides have been successfully updated with new versions:
 - [x] Update phone numbers in contact forms
 - [x] Test phone number display on landing page
 - [x] Verify phone number in all navigation elements
+
+## GHL Integration Testing
+- [ ] Submit test form through website contact form
+- [ ] Verify contact created in GHL dashboard
+- [ ] Verify custom fields are populated correctly
+- [ ] Verify tags are applied (Foreclosure_Hub_Lead)
+- [ ] Verify notes are added to contact
+- [ ] Confirm new phone number (844-981-2937) appears in GHL
+- [ ] Report test results to user
