@@ -8,6 +8,7 @@ import { trpc } from "@/lib/trpc";
 import { AlertCircle, Calendar, CheckCircle2, Clock, TrendingUp, Loader2, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { TimelineStatusCard } from "@/components/TimelineStatusCard";
 
 export default function MyTimeline() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
@@ -15,6 +16,10 @@ export default function MyTimeline() {
     enabled: isAuthenticated,
   });
   const { data: recommendationsData } = trpc.userTimeline.getRecommendations.useQuery(undefined, {
+    enabled: isAuthenticated,
+  });
+  // Fetch GHL timeline status
+  const { data: ghlStatus, isLoading: ghlLoading } = trpc.dashboard.getTimelineStatus.useQuery(undefined, {
     enabled: isAuthenticated,
   });
   const updateActionMutation = trpc.userTimeline.updateAction.useMutation();
@@ -217,6 +222,13 @@ export default function MyTimeline() {
             Track your progress and stay on top of critical deadlines. You're {daysSinceNotice} days into your foreclosure timeline.
           </p>
         </div>
+
+        {/* GHL Timeline Status Card */}
+        {ghlStatus && (
+          <div className="mb-8">
+            <TimelineStatusCard {...ghlStatus} />
+          </div>
+        )}
 
         {/* Progress Overview */}
         <Card className="mb-8">

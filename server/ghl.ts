@@ -346,6 +346,158 @@ export async function syncLeadToGHL(leadData: {
 }
 
 /**
+ * Get a contact from GHL by email
+ */
+export async function getGHLContactByEmail(email: string): Promise<{
+  success: boolean;
+  contact?: any;
+  error?: string;
+}> {
+  console.log("[GHL] Fetching contact by email:", email);
+
+  const result = await makeGHLRequest(
+    `/contacts/lookup?email=${encodeURIComponent(email)}&locationId=${GHL_LOCATION_ID}`,
+    "GET"
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  // GHL returns contacts array, get the first match
+  const contacts = result.data?.contacts || [];
+  if (contacts.length === 0) {
+    return { success: false, error: "Contact not found" };
+  }
+
+  return { success: true, contact: contacts[0] };
+}
+
+/**
+ * Get notes for a contact from GHL
+ */
+export async function getGHLContactNotes(contactId: string): Promise<{
+  success: boolean;
+  notes?: any[];
+  error?: string;
+}> {
+  console.log("[GHL] Fetching notes for contact:", contactId);
+
+  const result = await makeGHLRequest(
+    `/contacts/${contactId}/notes`,
+    "GET"
+  );
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  return { success: true, notes: result.data?.notes || [] };
+}
+
+/**
+ * Get timeline status for a user from GHL
+ * Returns saved timeline data, progress tracking, and engagement metrics
+ */
+export async function getGHLTimelineStatus(email: string): Promise<{
+  success: boolean;
+  timelineData?: {
+    hasSavedTimeline: boolean;
+    noticeOfDefaultDate?: string;
+    foreclosureSaleDate?: string;
+    daysUntilSale?: number;
+    completionPercentage?: number;
+    completedActions?: number;
+    totalActions?: number;
+    lastActivity?: string;
+    engagementLevel?: "high" | "medium" | "low";
+    tags?: string[];
+  };
+  error?: string;
+}> {
+  console.log("[GHL] Fetching timeline status for:", email);
+
+  // Step 1: Get contact by email
+  const contactResult = await getGHLContactByEmail(email);
+  if (!contactResult.success || !contactResult.contact) {
+    return { success: false, error: "Contact not found in GHL" };
+  }
+
+  const contact = contactResult.contact;
+  const contactId = contact.id;
+
+  // Step 2: Get notes to find timeline data
+  const notesResult = await getGHLContactNotes(contactId);
+  if (!notesResult.success) {
+    return { success: false, error: "Failed to fetch contact notes" };
+  }
+
+  const notes = notesResult.notes || [];
+  
+  // Parse timeline data from notes
+  const timelineNote = notes.find((note: any) => 
+    note.body?.includes("Foreclosure Timeline") || 
+    note.body?.includes("Notice of Default Date")
+  );
+
+  // Check for timeline-related tags
+  const tags = contact.tags || [];
+  const hasSavedTimeline = tags.includes("Timeline_Saved") || tags.includes("Timeline_Calculator");
+
+  // Extract custom field values
+  const customFields = contact.customField || {};
+  const completionPercentage = parseInt(customFields.completion_percentage || "0");
+  const completedActions = parseInt(customFields.completed_actions || "0");
+  const totalActions = parseInt(customFields.total_actions || "0");
+
+  // Parse dates from timeline note if available
+  let noticeOfDefaultDate: string | undefined;
+  let foreclosureSaleDate: string | undefined;
+  let daysUntilSale: number | undefined;
+
+  if (timelineNote) {
+    const noteBody = timelineNote.body;
+    const nodMatch = noteBody.match(/Notice of Default Date:\s*(\d{4}-\d{2}-\d{2})/);
+    const saleMatch = noteBody.match(/Foreclosure Sale Date:\s*(\d{4}-\d{2}-\d{2})/);
+
+    if (nodMatch) noticeOfDefaultDate = nodMatch[1];
+    if (saleMatch) {
+      foreclosureSaleDate = saleMatch[1];
+      const saleDate = new Date(saleMatch[1]);
+      const today = new Date();
+      daysUntilSale = Math.ceil((saleDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    }
+  }
+
+  // Determine engagement level based on tags and activity
+  let engagementLevel: "high" | "medium" | "low" = "low";
+  if (tags.includes("Timeline_Saved") && tags.includes("Registered_User")) {
+    engagementLevel = "high";
+  } else if (tags.includes("Timeline_Calculator")) {
+    engagementLevel = "medium";
+  }
+
+  // Get last activity date
+  const lastActivity = contact.dateUpdated || contact.dateAdded;
+
+  return {
+    success: true,
+    timelineData: {
+      hasSavedTimeline,
+      noticeOfDefaultDate,
+      foreclosureSaleDate,
+      daysUntilSale,
+      completionPercentage,
+      completedActions,
+      totalActions,
+      lastActivity,
+      engagementLevel,
+      tags,
+    },
+  };
+}
+
+/**
  * Track email interaction in GHL
  */
 export async function trackEmailInteraction(

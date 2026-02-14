@@ -7,7 +7,7 @@ import { z } from "zod";
 import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage, trackFormEvent, getFormAnalytics, trackFieldInteraction, getFieldInteractions } from "./db";
 import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
 import { notifyOwner } from "./_core/notification";
-import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail } from "./ghl";
+import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail, getGHLTimelineStatus } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
 import { linksRouter } from "./routers/links";
 import { campaignsRouter } from "./routers/campaigns";
@@ -22,6 +22,50 @@ export const appRouter = router({
   abTesting: abTestingRouter,
   userTimeline: userTimelineRouter,
   ghlTest: ghlTestRouter,
+  
+  // Dashboard timeline status from GHL
+  dashboard: router({
+    getTimelineStatus: protectedProcedure
+      .query(async ({ ctx }) => {
+        try {
+          const userEmail = ctx.user.email;
+          if (!userEmail) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "User email not found",
+            });
+          }
+
+          // Fetch timeline status from GHL
+          const result = await getGHLTimelineStatus(userEmail);
+          
+          if (!result.success) {
+            // Return empty state if contact not found in GHL (user hasn't interacted yet)
+            if (result.error === "Contact not found in GHL") {
+              return {
+                hasData: false,
+                message: "No timeline data found. Start by using our Timeline Calculator!",
+              };
+            }
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: result.error || "Failed to fetch timeline status",
+            });
+          }
+
+          return {
+            hasData: true,
+            ...result.timelineData,
+          };
+        } catch (error) {
+          console.error("[Dashboard] Error fetching timeline status:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to load timeline status",
+          });
+        }
+      }),
+  }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
