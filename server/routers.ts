@@ -623,11 +623,11 @@ Email: info@enteractdfw.com
             })),
           });
           
-          // Import GHL email function
-          const { sendTimelineEmail } = await import("./ghl");
+          // Import email service function
+          const { sendTimelinePDFEmail } = await import("./emailService");
           
-          // Send email with PDF attachment via GHL
-          const result = await sendTimelineEmail({
+          // Send email with PDF attachment via Resend
+          const result = await sendTimelinePDFEmail({
             email,
             firstName: email.split('@')[0], // Extract name from email if not provided
             noticeDate,

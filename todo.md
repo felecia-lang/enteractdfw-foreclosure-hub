@@ -21,3 +21,17 @@
 - [x] Confirm tags are applied correctly (Foreclosure_Hub_Lead)
 - [x] Verify custom fields populate (property_address, property_zip_code, foreclosure_stage)d fixes applied
 - [x] Generate comprehensive integration report
+
+## Timeline Calculator Email Issue
+- [x] Reproduce email sending failure on timeline calculator
+- [x] Check server logs for email errors
+- [x] Review email sending code in timeline router
+- [x] Identify root cause - GHL API doesn't support standalone email sending
+- [x] Implement Resend email service integration
+- [x] Update sendTimelineEmail function to use Resend API
+- [x] Validate Resend API key with vitest
+- [x] Restart server to apply changes
+- [x] Write and run integration tests for email sending
+- [x] Test email delivery with real submission
+- [x] Verify PDF attachment and email formatting
+- [ ] Complete domain verification in Resend dashboard (see resend-domain-verification-instructions.md)
