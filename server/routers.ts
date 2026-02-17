@@ -14,6 +14,7 @@ import { campaignsRouter } from "./routers/campaigns";
 import { abTestingRouter } from "./routers/abTesting";
 import { userTimelineRouter } from "./routers/userTimeline";
 import { ghlTestRouter } from "./routers/ghlTest";
+import { emailTrackingRouter } from "./routers/emailTracking";
 
 
 export const appRouter = router({
@@ -22,6 +23,7 @@ export const appRouter = router({
   abTesting: abTestingRouter,
   userTimeline: userTimelineRouter,
   ghlTest: ghlTestRouter,
+  emailTracking: emailTrackingRouter,
   
   // Dashboard timeline status from GHL
   dashboard: router({

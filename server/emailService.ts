@@ -1,4 +1,6 @@
 import { Resend } from "resend";
+import { getDb } from "./db";
+import { emailTrackingLogs } from "../drizzle/schema";
 
 // Initialize Resend with API key from environment
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -122,6 +124,28 @@ export async function sendTimelinePDFEmail(params: {
     }
 
     console.log("[EmailService] Timeline email sent successfully to:", email, "ID:", result.data?.id);
+    
+    // Log email to tracking table
+    if (result.data?.id) {
+      try {
+        const db = await getDb();
+        if (db) {
+          await db.insert(emailTrackingLogs).values({
+            resendEmailId: result.data.id,
+            recipientEmail: email,
+            subject: "Your Personalized Foreclosure Timeline - EnterActDFW",
+            emailType: "timeline_pdf",
+            status: "sent",
+            sentAt: new Date(),
+          });
+          console.log("[EmailService] Email tracking logged for:", result.data.id);
+        }
+      } catch (dbError) {
+        console.error("[EmailService] Failed to log email tracking:", dbError);
+        // Don't fail the email send if tracking fails
+      }
+    }
+    
     return { success: true };
   } catch (error) {
     console.error("[EmailService] Failed to send timeline email:", error);

@@ -1,0 +1,22 @@
+CREATE TABLE `emailTrackingLogs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`resendEmailId` varchar(255) NOT NULL,
+	`recipientEmail` varchar(320) NOT NULL,
+	`subject` varchar(500) NOT NULL,
+	`emailType` varchar(100) NOT NULL,
+	`userId` int,
+	`status` enum('sent','delivered','opened','clicked','bounced','failed') NOT NULL DEFAULT 'sent',
+	`sentAt` timestamp NOT NULL,
+	`deliveredAt` timestamp,
+	`openedAt` timestamp,
+	`clickedAt` timestamp,
+	`bouncedAt` timestamp,
+	`bounceReason` text,
+	`clickedUrl` text,
+	`lastWebhookEvent` varchar(100),
+	`lastWebhookAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `emailTrackingLogs_id` PRIMARY KEY(`id`),
+	CONSTRAINT `emailTrackingLogs_resendEmailId_unique` UNIQUE(`resendEmailId`)
+);

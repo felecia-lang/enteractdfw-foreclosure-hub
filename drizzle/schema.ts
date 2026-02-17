@@ -692,3 +692,41 @@ export const timelineActionProgress = mysqlTable("timelineActionProgress", {
 
 export type TimelineActionProgress = typeof timelineActionProgress.$inferSelect;
 export type InsertTimelineActionProgress = typeof timelineActionProgress.$inferInsert;
+
+/**
+ * Email tracking logs table for Resend webhook integration.
+ * Tracks email delivery events (sent, delivered, opened, clicked, bounced) from Resend.
+ * Used for email analytics and delivery status display in user dashboard.
+ */
+export const emailTrackingLogs = mysqlTable("emailTrackingLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  resendEmailId: varchar("resendEmailId", { length: 255 }).notNull().unique(), // Resend's email ID from API response
+  recipientEmail: varchar("recipientEmail", { length: 320 }).notNull(),
+  subject: varchar("subject", { length: 500 }).notNull(),
+  emailType: varchar("emailType", { length: 100 }).notNull(), // "timeline_pdf", "welcome", "nurture", etc.
+  userId: int("userId"), // Optional: link to users table if user is logged in
+  
+  // Delivery status tracking
+  status: mysqlEnum("status", ["sent", "delivered", "opened", "clicked", "bounced", "failed"]).default("sent").notNull(),
+  
+  // Timestamp tracking for each event
+  sentAt: timestamp("sentAt").notNull(),
+  deliveredAt: timestamp("deliveredAt"),
+  openedAt: timestamp("openedAt"),
+  clickedAt: timestamp("clickedAt"),
+  bouncedAt: timestamp("bouncedAt"),
+  
+  // Additional metadata
+  bounceReason: text("bounceReason"), // Reason for bounce if applicable
+  clickedUrl: text("clickedUrl"), // URL that was clicked (if applicable)
+  
+  // Webhook event tracking
+  lastWebhookEvent: varchar("lastWebhookEvent", { length: 100 }), // Last event type received
+  lastWebhookAt: timestamp("lastWebhookAt"), // When last webhook was received
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmailTrackingLog = typeof emailTrackingLogs.$inferSelect;
+export type InsertEmailTrackingLog = typeof emailTrackingLogs.$inferInsert;

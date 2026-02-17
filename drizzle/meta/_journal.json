@@ -211,6 +211,13 @@
       "when": 1767627222304,
       "tag": "0029_wild_captain_marvel",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1771314346812,
+      "tag": "0030_magical_doctor_faustus",
+      "breakpoints": true
     }
   ]
 }

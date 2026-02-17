@@ -15,6 +15,7 @@ import { generateContactingLenderPDF } from "../pdfGeneratorContactingLender";
 import { generateComparisonPDF } from "../comparisonPdfGenerator";
 import { calculateSaleOptions } from "../saleOptionsComparison";
 import { handleGHLBookingWebhook } from "../webhooks/ghl-booking";
+import { handleResendWebhook } from "../webhooks/resend";
 import shortlinksRouter from "../routes/shortlinks";
 import { initializeScheduledJobs } from "../jobs/scheduler";
 
@@ -112,6 +113,9 @@ async function startServer() {
   
   // GHL Booking Webhook
   app.post("/api/webhooks/ghl-booking", handleGHLBookingWebhook);
+  
+  // Resend Email Tracking Webhook
+  app.post("/api/webhooks/resend", handleResendWebhook);
   
   // Shortened link redirect handler
   app.use(shortlinksRouter);

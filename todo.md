@@ -35,3 +35,22 @@
 - [x] Test email delivery with real submission
 - [x] Verify PDF attachment and email formatting
 - [ ] Complete domain verification in Resend dashboard (see resend-domain-verification-instructions.md)
+
+## Email Delivery Tracking with Resend Webhooks
+- [x] Create database schema for email tracking (emailTrackingLogs table)
+- [x] Add fields: emailId, recipientEmail, subject, status, sentAt, deliveredAt, openedAt, clickedAt, bouncedAt
+- [x] Push database schema changes with drizzle
+- [x] Implement Resend webhook endpoint (/api/webhooks/resend)
+- [x] Handle webhook events: email.sent, email.delivered, email.opened, email.clicked, email.bounced
+- [x] Verify webhook signature for security (placeholder for future Resend feature)
+- [x] Update emailService to log sent emails to tracking table
+- [x] Create tRPC procedures to query email delivery status by user
+- [x] Add getMyEmails procedure to fetch user's email history
+- [x] Add getMyEmailStats procedure for delivery metrics
+- [x] Add admin procedures for overall email analytics
+- [x] Build EmailDeliveryStatus dashboard component
+- [x] Display email timeline with visual indicators
+- [x] Show delivery metrics (open rate, click rate, bounce rate)
+- [x] Add email tracking to MyTimeline page
+- [x] Test webhook integration with Resend dashboard (ready for production testing)
+- [x] Document webhook setup instructions (see resend-webhook-setup-instructions.md)

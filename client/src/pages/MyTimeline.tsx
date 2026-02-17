@@ -9,6 +9,7 @@ import { AlertCircle, Calendar, CheckCircle2, Clock, TrendingUp, Loader2, ArrowR
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { TimelineStatusCard } from "@/components/TimelineStatusCard";
+import EmailDeliveryStatus from "@/components/EmailDeliveryStatus";
 
 export default function MyTimeline() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
@@ -229,6 +230,11 @@ export default function MyTimeline() {
             <TimelineStatusCard {...ghlStatus} />
           </div>
         )}
+        
+        {/* Email Delivery Status */}
+        <div className="mb-8">
+          <EmailDeliveryStatus />
+        </div>
 
         {/* Progress Overview */}
         <Card className="mb-8">
