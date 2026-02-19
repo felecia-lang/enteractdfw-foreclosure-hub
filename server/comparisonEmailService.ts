@@ -219,13 +219,13 @@ export async function sendComparisonEmail(data: ComparisonEmailData): Promise<vo
       Licensed Texas Real Estate Broker<br>
       EnterActDFW</p>
       <p>
-        📞 <a href="tel:844-981-2937" style="color: #1e40af; text-decoration: none;">844-981-2937</a><br>
+        📞 <a href="tel:832-346-9569" style="color: #1e40af; text-decoration: none;">832-346-9569</a><br>
         ✉️ <a href="mailto:info@enteractdfw.com" style="color: #1e40af; text-decoration: none;">info@enteractdfw.com</a>
       </p>
     </div>
 
     <center>
-      <a href="tel:844-981-2937" class="cta-button">📞 Schedule Your Free Consultation</a>
+      <a href="tel:832-346-9569" class="cta-button">📞 Schedule Your Free Consultation</a>
     </center>
 
     <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">

@@ -334,7 +334,7 @@ export default function TimelineCalculator() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -577,7 +577,7 @@ export default function TimelineCalculator() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="secondary" asChild>
-                  <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+                  <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                     Call (844) 981-2937
                   </TrackablePhoneLink>
                 </Button>

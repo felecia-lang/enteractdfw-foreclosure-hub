@@ -182,7 +182,7 @@ export default function ContactingYourLenderGuide() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Now
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now
               </TrackablePhoneLink>
             </Button>
           </nav>
@@ -232,7 +232,7 @@ export default function ContactingYourLenderGuide() {
               Print Guide
             </Button>
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Get Help: (844) 981-2937
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Get Help: (844) 981-2937
               </TrackablePhoneLink>
             </Button>
           </div>
@@ -961,7 +961,7 @@ export default function ContactingYourLenderGuide() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call: (844) 981-2937
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call: (844) 981-2937
               </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
@@ -989,7 +989,7 @@ export default function ContactingYourLenderGuide() {
                 className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
                 asChild
               >
-                <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Now: (844) 981-2937
+                <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now: (844) 981-2937
                 </TrackablePhoneLink>
               </Button>
               <Button 

@@ -307,7 +307,7 @@ export default function SuccessStories() {
               <span className="text-sm font-medium hover:text-primary cursor-pointer transition-colors">Resources</span>
             </Link>
             <Button asChild variant="default">
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -448,7 +448,7 @@ export default function SuccessStories() {
                 Schedule Free Consultation
               </Button>
               <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+                <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                   Call (844) 981-2937
                 </TrackablePhoneLink>
               </Button>

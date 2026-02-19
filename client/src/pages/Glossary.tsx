@@ -199,7 +199,7 @@ export default function Glossary() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Now
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now
               </TrackablePhoneLink>
             </Button>
           </nav>
@@ -302,7 +302,7 @@ export default function Glossary() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call (844) 981-2937
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call (844) 981-2937
               </TrackablePhoneLink>
             </Button>
           </div>

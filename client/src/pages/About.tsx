@@ -41,7 +41,7 @@ export default function About() {
               </span>
             </Link>
             <Button variant="outline" size="sm" asChild>
-              <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                 Call Now
               </TrackablePhoneLink>
             </Button>
@@ -65,7 +65,7 @@ export default function About() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" asChild>
-                  <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+                  <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                     Call Felecia Today
                   </TrackablePhoneLink>
                 </Button>

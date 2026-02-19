@@ -667,7 +667,7 @@ export default function AvoidingScams() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <Button variant="secondary" size="lg" className="flex items-center gap-2" asChild>
-                  <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>
+                  <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
                     Call Now: (844) 981-2937
                   </TrackablePhoneLink>
                 </Button>
@@ -699,7 +699,7 @@ export default function AvoidingScams() {
                 className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
                 asChild
               >
-                <TrackablePhoneLink phoneNumber="844-981-2937" showIcon>Call Now: (844) 981-2937
+                <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now: (844) 981-2937
                 </TrackablePhoneLink>
               </Button>
               <Button 

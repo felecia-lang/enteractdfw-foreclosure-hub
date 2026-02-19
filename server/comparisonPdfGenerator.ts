@@ -286,7 +286,7 @@ export async function generateComparisonPDF(data: ComparisonReportData): Promise
       doc
         .fontSize(12)
         .fillColor("#1e40af")
-        .text("Phone: 844-981-2937", { align: "center", link: "tel:844-981-2937" })
+        .text("Phone: 832-346-9569", { align: "center", link: "tel:832-346-9569" })
         .text("Email: info@enteractdfw.com", { align: "center", link: "mailto:info@enteractdfw.com" })
         .moveDown(0.5);
 

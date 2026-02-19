@@ -27,7 +27,7 @@ export default function ThankYou() {
             <img src={APP_LOGO} alt="EnterActDFW" className="h-10" />
           </Link>
           <Button variant="default" asChild>
-            <TrackablePhoneLink phoneNumber="844-981-2937">
+            <TrackablePhoneLink phoneNumber="832-346-9569">
               Call Now
             </TrackablePhoneLink>
           </Button>
@@ -101,7 +101,7 @@ export default function ThankYou() {
                   </Button>
                 </a>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border-white/20 text-white" asChild>
-                  <TrackablePhoneLink phoneNumber="844-981-2937">
+                  <TrackablePhoneLink phoneNumber="832-346-9569">
                     Call (844) 981-2937
                   </TrackablePhoneLink>
                 </Button>
