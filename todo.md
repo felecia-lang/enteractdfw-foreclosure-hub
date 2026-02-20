@@ -95,3 +95,23 @@
 - [ ] Optimize all image alt text for SEO (deferred - requires comprehensive image audit)
 - [x] Test all optimizations in browser
 - [x] Save checkpoint with SEO optimizations
+
+## Content Marketing - Pillar Blog Posts (Feb 19, 2026)
+
+### Pillar Post #1: "10 Warning Signs You're Heading Toward Foreclosure in Texas"
+- [x] Create blog post page component (WarningSignsForeclosure.tsx)
+- [x] Write comprehensive content with 10 warning signs
+- [x] Add SEO meta tags (title, description, Open Graph)
+- [x] Implement Article schema markup for rich snippets
+- [x] Add internal links to Timeline Calculator, Knowledge Base, Resources
+- [x] Add lead capture CTAs throughout the post
+- [x] Add related articles section at bottom
+- [x] Add blog post route to App.tsx
+- [x] Test blog post in browser
+- [ ] Save checkpoint with Pillar Post #1
+
+### Future Pillar Posts (Planned)
+- [ ] Pillar Post #2: "Received a Notice of Default in Texas? Your 21-Day Action Plan"
+- [ ] Pillar Post #3: "Texas Loan Modification Guide: How to Negotiate with Your Lender"
+- [ ] Pillar Post #4: "Texas Short Sale Guide: Sell Your Home and Avoid Foreclosure"
+- [ ] Pillar Post #5: "Texas Foreclosure Auction: What Happens on Sale Day"

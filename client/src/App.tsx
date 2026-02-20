@@ -41,6 +41,7 @@ import FormHeatmap from "@/pages/FormHeatmap";
 import ABTestingDashboard from "@/pages/admin/ABTestingDashboard";
 import MyTimeline from "@/pages/MyTimeline";
 import GHLTest from "@/pages/admin/GHLTest";
+import WarningSignsForeclosure from "@/pages/WarningSignsForeclosure";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -85,6 +86,7 @@ function Router() {
       <Route path="/comparison-history" component={ComparisonHistory} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/thank-you-guide" component={ThankYouGuide} />
+      <Route path="/blog/warning-signs-foreclosure-texas" component={WarningSignsForeclosure} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
