@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import KnowledgeBaseLayout from "@/components/KnowledgeBaseLayout";
+import FAQSchema from "@/components/FAQSchema";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import {
@@ -141,6 +142,12 @@ const faqs = [
 export default function FAQ() {
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Prepare FAQ data for schema markup
+  const faqSchemaData = faqs.map(faq => ({
+    question: faq.question,
+    answer: faq.answer
+  }));
+
   const filteredFaqs = useMemo(() => {
     if (!searchQuery.trim()) return faqs;
     
@@ -159,10 +166,12 @@ export default function FAQ() {
   }, [filteredFaqs]);
 
   return (
-    <KnowledgeBaseLayout
-      title="Frequently Asked Questions"
-      description="Answers to the most common questions about foreclosure in Texas, your rights, and working with EnterActDFW."
-    >
+    <>
+      <FAQSchema faqs={faqSchemaData} />
+      <KnowledgeBaseLayout
+        title="Frequently Asked Questions"
+        description="Answers to the most common questions about foreclosure in Texas, your rights, and working with EnterActDFW."
+      >
       <div className="mb-8">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -216,5 +225,6 @@ export default function FAQ() {
         </div>
       )}
     </KnowledgeBaseLayout>
+    </>
   );
 }

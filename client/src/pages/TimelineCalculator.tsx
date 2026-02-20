@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,6 +34,7 @@ interface TimelineMilestone {
 }
 
 export default function TimelineCalculator() {
+  // SEO meta tags are added via Helmet below
   const [noticeDate, setNoticeDate] = useState<string>("");
   const [timeline, setTimeline] = useState<TimelineMilestone[] | null>(null);
   const [daysUntilSale, setDaysUntilSale] = useState<number | null>(null);
@@ -308,7 +310,18 @@ export default function TimelineCalculator() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <Helmet>
+        <title>Texas Foreclosure Timeline Calculator | Know Your Exact Dates</title>
+        <meta name="description" content="Free Texas foreclosure timeline calculator. Enter your Notice of Default date and instantly see your auction date, key deadlines, and action steps. Used by 1000+ TX homeowners." />
+        <meta property="og:title" content="Texas Foreclosure Timeline Calculator | Know Your Exact Dates" />
+        <meta property="og:description" content="Free Texas foreclosure timeline calculator. Enter your Notice of Default date and instantly see your auction date, key deadlines, and action steps. Used by 1000+ TX homeowners." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Texas Foreclosure Timeline Calculator | Know Your Exact Dates" />
+        <meta name="twitter:description" content="Free Texas foreclosure timeline calculator. Enter your Notice of Default date and instantly see your auction date, key deadlines, and action steps." />
+      </Helmet>
+      <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
@@ -347,7 +360,7 @@ export default function TimelineCalculator() {
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <Calendar className="h-16 w-16 text-primary mx-auto mb-6" />
-            <h1 className="text-4xl font-bold mb-4">Foreclosure Timeline Calculator</h1>
+            <h1 className="text-4xl font-bold mb-4">Calculate Your Texas Foreclosure Timeline in 60 Seconds</h1>
             <p className="text-xl text-muted-foreground mb-8">
               Enter your Notice of Default date to see your personalized timeline with key deadlines and action items.
             </p>
@@ -643,6 +656,7 @@ export default function TimelineCalculator() {
         open={showBookingModal} 
         onOpenChange={setShowBookingModal}
       />
-    </div>
+      </div>
+    </>
   );
 }

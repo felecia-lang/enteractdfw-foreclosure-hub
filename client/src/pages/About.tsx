@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Award, Users, Heart, Shield, Home as HomeIcon, CheckCircle2 } from "lucide-react";
@@ -10,7 +11,18 @@ export default function About() {
   const [showBookingModal, setShowBookingModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <Helmet>
+        <title>About EnterActDFW | Licensed Texas Foreclosure Specialists</title>
+        <meta name="description" content="Meet the EnterActDFW team. Licensed real estate and insurance brokers with 10+ years helping Dallas-Fort Worth families navigate foreclosure. 200+ success stories." />
+        <meta property="og:title" content="About EnterActDFW | Licensed Texas Foreclosure Specialists" />
+        <meta property="og:description" content="Meet the EnterActDFW team. Licensed real estate and insurance brokers with 10+ years helping Dallas-Fort Worth families navigate foreclosure." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="About EnterActDFW | Licensed Texas Foreclosure Specialists" />
+        <meta name="twitter:description" content="Meet the EnterActDFW team. Licensed real estate and insurance brokers with 10+ years helping Dallas-Fort Worth families navigate foreclosure." />
+      </Helmet>
+      <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
@@ -55,7 +67,7 @@ export default function About() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Meet Felecia Fair
+                Licensed Texas Real Estate Brokers Helping Families Avoid Foreclosure
               </h1>
               <p className="text-xl text-primary font-semibold mb-4">
                 Licensed Real Estate Broker | Foreclosure Prevention Specialist
@@ -301,6 +313,7 @@ export default function About() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
+import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -75,7 +77,19 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <LocalBusinessSchema />
+      <Helmet>
+        <title>Stop Foreclosure in Dallas TX | Free Timeline Calculator</title>
+        <meta name="description" content="Facing foreclosure in Dallas or Fort Worth? Get your FREE Texas foreclosure timeline calculator, survival guide, and expert help. 200+ families helped. Licensed TX brokerage." />
+        <meta property="og:title" content="Stop Foreclosure in Dallas TX | Free Timeline Calculator" />
+        <meta property="og:description" content="Facing foreclosure in Dallas or Fort Worth? Get your FREE Texas foreclosure timeline calculator, survival guide, and expert help. 200+ families helped. Licensed TX brokerage." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Stop Foreclosure in Dallas TX | Free Timeline Calculator" />
+        <meta name="twitter:description" content="Facing foreclosure in Dallas or Fort Worth? Get your FREE Texas foreclosure timeline calculator, survival guide, and expert help. 200+ families helped. Licensed TX brokerage." />
+      </Helmet>
+      <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card sticky top-0 z-50 shadow-sm">
         <div className="container flex h-16 items-center justify-between">
@@ -130,9 +144,7 @@ export default function Home() {
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                You Have Options.
-                <br />
-                <span className="text-primary">We Can Help.</span>
+                You Have Options. We Can Help You Stop Foreclosure in Dallas-Fort Worth.
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
                 Facing foreclosure is overwhelming, but you're not alone. Get your free guide to understand your rights, explore your options, and find a path forward—with no pressure and no judgment.
@@ -714,6 +726,7 @@ export default function Home() {
         open={showPropertyValueModal}
         onOpenChange={setShowPropertyValueModal}
       />
-    </div>
+      </div>
+    </>
   );
 }
