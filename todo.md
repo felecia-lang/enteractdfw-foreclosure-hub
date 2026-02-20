@@ -157,4 +157,11 @@
 - [x] Create "Foreclosure Auction Guide" blog post page
 - [x] Add all 4 blog post routes to App.tsx
 - [x] Test all blog post pages for 404 errors
-- [ ] Save checkpoint with complete blog content
+- [x] Save checkpoint with complete blog content
+
+## Legal Rights Blog Post (Feb 20, 2026)
+- [x] Create "Texas Homeowner's Legal Rights During Foreclosure" blog post page
+- [x] Add blog post to App.tsx routing
+- [x] Add blog post to blogPosts.ts data
+- [x] Test blog post in browser
+- [ ] Save checkpoint with legal rights blog post

@@ -78,6 +78,19 @@ export const blogPosts: BlogPost[] = [
     featuredImage: "/blog-images/foreclosure-auction.jpg",
     tags: ["Foreclosure Auction", "Sale Day", "Redemption Rights", "Deficiency Judgment"],
     featured: false
+  },
+  {
+    id: "6",
+    title: "Texas Homeowner's Legal Rights During Foreclosure",
+    slug: "texas-foreclosure-rights",
+    excerpt: "Know your rights as a Texas homeowner facing foreclosure. This comprehensive guide covers notice requirements, redemption periods, deficiency judgments, and legal protections under Texas Property Code. Understanding your rights is the first step to protecting your home and your financial future.",
+    category: "Legal Rights",
+    author: "EnterActDFW Team",
+    publishedDate: "2026-02-20",
+    readTime: "16 min read",
+    featuredImage: "/blog-images/texas-foreclosure-rights.jpg",
+    tags: ["Legal Rights", "Texas Property Code", "Homeowner Protections", "Foreclosure Law"],
+    featured: false
   }
 ];
 

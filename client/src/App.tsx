@@ -47,6 +47,7 @@ import NoticeOfDefaultActionPlan from "@/pages/NoticeOfDefaultActionPlan";
 import LoanModificationGuide from "@/pages/LoanModificationGuide";
 import ShortSaleGuide from "@/pages/ShortSaleGuide";
 import ForeclosureAuctionGuide from "@/pages/ForeclosureAuctionGuide";
+import TexasForeclosureRights from "@/pages/TexasForeclosureRights";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -97,6 +98,7 @@ function Router() {
       <Route path="/blog/texas-loan-modification-guide" component={LoanModificationGuide} />
       <Route path="/blog/texas-short-sale-guide" component={ShortSaleGuide} />
       <Route path="/blog/texas-foreclosure-auction-guide" component={ForeclosureAuctionGuide} />
+      <Route path="/blog/texas-foreclosure-rights" component={TexasForeclosureRights} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
