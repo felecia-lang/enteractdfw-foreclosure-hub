@@ -115,3 +115,15 @@
 - [ ] Pillar Post #3: "Texas Loan Modification Guide: How to Negotiate with Your Lender"
 - [ ] Pillar Post #4: "Texas Short Sale Guide: Sell Your Home and Avoid Foreclosure"
 - [ ] Pillar Post #5: "Texas Foreclosure Auction: What Happens on Sale Day"
+
+## Blog Index Page (Feb 20, 2026)
+- [x] Create blog posts data structure with metadata (title, excerpt, category, date, image)
+- [x] Generate featured images for blog posts
+- [x] Create Blog index page component (Blog.tsx)
+- [x] Implement category filter functionality
+- [x] Implement search functionality
+- [x] Add featured post section at top
+- [x] Add blog index route to App.tsx
+- [x] Update site navigation to include Blog link (already included in Blog.tsx header)
+- [x] Test blog index page in browser
+- [ ] Save checkpoint with blog index page
