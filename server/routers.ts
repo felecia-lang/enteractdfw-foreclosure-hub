@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAllLeads, getAllTestimonials, getLeadById, getLeadNotes, getTestimonialsByStatus, updateLeadNotes, updateLeadStatus, updateTestimonial, updateTestimonialStatus, createEmailCampaign, getEmailCampaignStats, trackPhoneCall, getPhoneCallStats, getRecentPhoneCalls, getCallVolumeByDate, getBookingStats, getRecentBookings, trackPageView, getFunnelOverview, getFunnelByPage, trackChatEvent, getChatStats, getChatEngagementByPage, trackFormEvent, getFormAnalytics, trackFieldInteraction, getFieldInteractions } from "./db";
 import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
+import { createNewsletterSubscriber, getNewsletterSubscribers } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail, getGHLTimelineStatus } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
@@ -24,6 +25,60 @@ export const appRouter = router({
   userTimeline: userTimelineRouter,
   ghlTest: ghlTestRouter,
   emailTracking: emailTrackingRouter,
+  
+  // Newsletter subscriptions
+  newsletter: router({
+    subscribe: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        source: z.string().optional().default("blog"),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          // Create newsletter subscriber in database
+          await createNewsletterSubscriber({
+            email: input.email,
+            source: input.source,
+          });
+
+          // Sync to GoHighLevel CRM
+          await syncContactToGHL({
+            firstName: "Newsletter",
+            email: input.email,
+            tags: ["Newsletter Subscriber", `Source: ${input.source}`],
+          });
+
+          return {
+            success: true,
+            message: "Successfully subscribed to newsletter",
+          };
+        } catch (error: any) {
+          // Handle duplicate email error
+          if (error.message?.includes("Duplicate entry")) {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "This email is already subscribed to our newsletter.",
+            });
+          }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to subscribe. Please try again.",
+          });
+        }
+      }),
+    
+    // Admin endpoint to view all subscribers
+    getAllSubscribers: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Admin access required",
+          });
+        }
+        return await getNewsletterSubscribers();
+      }),
+  }),
   
   // Dashboard timeline status from GHL
   dashboard: router({

@@ -20,6 +20,7 @@ import {
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
 import SocialShareButtons from "@/components/SocialShareButtons";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const warningSignsData = [
   {
@@ -439,8 +440,15 @@ export default function WarningSignsForeclosure() {
           </div>
         </section>
 
+        {/* Newsletter Signup */}
+        <section className="py-12 bg-gradient-to-b from-primary/5 to-background">
+          <div className="container max-w-2xl">
+            <NewsletterSignup variant="inline" />
+          </div>
+        </section>
+
         {/* Related Articles */}
-        <section className="py-12 bg-muted/20">
+        <section className="py-12 bg-muted/30">
           <div className="container max-w-4xl">
             <h2 className="text-2xl font-bold text-foreground mb-6">Related Articles</h2>
             <div className="grid md:grid-cols-2 gap-6">

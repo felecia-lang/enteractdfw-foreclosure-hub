@@ -47,6 +47,22 @@ export type Lead = typeof leads.$inferSelect;
 export type InsertLead = typeof leads.$inferInsert;
 
 /**
+ * Newsletter subscribers table for capturing email signups from blog.
+ * Stores email addresses and subscription preferences for content marketing.
+ */
+export const newsletterSubscribers = mysqlTable("newsletterSubscribers", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  source: varchar("source", { length: 255 }).default("blog").notNull(), // blog, homepage, footer
+  status: mysqlEnum("status", ["active", "unsubscribed"]).default("active").notNull(),
+  subscribedAt: timestamp("subscribedAt").defaultNow().notNull(),
+  unsubscribedAt: timestamp("unsubscribedAt"),
+});
+
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;
+
+/**
  * Lead notes table for tracking all interactions and updates for each lead.
  * Allows multiple notes per lead with timestamps and author tracking.
  */

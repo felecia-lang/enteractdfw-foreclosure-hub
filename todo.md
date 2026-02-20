@@ -169,4 +169,15 @@
 ## Add Featured Image to Legal Rights Blog Post (Feb 20, 2026)
 - [x] Search for appropriate legal rights/homeowner protection image
 - [x] Add featured image to blog post
-- [ ] Save checkpoint with image addition
+- [x] Save checkpoint with image addition
+
+## Email Newsletter Signup (Feb 20, 2026)
+- [x] Create NewsletterSignup component
+- [x] Add newsletter form to blog sidebar
+- [x] Add newsletter form to blog post footers
+- [ ] Add newsletter form to site footer (deferred)
+- [x] Create backend tRPC endpoint for newsletter subscriptions
+- [x] Store newsletter subscribers in database
+- [x] Integrate with GoHighLevel CRM for lead capture
+- [x] Test newsletter signup functionality
+- [ ] Save checkpoint with newsletter signup feature

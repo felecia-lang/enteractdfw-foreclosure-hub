@@ -218,6 +218,13 @@
       "when": 1771314346812,
       "tag": "0030_magical_doctor_faustus",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1771611797098,
+      "tag": "0031_keen_dazzler",
+      "breakpoints": true
     }
   ]
 }

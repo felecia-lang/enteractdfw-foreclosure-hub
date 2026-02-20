@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users, emailCampaigns, emailDeliveryLog, InsertEmailCampaign, InsertEmailDeliveryLog, InsertFormAnalyticsEvent, InsertFormFieldInteraction } from "../drizzle/schema";
+import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users, emailCampaigns, emailDeliveryLog, InsertEmailCampaign, InsertEmailDeliveryLog, InsertFormAnalyticsEvent, InsertFormFieldInteraction, newsletterSubscribers, InsertNewsletterSubscriber } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -2320,6 +2320,45 @@ export async function getFieldInteractions(formName: string = "contact_form", da
     return interactions;
   } catch (error) {
     console.error("[Database] Failed to get field interactions:", error);
+    return [];
+  }
+}
+
+// Newsletter subscriber functions
+export async function createNewsletterSubscriber(subscriber: InsertNewsletterSubscriber) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create newsletter subscriber: database not available");
+    return undefined;
+  }
+
+  try {
+    const result = await db.insert(newsletterSubscribers).values(subscriber);
+    console.log(`[Newsletter] New subscriber: ${subscriber.email} from ${subscriber.source}`);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create newsletter subscriber:", error);
+    throw error;
+  }
+}
+
+export async function getNewsletterSubscribers() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get newsletter subscribers: database not available");
+    return [];
+  }
+
+  try {
+    const subscribers = await db
+      .select()
+      .from(newsletterSubscribers)
+      .where(eq(newsletterSubscribers.status, "active"))
+      .orderBy(desc(newsletterSubscribers.subscribedAt));
+    
+    return subscribers;
+  } catch (error) {
+    console.error("[Database] Failed to get newsletter subscribers:", error);
     return [];
   }
 }
