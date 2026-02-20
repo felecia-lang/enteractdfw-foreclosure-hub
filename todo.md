@@ -164,4 +164,9 @@
 - [x] Add blog post to App.tsx routing
 - [x] Add blog post to blogPosts.ts data
 - [x] Test blog post in browser
-- [ ] Save checkpoint with legal rights blog post
+- [x] Save checkpoint with legal rights blog post
+
+## Add Featured Image to Legal Rights Blog Post (Feb 20, 2026)
+- [x] Search for appropriate legal rights/homeowner protection image
+- [x] Add featured image to blog post
+- [ ] Save checkpoint with image addition
