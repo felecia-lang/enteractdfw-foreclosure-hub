@@ -29,6 +29,7 @@ import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
 import { PropertyValueLeadCaptureModal } from "@/components/PropertyValueLeadCaptureModal";
 import LeadConnectorContactForm from "@/components/LeadConnectorContactForm";
+import { blogPosts } from "@/data/blogPosts";
 
 export default function Home() {
   const [showPropertyValueModal, setShowPropertyValueModal] = useState(false);
@@ -105,6 +106,11 @@ export default function Home() {
             <Link href="/resources">
               <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
                 Resources
+              </span>
+            </Link>
+            <Link href="/blog">
+              <span className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+                Blog
               </span>
             </Link>
             <Link href="/faq">
@@ -647,6 +653,61 @@ export default function Home() {
                 </Button>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Blog Posts Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Latest From Our Blog</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Expert guidance and actionable strategies to help you navigate foreclosure and protect your home.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {blogPosts.slice(0, 3).map((post) => (
+              <Card key={post.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                <div className="aspect-video w-full overflow-hidden">
+                  <img 
+                    src={post.featuredImage} 
+                    alt={post.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <CardHeader>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
+                      {post.category}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{post.readTime}</span>
+                  </div>
+                  <CardTitle className="text-lg line-clamp-2">
+                    <Link href={`/blog/${post.slug}`}>
+                      <span className="hover:text-primary cursor-pointer">{post.title}</span>
+                    </Link>
+                  </CardTitle>
+                  <CardDescription className="text-sm line-clamp-3">
+                    {post.excerpt}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href={`/blog/${post.slug}`}>
+                      <span className="cursor-pointer">Read Article →</span>
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Button size="lg" variant="default" asChild>
+              <Link href="/blog">
+                <span className="cursor-pointer">View All Blog Posts →</span>
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -135,4 +135,11 @@
 - [x] Update tel: links to match new number (832-346-9569)
 - [x] Update LocalBusinessSchema telephone field
 - [x] Verify all changes in browser
-- [ ] Save checkpoint with phone number updates
+- [x] Save checkpoint with phone number updates
+
+## Blog Visibility Enhancement (Feb 20, 2026)
+- [x] Add "Blog" link to homepage navigation menu
+- [x] Create Latest Blog Posts section component
+- [x] Add Latest Blog Posts section to homepage
+- [x] Test blog navigation from homepage
+- [x] Save checkpoint with blog visibility enhancements
