@@ -43,6 +43,10 @@ import MyTimeline from "@/pages/MyTimeline";
 import GHLTest from "@/pages/admin/GHLTest";
 import WarningSignsForeclosure from "@/pages/WarningSignsForeclosure";
 import Blog from "@/pages/Blog";
+import NoticeOfDefaultActionPlan from "@/pages/NoticeOfDefaultActionPlan";
+import LoanModificationGuide from "@/pages/LoanModificationGuide";
+import ShortSaleGuide from "@/pages/ShortSaleGuide";
+import ForeclosureAuctionGuide from "@/pages/ForeclosureAuctionGuide";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -89,6 +93,10 @@ function Router() {
       <Route path="/thank-you-guide" component={ThankYouGuide} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/warning-signs-foreclosure-texas" component={WarningSignsForeclosure} />
+      <Route path="/blog/notice-of-default-action-plan" component={NoticeOfDefaultActionPlan} />
+      <Route path="/blog/texas-loan-modification-guide" component={LoanModificationGuide} />
+      <Route path="/blog/texas-short-sale-guide" component={ShortSaleGuide} />
+      <Route path="/blog/texas-foreclosure-auction-guide" component={ForeclosureAuctionGuide} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
