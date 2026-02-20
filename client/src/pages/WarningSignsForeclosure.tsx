@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
+import SocialShareButtons from "@/components/SocialShareButtons";
 
 const warningSignsData = [
   {
@@ -267,10 +268,17 @@ export default function WarningSignsForeclosure() {
             <p className="text-xl text-muted-foreground mb-6">
               Recognize the early warning signs before it's too late. Most homeowners don't realize they're in foreclosure danger until they receive the Notice of Default—but by then, your options are limited. Learn what to watch for and what action steps to take now.
             </p>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>Published: February 19, 2026</span>
-              <span>•</span>
-              <span>12 min read</span>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span>Published: February 19, 2026</span>
+                <span>•</span>
+                <span>12 min read</span>
+              </div>
+              <SocialShareButtons 
+                url={typeof window !== 'undefined' ? window.location.href : 'https://enteractdfw.com/blog/warning-signs-foreclosure-texas'}
+                title="10 Warning Signs You're Heading Toward Foreclosure in Texas"
+                description="Recognize the early warning signs of foreclosure in Texas before it's too late. Expert guidance from EnterActDFW."
+              />
             </div>
           </div>
         </section>
