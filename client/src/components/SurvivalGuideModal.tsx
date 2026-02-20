@@ -142,7 +142,7 @@ export default function SurvivalGuideModal({ open, onOpenChange }: SurvivalGuide
             <Input
               id="phone"
               type="tel"
-              placeholder="(844) 981-2937"
+              placeholder="(832) 346-9569"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               className={errors.phone ? "border-red-500" : ""}

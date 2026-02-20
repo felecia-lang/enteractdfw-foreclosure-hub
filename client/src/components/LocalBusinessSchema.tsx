@@ -14,7 +14,7 @@ export default function LocalBusinessSchema() {
     "url": "https://www.enteractdfw.com",
     "logo": "https://www.enteractdfw.com/enteractdfw-logo.png",
     "image": "https://www.enteractdfw.com/enteractdfw-logo.png",
-    "telephone": "+18449812937",
+    "telephone": "+18323469569",
     "email": "info@enteractdfw.com",
     "address": {
       "@type": "PostalAddress",

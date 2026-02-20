@@ -196,7 +196,7 @@ export default function ContactingYourLenderGuide() {
             <img src={APP_LOGO} alt="EnterActDFW" className="h-12" />
             <div className="text-right text-sm">
               <p className="font-semibold">EnterActDFW Real Estate Brokerage</p>
-              <p>Phone: (844) 981-2937</p>
+              <p>Phone: (832) 346-9569</p>
               <p>Email: info@enteractdfw.com</p>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function ContactingYourLenderGuide() {
               Print Guide
             </Button>
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Get Help: (844) 981-2937
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Get Help: (832) 346-9569
               </TrackablePhoneLink>
             </Button>
           </div>
@@ -961,7 +961,7 @@ export default function ContactingYourLenderGuide() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call: (844) 981-2937
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call: (832) 346-9569
               </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
@@ -989,7 +989,7 @@ export default function ContactingYourLenderGuide() {
                 className="bg-[#00A6A6] hover:bg-[#008A8A] text-white font-semibold px-8 py-6 text-lg"
                 asChild
               >
-                <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now: (844) 981-2937
+                <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call Now: (832) 346-9569
                 </TrackablePhoneLink>
               </Button>
               <Button 
@@ -1012,7 +1012,7 @@ export default function ContactingYourLenderGuide() {
         <div className="container text-center text-sm text-muted-foreground">
           <p className="font-semibold text-foreground mb-2">EnterActDFW Real Estate Brokerage</p>
           <p>4400 State Hwy 121, Suite 300 | Lewisville, Texas 75056</p>
-          <p>Phone: (844) 981-2937 | Email: info@enteractdfw.com</p>
+          <p>Phone: (832) 346-9569 | Email: info@enteractdfw.com</p>
           <p className="mt-4 text-xs">
             <strong>Legal Disclaimer:</strong> This guide is for educational purposes only and does not constitute legal or financial advice. 
             For legal guidance, consult an attorney. For financial advice, consult a licensed financial advisor.

@@ -397,7 +397,7 @@ export default function MyTimeline() {
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="flex-1">
-                <a href="tel:832-346-9569">Call Us: (844) 981-2937</a>
+                <a href="tel:832-346-9569">Call Us: (832) 346-9569</a>
               </Button>
               <Button asChild variant="outline" size="lg" className="flex-1">
                 <Link href="/knowledge-base">Browse Knowledge Base</Link>

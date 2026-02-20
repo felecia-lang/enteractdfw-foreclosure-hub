@@ -105,7 +105,7 @@ export default function About() {
                       <Phone className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
                       <div>
                         <p className="font-semibold text-foreground">Direct Line</p>
-                        <p className="text-sm text-muted-foreground">(844) 981-2937</p>
+                        <p className="text-sm text-muted-foreground">(832) 346-9569</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -297,7 +297,7 @@ export default function About() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: (844) 981-2937</li>
+                <li>Phone: (832) 346-9569</li>
                 <li>Email: info@enteractdfw.com</li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

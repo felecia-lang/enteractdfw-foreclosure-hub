@@ -135,7 +135,7 @@ export default function NoticeOfDefaultChecklist() {
               <img src="/enteractdfw-logo.png" alt="EnterActDFW" className="h-12" />
               <div className="text-right">
                 <p className="text-sm font-semibold">EnterActDFW Real Estate Brokerage</p>
-                <p className="text-xs">Phone: (844) 981-2937</p>
+                <p className="text-xs">Phone: (832) 346-9569</p>
                 <p className="text-xs">info@enteractdfw.com</p>
               </div>
             </div>
@@ -458,7 +458,7 @@ export default function NoticeOfDefaultChecklist() {
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
-                    <span className="text-sm">Contact EnterActDFW for no-obligation cash offer: (844) 981-2937</span>
+                    <span className="text-sm">Contact EnterActDFW for no-obligation cash offer: (832) 346-9569</span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded print:p-1">
                     <input type="checkbox" className="mt-1 h-4 w-4 print:h-3 print:w-3" />
@@ -503,7 +503,7 @@ export default function NoticeOfDefaultChecklist() {
               4400 State Hwy 121, Suite 300, Lewisville, Texas 75056
             </p>
             <p className="mb-2">
-              Phone: (844) 981-2937 | Email: info@enteractdfw.com
+              Phone: (832) 346-9569 | Email: info@enteractdfw.com
             </p>
             <p className="text-xs">
               <strong>Legal Disclaimer:</strong> This information is for educational purposes only and is not legal advice. 
@@ -568,7 +568,7 @@ export default function NoticeOfDefaultChecklist() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild>
-              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call (844) 981-2937
+              <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>Call (832) 346-9569
               </TrackablePhoneLink>
             </Button>
             <Button size="lg" variant="outline" asChild>
@@ -602,7 +602,7 @@ export default function NoticeOfDefaultChecklist() {
             <div>
               <h4 className="font-semibold text-foreground mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: (844) 981-2937</li>
+                <li>Phone: (832) 346-9569</li>
                 <li>Email: info@enteractdfw.com</li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

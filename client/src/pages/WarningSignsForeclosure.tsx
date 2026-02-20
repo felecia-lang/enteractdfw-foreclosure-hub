@@ -281,7 +281,7 @@ export default function WarningSignsForeclosure() {
             <Alert className="bg-primary/10 border-primary">
               <AlertTriangle className="h-5 w-5 text-primary" />
               <AlertDescription className="text-foreground">
-                <strong>Time-Sensitive Information:</strong> If you're experiencing three or more of these warning signs, you're at high risk of foreclosure. Contact a HUD-approved housing counselor immediately at <strong>1-888-995-HOPE (4673)</strong> or call EnterActDFW at <strong>(844) 981-2937</strong> for a free consultation.
+                <strong>Time-Sensitive Information:</strong> If you're experiencing three or more of these warning signs, you're at high risk of foreclosure. Contact a HUD-approved housing counselor immediately at <strong>1-888-995-HOPE (4673)</strong> or call EnterActDFW at <strong>(832) 346-9569</strong> for a free consultation.
               </AlertDescription>
             </Alert>
           </div>
@@ -419,7 +419,7 @@ export default function WarningSignsForeclosure() {
                 <div className="flex flex-wrap gap-4 justify-center">
                   <Button size="lg" asChild>
                     <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
-                      Call (844) 981-2937 Now
+                      Call (832) 346-9569 Now
                     </TrackablePhoneLink>
                   </Button>
                   <Button size="lg" variant="outline" onClick={() => setShowBookingModal(true)}>
@@ -536,7 +536,7 @@ export default function WarningSignsForeclosure() {
               <div>
                 <h4 className="font-semibold text-foreground mb-4">Contact</h4>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>(844) 981-2937</li>
+                  <li>(832) 346-9569</li>
                   <li>info@enteractdfw.com</li>
                   <li>4400 State Hwy 121, Suite 300</li>
                   <li>Lewisville, TX 75056</li>

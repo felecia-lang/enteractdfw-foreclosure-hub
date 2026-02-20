@@ -508,7 +508,7 @@ export default function TimelineCalculator() {
                   <AlertTriangle className="h-5 w-5 text-red-600" />
                   <AlertDescription className="text-red-900">
                     <strong>URGENT: Act now!</strong> You have only <strong>{daysUntilSale} days</strong> until the foreclosure sale. 
-                    Call us today at (844) 981-2937 for immediate assistance.
+                    Call us today at (832) 346-9569 for immediate assistance.
                   </AlertDescription>
                 </Alert>
               ) : (
@@ -516,7 +516,7 @@ export default function TimelineCalculator() {
                   <AlertTriangle className="h-5 w-5 text-red-600" />
                   <AlertDescription className="text-red-900">
                     <strong>CRITICAL:</strong> Your foreclosure sale date has passed or is imminent. 
-                    Contact us immediately at (844) 981-2937.
+                    Contact us immediately at (832) 346-9569.
                   </AlertDescription>
                 </Alert>
               )}
@@ -591,7 +591,7 @@ export default function TimelineCalculator() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="secondary" asChild>
                   <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
-                    Call (844) 981-2937
+                    Call (832) 346-9569
                   </TrackablePhoneLink>
                 </Button>
                 <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
@@ -639,7 +639,7 @@ export default function TimelineCalculator() {
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: (844) 981-2937</li>
+                <li>Phone: (832) 346-9569</li>
                 <li>Email: info@enteractdfw.com</li>
                 <li>Lewisville, Texas 75056</li>
               </ul>

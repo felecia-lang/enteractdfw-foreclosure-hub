@@ -126,4 +126,13 @@
 - [x] Add blog index route to App.tsx
 - [x] Update site navigation to include Blog link (already included in Blog.tsx header)
 - [x] Test blog index page in browser
-- [ ] Save checkpoint with blog index page
+- [x] Save checkpoint with blog index page
+
+## Phone Number Update (Feb 20, 2026)
+- [x] Search for all instances of old phone numbers (844-981-2937, etc.)
+- [x] Update phone numbers in all page components
+- [x] Update phone numbers in shared components (headers, footers)
+- [x] Update tel: links to match new number (832-346-9569)
+- [x] Update LocalBusinessSchema telephone field
+- [x] Verify all changes in browser
+- [ ] Save checkpoint with phone number updates

@@ -354,7 +354,7 @@ export default function TermsOfService() {
             <div>
               <h3 className="font-semibold mb-2">Termination by You</h3>
               <p className="text-muted-foreground">
-                You may stop using our website and services at any time. If you wish to terminate any ongoing service agreements or opt out of communications, please contact us at info@enteractdfw.com or (844) 981-2937.
+                You may stop using our website and services at any time. If you wish to terminate any ongoing service agreements or opt out of communications, please contact us at info@enteractdfw.com or (832) 346-9569.
               </p>
             </div>
 
@@ -442,7 +442,7 @@ export default function TermsOfService() {
                 <div>
                   <p className="font-semibold">Phone</p>
                   <TrackablePhoneLink phoneNumber="832-346-9569" className="text-primary hover:underline">
-                    (844) 981-2937
+                    (832) 346-9569
                   </TrackablePhoneLink>
                 </div>
               </div>
@@ -515,7 +515,7 @@ export default function TermsOfService() {
             <div>
               <h3 className="font-semibold mb-3">Contact</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Phone: (844) 981-2937</li>
+                <li>Phone: (832) 346-9569</li>
                 <li>Email: info@enteractdfw.com</li>
                 <li>4400 State Hwy 121, Suite 300</li>
                 <li>Lewisville, Texas 75056</li>

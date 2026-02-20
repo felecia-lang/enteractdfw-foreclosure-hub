@@ -449,7 +449,7 @@ export default function SuccessStories() {
               </Button>
               <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
-                  Call (844) 981-2937
+                  Call (832) 346-9569
                 </TrackablePhoneLink>
               </Button>
             </div>
@@ -558,7 +558,7 @@ export default function SuccessStories() {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="(844) 981-2937"
+                      placeholder="(832) 346-9569"
                     />
                   </div>
                 </div>

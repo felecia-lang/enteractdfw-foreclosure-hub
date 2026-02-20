@@ -102,7 +102,7 @@ export default function ThankYou() {
                 </a>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border-white/20 text-white" asChild>
                   <TrackablePhoneLink phoneNumber="832-346-9569">
-                    Call (844) 981-2937
+                    Call (832) 346-9569
                   </TrackablePhoneLink>
                 </Button>
               </div>

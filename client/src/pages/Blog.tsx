@@ -286,7 +286,7 @@ export default function Blog() {
                 <div className="flex flex-wrap gap-4 justify-center">
                   <Button size="lg" asChild>
                     <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
-                      Call (844) 981-2937 Now
+                      Call (832) 346-9569 Now
                     </TrackablePhoneLink>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
@@ -330,7 +330,7 @@ export default function Blog() {
               <div>
                 <h4 className="font-semibold text-foreground mb-4">Contact</h4>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>(844) 981-2937</li>
+                  <li>(832) 346-9569</li>
                   <li>info@enteractdfw.com</li>
                   <li>4400 State Hwy 121, Suite 300</li>
                   <li>Lewisville, TX 75056</li>
