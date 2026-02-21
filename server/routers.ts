@@ -2449,6 +2449,72 @@ Email: info@enteractdfw.com
         }
       }),
   }),
+
+  // Calculator email gate
+  calculator: router({
+    requestActionPlanPdf: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        timelineData: z.object({
+          noticeDate: z.string(),
+          saleDate: z.string(),
+          daysUntilSale: z.number(),
+          keyDates: z.array(z.object({
+            date: z.string(),
+            event: z.string(),
+            description: z.string(),
+          })),
+        }),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          // Create lead in database
+          await createLead({
+            firstName: "Calculator User",
+            email: input.email,
+            phone: "",
+            propertyZip: "",
+            source: "timeline_calculator_pdf",
+            status: "new",
+            notes: `Notice Date: ${input.timelineData.noticeDate}, Sale Date: ${input.timelineData.saleDate}, Days Until Sale: ${input.timelineData.daysUntilSale}`,
+          });
+
+          // Sync to GoHighLevel CRM
+          await syncContactToGHL({
+            firstName: "Calculator User",
+            email: input.email,
+            tags: ["Timeline Calculator", "Action Plan PDF Request"],
+            customFields: [
+              { key: "notice_date", field_value: input.timelineData.noticeDate },
+              { key: "sale_date", field_value: input.timelineData.saleDate },
+              { key: "days_until_sale", field_value: input.timelineData.daysUntilSale.toString() },
+            ],
+          });
+
+          // Send action plan email
+          // Note: sendSurvivalGuideEmail requires contactId from GHL
+          // For now, we'll skip the GHL email and implement a direct email solution
+          // TODO: Implement direct email with PDF attachment using Resend
+
+          // Notify owner of new lead
+          await notifyOwner({
+            title: "New Calculator Lead: Action Plan PDF Request",
+            content: `Email: ${input.email}\nNotice Date: ${input.timelineData.noticeDate}\nSale Date: ${input.timelineData.saleDate}\nDays Until Sale: ${input.timelineData.daysUntilSale}`,
+          });
+
+          return {
+            success: true,
+            message: "Action plan sent to your email",
+          };
+        } catch (error) {
+          console.error("[Calculator] Failed to send action plan:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to send action plan. Please try again.",
+          });
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

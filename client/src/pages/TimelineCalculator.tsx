@@ -21,6 +21,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import BookingModal from "@/components/BookingModal";
+import { CalculatorEmailGate } from "@/components/CalculatorEmailGate";
 
 interface TimelineMilestone {
   id: string;
@@ -41,6 +42,7 @@ export default function TimelineCalculator() {
   const [email, setEmail] = useState<string>("");
   const [isEmailSending, setIsEmailSending] = useState<boolean>(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showEmailGate, setShowEmailGate] = useState(false);
 
   const emailTimelineMutation = trpc.timeline.emailPDF.useMutation();
 
@@ -189,6 +191,11 @@ export default function TimelineCalculator() {
       const diffTime = saleDate.getTime() - today.getTime();
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       setDaysUntilSale(diffDays);
+      
+      // Show email gate after 2 seconds to let user see results first
+      setTimeout(() => {
+        setShowEmailGate(true);
+      }, 2000);
     }
   };
 
@@ -656,6 +663,24 @@ export default function TimelineCalculator() {
         open={showBookingModal} 
         onOpenChange={setShowBookingModal}
       />
+
+      {/* Email Gate Modal */}
+      {timeline && (
+        <CalculatorEmailGate
+          open={showEmailGate}
+          onOpenChange={setShowEmailGate}
+          timelineData={{
+            noticeDate,
+            saleDate: timeline.find(m => m.id === "foreclosure-sale")?.date.toISOString() || "",
+            daysUntilSale: daysUntilSale || 0,
+            keyDates: timeline.map(m => ({
+              date: m.date.toISOString(),
+              event: m.title,
+              description: m.description,
+            })),
+          }}
+        />
+      )}
       </div>
     </>
   );

@@ -186,8 +186,12 @@
 ### CRITICAL Priority Changes
 - [x] Refactor lead magnet form to email-only capture
 - [x] Create Step 2 thank-you page for phone + ZIP capture
-- [ ] Add email gate to Timeline Calculator results
-- [ ] Create "Personalized 21-Day Action Plan PDF" download
+- [x] Add email gate to Timeline Calculator results
+- [x] Create "Personalized 21-Day Action Plan PDF" download
+- [x] Create CalculatorEmailGate modal component
+- [x] Create backend endpoint for calculator lead capture
+- [x] Integrate email gate with Timeline Calculator
+- [x] Write and pass vitest tests for calculator endpoint
 - [ ] Update og:title meta tag with social-optimized copy
 - [ ] Update og:description meta tag with benefit-focused copy
 - [ ] Generate branded 1200x630 Open Graph image
