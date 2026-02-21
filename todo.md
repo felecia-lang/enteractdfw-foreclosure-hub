@@ -214,3 +214,14 @@
 - [ ] Test mobile UI on simulated viewport
 - [ ] Create before/after implementation checklist
 - [ ] Save checkpoint with all CRO improvements
+
+## SMS Delivery Troubleshooting (Feb 21, 2026)
+- [x] Investigate SMS delivery failure for phone number 469-888-2313
+- [x] Check server logs for SMS sending errors
+- [x] Review GHL SMS API implementation
+- [x] Identify root cause: contactId parameter was using phone number instead of GHL contact ID
+- [x] Implement two-step fix: create/upsert contact first, then send SMS with contact ID
+- [x] Add detailed error logging for both contact creation and SMS sending
+- [ ] Test SMS delivery with 469-888-2313 (ready for user testing)
+- [ ] Verify SMS arrives at recipient phone
+- [ ] Save checkpoint with SMS fix

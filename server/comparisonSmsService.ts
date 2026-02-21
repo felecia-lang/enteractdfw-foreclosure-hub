@@ -80,9 +80,44 @@ Or text SCHEDULE to this number
   // Format phone number
   const formattedPhone = formatPhoneNumber(phone);
 
-  // Send via GHL SMS API
+  // STEP 1: Create or find contact in GHL first
   try {
-    const response = await fetch(`${GHL_API_URL}/conversations/messages`, {
+    // Create/upsert contact in GHL
+    const contactResponse = await fetch(`${GHL_API_URL}/contacts/upsert`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${GHL_API_KEY}`,
+        "Content-Type": "application/json",
+        "Version": "2021-07-28",
+      },
+      body: JSON.stringify({
+        locationId: GHL_LOCATION_ID,
+        firstName: "Property Owner",
+        phone: formattedPhone,
+        email: `sms-${formattedPhone.replace(/\D/g, '')}@temp.enteractdfw.com`, // Temporary email for SMS-only contacts
+        tags: ["SMS Comparison Request", "Property Valuation"],
+        source: "Website SMS Request",
+      }),
+    });
+
+    if (!contactResponse.ok) {
+      const errorText = await contactResponse.text();
+      console.error("[ComparisonSMS] Failed to create contact:", errorText);
+      throw new Error(`Failed to create contact: ${errorText}`);
+    }
+
+    const contactData = await contactResponse.json();
+    const contactId = contactData.contact?.id;
+
+    if (!contactId) {
+      console.error("[ComparisonSMS] No contact ID returned from GHL");
+      throw new Error("No contact ID returned from GHL");
+    }
+
+    console.log("[ComparisonSMS] Contact created/found:", contactId);
+
+    // STEP 2: Send SMS using the contact ID
+    const smsResponse = await fetch(`${GHL_API_URL}/conversations/messages`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${GHL_API_KEY}`,
@@ -92,24 +127,27 @@ Or text SCHEDULE to this number
       body: JSON.stringify({
         type: "SMS",
         locationId: GHL_LOCATION_ID,
-        contactId: formattedPhone, // Will need to create/find contact first in production
+        contactId: contactId, // Use actual GHL contact ID
         message: smsMessage,
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("[ComparisonSMS] GHL API error:", errorText);
-      
-      // Fallback: Just log the SMS attempt
-      console.log("[ComparisonSMS] Would send to:", formattedPhone);
-      console.log("[ComparisonSMS] Message:", smsMessage);
-    } else {
-      console.log("[ComparisonSMS] Successfully sent to:", formattedPhone);
+    if (!smsResponse.ok) {
+      const errorText = await smsResponse.text();
+      console.error("[ComparisonSMS] GHL SMS API error:", errorText);
+      throw new Error(`SMS API error: ${errorText}`);
     }
+
+    const smsData = await smsResponse.json();
+    console.log("[ComparisonSMS] SMS sent successfully to:", formattedPhone);
+    console.log("[ComparisonSMS] SMS response:", JSON.stringify(smsData));
   } catch (error) {
     console.error("[ComparisonSMS] Failed to send SMS:", error);
     // Don't throw - we don't want to fail the entire request if SMS fails
+    // But log the full error for debugging
+    if (error instanceof Error) {
+      console.error("[ComparisonSMS] Error details:", error.message);
+    }
   }
 }
 
