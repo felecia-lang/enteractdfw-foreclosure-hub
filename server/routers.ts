@@ -193,22 +193,22 @@ Email: info@enteractdfw.com
     submit: publicProcedure
       .input(
         z.object({
-          firstName: z.string().min(1, "First name is required"),
           email: z.string().email("Valid email is required"),
-          phone: z.string().min(10, "Valid phone number is required"),
-          propertyZip: z.string().min(5, "Valid ZIP code is required"),
-          smsConsent: z.boolean(),
+          firstName: z.string().optional(),
+          phone: z.string().optional(),
+          propertyZip: z.string().optional(),
+          smsConsent: z.boolean().optional(),
           source: z.string().optional(), // "landing_page" or "chatbot"
         })
       )
       .mutation(async ({ input }) => {
         try {
-          // Create lead in database
+          // Create lead in database (email-only for Step 1)
           const leadResult = await createLead({
-            firstName: input.firstName,
+            firstName: input.firstName || "Lead",
             email: input.email,
-            phone: input.phone,
-            propertyZip: input.propertyZip,
+            phone: input.phone || "",
+            propertyZip: input.propertyZip || "",
             smsConsent: input.smsConsent ? "yes" : "no",
             source: input.source || "landing_page",
             status: "new",
@@ -229,28 +229,28 @@ Email: info@enteractdfw.com
 
           // Notify owner of new lead
           await notifyOwner({
-            title: "New Foreclosure Lead",
-            content: `New lead from ${input.firstName}\nEmail: ${input.email}\nPhone: ${input.phone}\nZIP: ${input.propertyZip}`,
+            title: "New Foreclosure Lead (Step 1)",
+            content: `New lead email: ${input.email}${input.firstName ? `\nName: ${input.firstName}` : ''}`,
           });
 
           // Sync lead to Go HighLevel CRM
           const ghlResult = await syncLeadToGHL({
-            firstName: input.firstName,
+            firstName: input.firstName || "Lead",
             email: input.email,
-            phone: input.phone,
-            propertyZip: input.propertyZip,
-            source: "Website - Landing Page",
+            phone: input.phone || "",
+            propertyZip: input.propertyZip || "",
+            source: "Website - Landing Page (Email Only)",
           });
 
           if (ghlResult.success && ghlResult.contactId) {
             console.log("[Leads] Successfully synced to GHL:", ghlResult.contactId);
             
-            // Send welcome email to lead via GHL
+            // Send survival guide email to lead
             try {
-              await sendWelcomeEmail(ghlResult.contactId, input.firstName);
-              console.log("[Leads] Welcome email sent to:", input.email);
+              await sendSurvivalGuideEmail(ghlResult.contactId, input.firstName || "there");
+              console.log("[Leads] Survival guide email sent to:", input.email);
             } catch (emailError) {
-              console.warn("[Leads] Failed to send welcome email:", emailError);
+              console.warn("[Leads] Failed to send survival guide email:", emailError);
               // Don't fail the request if email fails
             }
           } else {
@@ -347,6 +347,41 @@ Email: info@enteractdfw.com
         } catch (error) {
           console.error("Failed to process survival guide request:", error);
           throw new Error("Failed to submit your request. Please try again.");
+        }
+      }),
+
+    // Update contact info (Step 2 of two-step funnel)
+    updateContact: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email(),
+          phone: z.string().optional(),
+          propertyZip: z.string().optional(),
+          smsConsent: z.boolean().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          // Update contact in GHL
+          await syncContactToGHL({
+            firstName: "Lead",
+            email: input.email,
+            phone: input.phone,
+            tags: ["Step 2 Completed"],
+          });
+
+          // Notify owner of Step 2 completion
+          if (input.phone || input.propertyZip) {
+            await notifyOwner({
+              title: "Lead Completed Step 2",
+              content: `Email: ${input.email}${input.phone ? `\nPhone: ${input.phone}` : ''}${input.propertyZip ? `\nZIP: ${input.propertyZip}` : ''}`,
+            });
+          }
+
+          return { success: true };
+        } catch (error) {
+          console.error("Failed to update contact:", error);
+          throw new Error("Failed to update contact info. Please try again.");
         }
       }),
 

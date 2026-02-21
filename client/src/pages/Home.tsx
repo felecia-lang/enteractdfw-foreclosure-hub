@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { trpc } from "@/lib/trpc";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { 
   Clock, 
   Shield, 
@@ -34,38 +34,28 @@ import { blogPosts } from "@/data/blogPosts";
 export default function Home() {
   const [showPropertyValueModal, setShowPropertyValueModal] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
     email: "",
-    phone: "",
-    propertyZip: "",
-    smsConsent: false,
   });
   const [submitted, setSubmitted] = useState(false);
   const [showResourceDialog, setShowResourceDialog] = useState(false);
   const [selectedResource, setSelectedResource] = useState<{name: string; file: string}>({name: "", file: ""});
   const [showBookingModal, setShowBookingModal] = useState(false);
 
+  const [, setLocation] = useLocation();
+  
   const submitLead = trpc.leads.submit.useMutation({
     onSuccess: () => {
+      const email = formData.email;
       setSubmitted(true);
-      toast.success("Thank you! Check your email for the guide. We'll also reach out within 24 hours to answer any questions.");
-      
-      // Trigger PDF download
-      const link = document.createElement('a');
-      link.href = '/api/pdf/foreclosure-survival-guide';
-      link.download = 'Foreclosure_Survival_Guide.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      toast.success("Thank you! Check your email for the guide.");
       
       // Reset form
       setFormData({
-        firstName: "",
         email: "",
-        phone: "",
-        propertyZip: "",
-        smsConsent: false,
       });
+      
+      // Redirect to thank-you page with email param for Step 2
+      setLocation(`/thank-you?email=${encodeURIComponent(email)}`);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to submit. Please try again.");
@@ -190,18 +180,7 @@ export default function Home() {
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name *</Label>
-                      <Input
-                        id="firstName"
-                        type="text"
-                        placeholder="John"
-                        value={formData.firstName}
-                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email *</Label>
+                      <Label htmlFor="email">Email Address *</Label>
                       <Input
                         id="email"
                         type="email"
@@ -209,53 +188,17 @@ export default function Home() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
+                        className="text-base"
                       />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone *</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="(832) 346-9569"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="propertyZip">Property ZIP Code *</Label>
-                      <Input
-                        id="propertyZip"
-                        type="text"
-                        placeholder="75001"
-                        value={formData.propertyZip}
-                        onChange={(e) => setFormData({ ...formData, propertyZip: e.target.value })}
-                        required
-                      />
-                    </div>
-                    
-                    {/* A2P Compliance: SMS Consent */}
-                    <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-md border">
-                      <input
-                        type="checkbox"
-                        id="smsConsent"
-                        checked={formData.smsConsent}
-                        onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
-                        required
-                        className="mt-1 h-4 w-4 rounded border-gray-300"
-                      />
-                      <label htmlFor="smsConsent" className="text-xs text-muted-foreground leading-tight">
-                        By checking this box and providing my phone number, I consent to receive calls and text messages (including via automated technology and/or prerecorded messages) from EnterActDFW at the number provided about foreclosure assistance services. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. View our <a href="/privacy-policy" className="underline">Privacy Policy</a>.
-                      </label>
                     </div>
                     
                     <Button 
                       type="submit" 
                       className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" 
                       size="lg"
-                      disabled={submitLead.isPending || !formData.smsConsent}
+                      disabled={submitLead.isPending}
                     >
-                      {submitLead.isPending ? "Submitting..." : "Download Free Guide Now →"}
+                      {submitLead.isPending ? "Sending..." : "Get Free Guide →"}
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">
                       ✓ 100% Free ✓ No Obligation ✓ Secure & Confidential

@@ -180,4 +180,33 @@
 - [x] Store newsletter subscribers in database
 - [x] Integrate with GoHighLevel CRM for lead capture
 - [x] Test newsletter signup functionality
-- [ ] Save checkpoint with newsletter signup feature
+- [x] Save checkpoint with newsletter signup feature
+
+## CRO Audit Implementation (Feb 20, 2026)
+### CRITICAL Priority Changes
+- [x] Refactor lead magnet form to email-only capture
+- [x] Create Step 2 thank-you page for phone + ZIP capture
+- [ ] Add email gate to Timeline Calculator results
+- [ ] Create "Personalized 21-Day Action Plan PDF" download
+- [ ] Update og:title meta tag with social-optimized copy
+- [ ] Update og:description meta tag with benefit-focused copy
+- [ ] Generate branded 1200x630 Open Graph image
+- [ ] Update twitter:card meta tags
+
+### HIGH PRIORITY Changes
+- [ ] Reposition "200+ families helped" badge higher in hero
+- [ ] Create Success Stories carousel component
+- [ ] Add placeholder slots for client photos in carousel
+- [ ] Make "Call Now" button sticky/prominent on mobile
+- [ ] Optimize navigation menu for mobile viewport
+- [ ] Increase button padding for better tap targets
+- [ ] Add "Quick Summary" boxes to blog posts
+- [ ] Create floating CTA bar for blog posts
+
+### Testing & Deployment
+- [ ] Test lead magnet two-step flow
+- [ ] Test calculator email gate
+- [ ] Verify Open Graph preview on Facebook/Twitter
+- [ ] Test mobile UI on simulated viewport
+- [ ] Create before/after implementation checklist
+- [ ] Save checkpoint with all CRO improvements

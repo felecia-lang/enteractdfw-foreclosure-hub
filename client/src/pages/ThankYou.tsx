@@ -1,9 +1,14 @@
-import { CheckCircle2, Mail, Calendar, FileText, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, Mail, Calendar, FileText, ArrowRight, Phone, MapPin } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { APP_LOGO } from "@/const";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 const RESOURCE_TITLES: Record<string, string> = {
   "texas-foreclosure-survival-guide": "Texas Foreclosure Survival Guide",
@@ -16,7 +21,39 @@ export default function ThankYou() {
   const [location] = useLocation();
   const params = new URLSearchParams(location.split("?")[1]);
   const resource = params.get("resource") || "guide";
+  const email = params.get("email") || "";
   const resourceTitle = RESOURCE_TITLES[resource] || "Foreclosure Resource Guide";
+  
+  const [formData, setFormData] = useState({
+    phone: "",
+    propertyZip: "",
+    smsConsent: false,
+  });
+  const [step2Completed, setStep2Completed] = useState(false);
+
+  const updateLead = trpc.leads.updateContact.useMutation({
+    onSuccess: () => {
+      setStep2Completed(true);
+      toast.success("Thank you! Your information has been saved.");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to update. Please try again.");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateLead.mutate({
+      email,
+      phone: formData.phone,
+      propertyZip: formData.propertyZip,
+      smsConsent: formData.smsConsent,
+    });
+  };
+
+  const handleSkip = () => {
+    setStep2Completed(true);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-primary/5">
@@ -49,6 +86,89 @@ export default function ThankYou() {
             <p>Check your email inbox in the next few minutes</p>
           </div>
         </div>
+
+        {/* Step 2: Optional Contact Info (only show if email param exists and not completed) */}
+        {email && !step2Completed && (
+          <Card className="mx-auto max-w-2xl p-8 mb-12 border-2 border-accent/30">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-3">Get Personalized Help (Optional)</h2>
+              <p className="text-muted-foreground">
+                Provide your phone and ZIP code for location-specific foreclosure timelines and local resources.
+              </p>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  Phone Number (Optional)
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="(832) 346-9569"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="text-base"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="propertyZip" className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Property ZIP Code (Optional)
+                </Label>
+                <Input
+                  id="propertyZip"
+                  type="text"
+                  placeholder="75001"
+                  maxLength={5}
+                  value={formData.propertyZip}
+                  onChange={(e) => setFormData({ ...formData, propertyZip: e.target.value })}
+                  className="text-base"
+                />
+              </div>
+
+              {formData.phone && (
+                <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-md border">
+                  <input
+                    type="checkbox"
+                    id="smsConsent"
+                    checked={formData.smsConsent}
+                    onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
+                    className="mt-1 h-4 w-4 rounded border-gray-300"
+                  />
+                  <label htmlFor="smsConsent" className="text-xs text-muted-foreground leading-tight">
+                    I consent to receive calls and text messages from EnterActDFW about foreclosure assistance. Reply STOP to unsubscribe.
+                  </label>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button 
+                  type="submit" 
+                  className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground" 
+                  size="lg"
+                  disabled={updateLead.isPending || (!!formData.phone && !formData.smsConsent)}
+                >
+                  {updateLead.isPending ? "Saving..." : "Save My Info"}
+                </Button>
+                <Button 
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  onClick={handleSkip}
+                >
+                  Skip
+                </Button>
+              </div>
+              
+              <p className="text-xs text-center text-muted-foreground">
+                ✓ 100% Optional ✓ Secure & Confidential
+              </p>
+            </form>
+          </Card>
+        )}
 
         {/* What Happens Next */}
         <Card className="mx-auto max-w-3xl p-8 mb-12">
