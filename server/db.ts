@@ -1,5 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 import { InsertLead, InsertLeadNote, InsertTestimonial, InsertUser, leadNotes, leads, testimonials, users, emailCampaigns, emailDeliveryLog, InsertEmailCampaign, InsertEmailDeliveryLog, InsertFormAnalyticsEvent, InsertFormFieldInteraction, newsletterSubscribers, InsertNewsletterSubscriber } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -9,7 +10,19 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      // Parse DATABASE_URL and configure SSL for TiDB Cloud Serverless
+      const dbUrl = new URL(process.env.DATABASE_URL.replace('mysql://', 'http://'));
+      const pool = mysql.createPool({
+        host: dbUrl.hostname,
+        port: parseInt(dbUrl.port) || 4000,
+        user: dbUrl.username,
+        password: dbUrl.password,
+        database: dbUrl.pathname.slice(1),
+        ssl: {
+          rejectUnauthorized: true
+        }
+      });
+      _db = drizzle({ client: pool });
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
