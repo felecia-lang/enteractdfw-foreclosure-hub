@@ -225,3 +225,20 @@
 - [ ] Test SMS delivery with 469-888-2313 (ready for user testing)
 - [ ] Verify SMS arrives at recipient phone
 - [ ] Save checkpoint with SMS fix
+
+## Sale Comparison Delivery Debugging (Feb 21-22, 2026)
+- [x] Check server logs for recent sale comparison requests - NO REQUESTS FOUND
+- [x] Verify SMS sending attempt and GHL API response - NO ATTEMPTS LOGGED
+- [x] Verify email sending attempt and Resend API response - NO ATTEMPTS LOGGED
+- [x] Check if property valuation endpoint is being called - NOT BEING CALLED
+- [x] Identified root cause: Silent early return when comparison is null
+- [x] Fixed: Added comprehensive error logging to frontend handlers
+- [x] Fixed: Show user-friendly error toast when comparison data is missing
+- [x] Fixed: Prevent silent failures in SMS/email handlers
+- [x] Fixed: Added detailed logging to comparisonSmsService.ts for GHL contact creation
+- [x] Verified handlers are correctly wired to dialog onSubmit callbacks
+- [x] Verified SmsCaptureDialog and EmailCaptureDialog call onSubmit correctly
+- [ ] BLOCKER: Browser caching prevents new code from loading despite hard refresh
+- [ ] Test on published version (no caching) to verify fixes work
+- [ ] Verify SMS arrives at 469-888-2313
+- [ ] Verify email arrives at felecia.fair@outlook.com

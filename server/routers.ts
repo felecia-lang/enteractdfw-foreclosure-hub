@@ -932,6 +932,8 @@ Email: info@enteractdfw.com
         }),
       }))
       .mutation(async ({ input }) => {
+        console.log("[PropertyValuation] emailComparison endpoint called");
+        console.log("[PropertyValuation] Input data:", JSON.stringify(input, null, 2));
         try {
           const { calculateSaleOptions } = await import("./saleOptionsComparison");
           const { generateComparisonPDF } = await import("./comparisonPdfGenerator");
@@ -994,6 +996,8 @@ Email: info@enteractdfw.com
         }),
       }))
       .mutation(async ({ input }) => {
+        console.log("[PropertyValuation] smsComparison endpoint called");
+        console.log("[PropertyValuation] Input data:", JSON.stringify(input, null, 2));
         try {
           const { calculateSaleOptions } = await import("./saleOptionsComparison");
           const { sendComparisonSms, isValidPhoneNumber } = await import("./comparisonSmsService");

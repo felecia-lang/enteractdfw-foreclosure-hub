@@ -107,9 +107,16 @@ export default function PropertyValueEstimator() {
   }, [formData, showResults]);
 
   const handleEmailReport = async (email: string) => {
-    if (!result || !comparison) return;
+    if (!result || !comparison) {
+      console.error('[EmailReport] Missing required data:', { hasResult: !!result, hasComparison: !!comparison });
+      toast.error("Cannot send report", {
+        description: "Please calculate your property value with a mortgage balance first.",
+      });
+      return;
+    }
 
     try {
+      console.log('[EmailReport] Sending email comparison:', { email, propertyValue: result.estimatedValue });
       await emailComparisonMutation.mutateAsync({
         email,
         propertyValue: result.estimatedValue,
@@ -123,11 +130,13 @@ export default function PropertyValueEstimator() {
           condition: formData.condition,
         },
       });
+      console.log('[EmailReport] Email sent successfully');
 
       toast.success("Report sent!", {
         description: `We've sent the detailed comparison report to ${email}`,
       });
     } catch (error) {
+      console.error('[EmailReport] Failed to send email:', error);
       toast.error("Failed to send report", {
         description: "Please try again or contact us directly.",
       });
@@ -136,9 +145,16 @@ export default function PropertyValueEstimator() {
   };
 
   const handleSmsReport = async (phone: string) => {
-    if (!result || !comparison) return;
+    if (!result || !comparison) {
+      console.error('[SmsReport] Missing required data:', { hasResult: !!result, hasComparison: !!comparison });
+      toast.error("Cannot send SMS", {
+        description: "Please calculate your property value with a mortgage balance first.",
+      });
+      return;
+    }
 
     try {
+      console.log('[SmsReport] Sending SMS comparison:', { phone, propertyValue: result.estimatedValue });
       await smsComparisonMutation.mutateAsync({
         phone,
         propertyValue: result.estimatedValue,
@@ -152,11 +168,13 @@ export default function PropertyValueEstimator() {
           condition: formData.condition,
         },
       });
+      console.log('[SmsReport] SMS sent successfully');
 
       toast.success("SMS sent!", {
         description: `We've sent the comparison summary to ${phone}`,
       });
     } catch (error) {
+      console.error('[SmsReport] Failed to send SMS:', error);
       toast.error("Failed to send SMS", {
         description: "Please try again or contact us directly.",
       });
