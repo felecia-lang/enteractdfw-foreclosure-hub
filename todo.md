@@ -261,7 +261,14 @@
 - [x] Add "Call the DFW Foreclosure Help Line: (832) 346-9569" as primary button
 - [x] Add "Book a Free 15-Minute Options Call" as secondary CTA
 - [x] Move "Get Your Free Foreclosure Survival Guide" to tertiary position
-- [ ] Add email gates to all 4 PDF downloads (Survival Guide, Lender Communication, Notice of Default, Red Flags)
+- [x] Add email gates to all 4 PDF downloads (Survival Guide, Lender Communication, Notice of Default, Red Flags)
+  - [x] Create email gate modal component for PDF downloads (ResourceLeadCaptureDialog)
+  - [x] Update Resources page to trigger email gates (N/A - no PDFs on Resources page)
+  - [x] Update Home page PDF download buttons to trigger email gates
+  - [x] Create backend endpoint for PDF download lead capture (resources.downloadWithCapture)
+  - [x] Send confirmation email with PDF download link (via GHL API)
+  - [x] Sync PDF download leads to GHL with appropriate tags (automatic via createLead)
+  - [x] Verify all 4 PDFs exist in /client/public/pdfs/ directory
 - [ ] Revise hero headline to "Behind on Your Mortgage in DFW? Here's Exactly What to Do Next."
 - [ ] Add FAQ section with 10 questions and schema markup
 - [ ] Optimize contact form: Change button to "Get Your Free Consultation →"
