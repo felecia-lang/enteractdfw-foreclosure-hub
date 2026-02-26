@@ -476,7 +476,7 @@ export default function Home() {
               <div className="order-2 md:order-1">
                 <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-2xl">
                   <img 
-                    src="/felecia-fair-photo.jpg.svg" 
+                    src="/felecia-fair-photo.jpg" 
                     alt="Felecia Fair - Real Estate & Insurance Broker" 
                     className="w-full h-full object-cover"
                   />

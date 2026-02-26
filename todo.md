@@ -293,7 +293,7 @@
   - [x] Design section with photo + credentials layout (2-column responsive grid)
   - [x] Integrate into homepage after "How EnterActDFW Can Help You" section
   - [x] Add CTAs: "Call Me Directly" and "Schedule a Call"
-  - [ ] Replace placeholder photo with actual professional headshot
+  - [x] Replace placeholder photo with actual professional headshot
 - [ ] Add "About Felecia Fair" section to homepage after "How EnterActDFW Can Help You"
 - [ ] Add Texas Foreclosure Timeline explanation section
 - [ ] Add review widgets or testimonial carousel (3-5 detailed testimonials)
