@@ -257,10 +257,10 @@
 - [ ] Test page load performance after deployment (target: under 3 seconds)
 
 ### HIGH-PRIORITY OPTIMIZATIONS (Week 1)
-- [ ] Restructure hero CTA hierarchy: Make phone call primary CTA
-- [ ] Add "Call the DFW Foreclosure Help Line: (832) 932-7585" as primary button
-- [ ] Add "Book a Free 15-Minute Options Call" as secondary CTA
-- [ ] Move "Get Your Free Foreclosure Survival Guide" to tertiary position
+- [x] Restructure hero CTA hierarchy: Make phone call primary CTA
+- [x] Add "Call the DFW Foreclosure Help Line: (832) 346-9569" as primary button
+- [x] Add "Book a Free 15-Minute Options Call" as secondary CTA
+- [x] Move "Get Your Free Foreclosure Survival Guide" to tertiary position
 - [ ] Add email gates to all 4 PDF downloads (Survival Guide, Lender Communication, Notice of Default, Red Flags)
 - [ ] Revise hero headline to "Behind on Your Mortgage in DFW? Here's Exactly What to Do Next."
 - [ ] Add FAQ section with 10 questions and schema markup

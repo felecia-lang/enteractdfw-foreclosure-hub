@@ -131,41 +131,73 @@ export default function Home() {
       <section className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-20 md:py-32">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Headline */}
-            <div className="space-y-6">
-              <div className="inline-block">
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                  <AlertCircle className="h-4 w-4" />
-                  Received a Notice of Default?
-                </span>
+            {/* Left Column - Headline & Primary CTA */}
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <div className="inline-block">
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+                    <AlertCircle className="h-4 w-4" />
+                    Received a Notice of Default?
+                  </span>
+                </div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+                  You Have Options. We Can Help You Stop Foreclosure in Dallas-Fort Worth.
+                </h1>
+                <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
+                  Facing foreclosure is overwhelming, but you're not alone. Get your free guide to understand your rights, explore your options, and find a path forward—with no pressure and no judgment.
+                </p>
+                <div className="flex flex-wrap gap-4 items-center">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <span>200+ Families Helped</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <span>Licensed Texas Brokerage</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    <span>100% Free Consultation</span>
+                  </div>
+                </div>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                You Have Options. We Can Help You Stop Foreclosure in Dallas-Fort Worth.
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
-                Facing foreclosure is overwhelming, but you're not alone. Get your free guide to understand your rights, explore your options, and find a path forward—with no pressure and no judgment.
-              </p>
-              <div className="flex flex-wrap gap-4 items-center">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  <span>200+ Families Helped</span>
+
+              {/* Primary CTA - Phone Call */}
+              <div className="space-y-4">
+                <div className="p-6 bg-primary/10 border-2 border-primary rounded-lg">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                        <Phone className="h-6 w-6 text-primary-foreground" />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-foreground mb-2">Talk to a Foreclosure Specialist Now</h3>
+                      <p className="text-muted-foreground mb-4">Get immediate help understanding your options. Our team is standing by.</p>
+                      <Button size="lg" className="w-full md:w-auto" asChild>
+                        <TrackablePhoneLink phoneNumber="832-346-9569" showIcon>
+                          Call (832) 346-9569
+                        </TrackablePhoneLink>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  <span>Licensed Texas Brokerage</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  <span>100% Free Consultation</span>
+
+                {/* Secondary CTA - Book Consultation */}
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground mb-2">Prefer to schedule a call?</p>
+                  <Button variant="outline" size="lg" onClick={() => setShowBookingModal(true)}>
+                    Book a Free 15-Minute Options Call
+                  </Button>
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Lead Capture Form */}
-            <Card className="shadow-xl border-2">
-              <CardHeader className="bg-primary/5">
-                <CardTitle className="text-2xl">Get Your FREE Foreclosure Survival Guide</CardTitle>
-                <CardDescription className="text-base">
+            {/* Right Column - Tertiary CTA: Email Form */}
+            <Card className="shadow-lg">
+              <CardHeader className="bg-muted/30">
+                <CardTitle className="text-xl">Or Get Your FREE Foreclosure Survival Guide</CardTitle>
+                <CardDescription className="text-sm">
                   Download our comprehensive guide and learn how to protect your home and your rights in Texas.
                 </CardDescription>
               </CardHeader>
