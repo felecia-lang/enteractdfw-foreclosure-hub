@@ -467,6 +467,78 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Felecia Fair */}
+      <section className="py-16 bg-background">
+        <div className="container">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Photo */}
+              <div className="order-2 md:order-1">
+                <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-2xl">
+                  <img 
+                    src="/felecia-fair-photo.jpg.svg" 
+                    alt="Felecia Fair - Real Estate & Insurance Broker" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="order-1 md:order-2">
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  Meet Felecia Fair
+                </h2>
+                <p className="text-lg text-primary font-semibold mb-6">
+                  Your Dual-Licensed Advocate: Real Estate Broker & Insurance Broker
+                </p>
+                
+                <div className="space-y-4 text-muted-foreground mb-6">
+                  <p>
+                    I'm not your typical real estate broker. With active licenses as both a <strong className="text-foreground">Texas Real Estate Broker (TREC #0555113)</strong> and an <strong className="text-foreground">Insurance Broker</strong>, I bring a unique 360-degree perspective to foreclosure situations that most specialists simply can't match.
+                  </p>
+                  <p>
+                    While other brokers focus solely on transactions, I understand how property decisions impact your long-term financial security and risk exposure. This dual expertise means I can help you navigate foreclosure while simultaneously protecting your assets and planning for your next chapter.
+                  </p>
+                  <p>
+                    Over the past decade, I've helped <strong className="text-foreground">200+ DFW families</strong> avoid foreclosure, preserve their dignity, and move forward with confidence. My mission is simple: provide honest guidance, fair solutions, and zero judgment during one of life's most challenging moments.
+                  </p>
+                </div>
+                
+                <div className="bg-primary/5 border-l-4 border-l-primary p-6 rounded-r-lg mb-6">
+                  <p className="text-foreground font-medium italic">
+                    "I believe every homeowner deserves a strategic partner who understands both the real estate market AND the financial protection side. That's the advantage I bring to your situation."
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-2">— Felecia Fair</p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button 
+                    size="lg" 
+                    className="bg-primary hover:bg-primary/90"
+                    asChild
+                  >
+                    <TrackablePhoneLink 
+                      phoneNumber="832-346-9569" 
+                      className="flex items-center justify-center"
+                    >
+                      <Phone className="mr-2 h-5 w-5" />
+                      Call Me Directly
+                    </TrackablePhoneLink>
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    onClick={() => setShowBookingModal(true)}
+                  >
+                    Schedule a Call
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Trust Indicators */}
       <section className="py-12 border-y bg-card">
         <div className="container">
