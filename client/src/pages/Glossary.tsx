@@ -341,7 +341,7 @@ export default function Glossary() {
           <div className="border-t pt-6 text-center text-sm text-muted-foreground">
             <p className="mb-2">
               <strong>Legal Disclaimer:</strong> This information is for educational purposes only and is not legal advice. 
-              EnterActDFW is a licensed real estate brokerage in Texas. For legal guidance, consult an attorney or HUD-approved housing counselor.
+              EnterActDFW is a licensed real estate brokerage in Texas (License #0555113). For legal guidance, consult an attorney or HUD-approved housing counselor.
             </p>
             <p>© 2025 EnterActDFW. All rights reserved. | <Link href="/privacy"><span className="hover:text-primary cursor-pointer">Privacy Policy</span></Link> | <Link href="/terms"><span className="hover:text-primary cursor-pointer">Terms of Service</span></Link></p>
           </div>

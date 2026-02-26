@@ -701,7 +701,10 @@ export default function Home() {
           <div className="border-t pt-6 text-center text-sm text-muted-foreground">
             <p className="mb-2">
               <strong>Legal Disclaimer:</strong> This information is for educational purposes only and is not legal advice. 
-              EnterActDFW is a licensed real estate brokerage in Texas. For legal guidance, consult an attorney or HUD-approved housing counselor.
+              EnterActDFW is a licensed real estate brokerage in Texas (License #0555113). For legal guidance, consult an attorney or HUD-approved housing counselor.
+            </p>
+            <p className="text-xs mt-2">
+              EnterActDFW | Texas Real Estate Broker License #0555113 | Felecia Fair, Broker
             </p>
             <p>© 2025 EnterActDFW. All rights reserved. | <a href="#" className="hover:text-primary">Privacy Policy</a> | <a href="#" className="hover:text-primary">Terms of Service</a></p>
           </div>
