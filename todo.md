@@ -270,7 +270,15 @@
   - [x] Sync PDF download leads to GHL with appropriate tags (automatic via createLead)
   - [x] Verify all 4 PDFs exist in /client/public/pdfs/ directory
 - [ ] Revise hero headline to "Behind on Your Mortgage in DFW? Here's Exactly What to Do Next."
-- [ ] Add FAQ section with 10 questions and schema markup
+- [x] Add FAQ section with 10+ questions and schema markup
+  - [x] Research common Texas foreclosure questions
+  - [x] Write authoritative FAQ content based on Texas law (21 comprehensive questions)
+  - [x] Create FAQ page component with accordion UI
+  - [x] Implement FAQ schema markup for Google rich snippets (FAQSchema component)
+  - [x] Add FAQ link to site navigation (route: /faq)
+  - [x] FAQ page includes search functionality and category organization
+  - [x] Add FAQ link to homepage footer (present in header nav and footer)
+  - [ ] Test schema markup with Google Rich Results Test after deployment
 - [ ] Optimize contact form: Change button to "Get Your Free Consultation →"
 - [ ] Add situation radio buttons to contact form (Notice of Default, Behind on Payments, Auction Scheduled, Other)
 - [ ] Make contact form message field optional
