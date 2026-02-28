@@ -8,7 +8,7 @@ import { createLead, createLeadNote, createTestimonial, deleteTestimonial, getAl
 import { getChannelPerformance, getCampaignPerformance, getMediumPerformance } from "./utmAnalytics";
 import { createNewsletterSubscriber, getNewsletterSubscribers } from "./db";
 import { notifyOwner } from "./_core/notification";
-import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail, getGHLTimelineStatus } from "./ghl";
+import { syncLeadToGHL, sendWelcomeEmail, syncContactToGHL, addGHLNote, sendSurvivalGuideEmail, getGHLTimelineStatus, getGHLContactByEmail } from "./ghl";
 import { getOwnerNotificationEmail } from "./emailTemplates";
 import { linksRouter } from "./routers/links";
 import { campaignsRouter } from "./routers/campaigns";
@@ -357,24 +357,60 @@ Email: info@enteractdfw.com
           email: z.string().email(),
           phone: z.string().optional(),
           propertyZip: z.string().optional(),
+          serviceInterest: z.string().optional(),
+          message: z.string().optional(),
           smsConsent: z.boolean().optional(),
         })
       )
       .mutation(async ({ input }) => {
         try {
+          // Build tags based on service interest
+          const tags = ["Step 2 Completed"];
+          if (input.serviceInterest) {
+            const serviceLabels: Record<string, string> = {
+              foreclosure_help: "Interested: Foreclosure Prevention",
+              cash_offer: "Interested: Cash Offer",
+              short_sale: "Interested: Short Sale",
+              loan_modification: "Interested: Loan Modification",
+              consultation: "Interested: Consultation",
+              other: "Interested: Other",
+            };
+            tags.push(serviceLabels[input.serviceInterest] || `Interest: ${input.serviceInterest}`);
+          }
+
           // Update contact in GHL
           await syncContactToGHL({
             firstName: "Lead",
             email: input.email,
             phone: input.phone,
-            tags: ["Step 2 Completed"],
+            tags,
           });
 
+          // Add note with message if provided
+          if (input.message) {
+            // Get contact ID from GHL to add note
+            const contactResult = await getGHLContactByEmail(input.email);
+            if (contactResult.success && contactResult.contact?.id) {
+              await addGHLNote({
+                contactId: contactResult.contact.id,
+                body: `Step 2 Message: ${input.message}`,
+              });
+            }
+          }
+
           // Notify owner of Step 2 completion
-          if (input.phone || input.propertyZip) {
+          if (input.phone || input.serviceInterest || input.message) {
+            const serviceLabels: Record<string, string> = {
+              foreclosure_help: "Foreclosure Prevention Help",
+              cash_offer: "Get a Cash Offer",
+              short_sale: "Short Sale Assistance",
+              loan_modification: "Loan Modification Support",
+              consultation: "Free Consultation",
+              other: "Other / Not Sure",
+            };
             await notifyOwner({
               title: "Lead Completed Step 2",
-              content: `Email: ${input.email}${input.phone ? `\nPhone: ${input.phone}` : ''}${input.propertyZip ? `\nZIP: ${input.propertyZip}` : ''}`,
+              content: `Email: ${input.email}${input.phone ? `\nPhone: ${input.phone}` : ''}${input.serviceInterest ? `\nService Interest: ${serviceLabels[input.serviceInterest] || input.serviceInterest}` : ''}${input.message ? `\nMessage: ${input.message}` : ''}`,
             });
           }
 
