@@ -11,6 +11,7 @@ import { APP_LOGO } from "@/const";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { trackLeadCaptureStep2 } from "@/lib/analytics";
 
 const RESOURCE_TITLES: Record<string, string> = {
   "texas-foreclosure-survival-guide": "Texas Foreclosure Survival Guide",
@@ -47,6 +48,9 @@ export default function ThankYou() {
     onSuccess: () => {
       setStep2Completed(true);
       toast.success("Thank you! Your information has been saved.");
+      
+      // Track GA4 event for Step 2 lead capture completion
+      trackLeadCaptureStep2(formData.serviceInterest);
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update. Please try again.");
