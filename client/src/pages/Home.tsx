@@ -20,7 +20,8 @@ import {
   Home as HomeIcon,
   Users,
   Scale,
-  Download
+  Download,
+  Mail
 } from "lucide-react";
 import { toast } from "sonner";
 import { ResourceLeadCaptureDialog } from "@/components/ResourceLeadCaptureDialog";
@@ -30,6 +31,8 @@ import BookingModal from "@/components/BookingModal";
 import { PropertyValueLeadCaptureModal } from "@/components/PropertyValueLeadCaptureModal";
 import LeadConnectorContactForm from "@/components/LeadConnectorContactForm";
 import { blogPosts } from "@/data/blogPosts";
+import TrustBadges from "@/components/TrustBadges";
+import StickyCTA from "@/components/StickyCTA";
 
 export default function Home() {
   const [showPropertyValueModal, setShowPropertyValueModal] = useState(false);
@@ -65,6 +68,19 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     submitLead.mutate(formData);
+  };
+
+  const scrollToEmailForm = () => {
+    const heroForm = document.getElementById("hero-email-form");
+    if (heroForm) {
+      heroForm.scrollIntoView({ behavior: "smooth", block: "center" });
+      setTimeout(() => {
+        const emailInput = document.getElementById("hero-email-input");
+        if (emailInput) {
+          emailInput.focus();
+        }
+      }, 500);
+    }
   };
 
   return (
@@ -143,6 +159,10 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
                   You Have Options. We Can Help You Stop Foreclosure in Dallas-Fort Worth.
                 </h1>
+                
+                {/* Trust Badges - Directly under H1 */}
+                <TrustBadges className="mt-4" />
+                
                 <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
                   Facing foreclosure is overwhelming, but you're not alone. Get your free guide to understand your rights, explore your options, and find a path forward—with no pressure and no judgment.
                 </p>
@@ -193,11 +213,16 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Column - Tertiary CTA: Email Form */}
-            <Card className="shadow-lg">
-              <CardHeader className="bg-muted/30">
-                <CardTitle className="text-xl">Or Get Your FREE Foreclosure Survival Guide</CardTitle>
-                <CardDescription className="text-sm">
+            {/* Right Column - Step 1: Email-Only Lead Capture Form */}
+            <Card className="shadow-lg border-2 border-accent/30" id="hero-email-form">
+              <CardHeader className="bg-accent/10 border-b border-accent/20">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-accent rounded-full">
+                    <Mail className="h-6 w-6 text-accent-foreground" />
+                  </div>
+                  <CardTitle className="text-2xl">Get Your FREE Foreclosure Survival Guide</CardTitle>
+                </div>
+                <CardDescription className="text-base">
                   Download our comprehensive guide and learn how to protect your home and your rights in Texas.
                 </CardDescription>
               </CardHeader>
@@ -210,31 +235,37 @@ export default function Home() {
                     </AlertDescription>
                   </Alert>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email Address *</Label>
+                      <Label htmlFor="hero-email-input" className="text-base font-medium">Email Address *</Label>
                       <Input
-                        id="email"
+                        id="hero-email-input"
                         type="email"
-                        placeholder="john@example.com"
+                        placeholder="Enter your email address"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
-                        className="text-base"
+                        className="text-lg py-6"
                       />
                     </div>
                     
                     <Button 
                       type="submit" 
-                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" 
+                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-7 text-lg font-bold" 
                       size="lg"
                       disabled={submitLead.isPending}
                     >
-                      {submitLead.isPending ? "Sending..." : "Get Free Guide →"}
+                      {submitLead.isPending ? "Sending..." : "Get My Free Consultation →"}
                     </Button>
-                    <p className="text-xs text-center text-muted-foreground">
-                      ✓ 100% Free ✓ No Obligation ✓ Secure & Confidential
-                    </p>
+                    
+                    <div className="space-y-2">
+                      <p className="text-sm text-center text-muted-foreground">
+                        ✓ 100% Free ✓ No Obligation ✓ Secure & Confidential
+                      </p>
+                      <p className="text-xs text-center text-muted-foreground">
+                        We'll send you the guide and follow up with personalized help. Unsubscribe anytime.
+                      </p>
+                    </div>
                   </form>
                 )}
               </CardContent>
@@ -566,7 +597,7 @@ export default function Home() {
       </section>
 
       {/* Free Foreclosure Survival Resources */}
-      <section className="py-16 bg-background">
+      <section className="py-16 bg-background" id="resources">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -773,7 +804,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t py-12">
+      <footer className="bg-card border-t py-12 pb-24 md:pb-12">
         <div className="container">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
@@ -837,6 +868,9 @@ export default function Home() {
         open={showPropertyValueModal}
         onOpenChange={setShowPropertyValueModal}
       />
+
+      {/* Sticky Mobile CTA */}
+      <StickyCTA onCtaClick={scrollToEmailForm} />
       </div>
     </>
   );

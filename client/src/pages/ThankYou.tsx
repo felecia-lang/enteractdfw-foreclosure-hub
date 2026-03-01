@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { CheckCircle2, Mail, Calendar, FileText, ArrowRight, Phone, MapPin } from "lucide-react";
+import { CheckCircle2, Mail, Calendar, FileText, ArrowRight, Phone, MessageSquare, Briefcase } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { APP_LOGO } from "@/const";
 import TrackablePhoneLink from "@/components/TrackablePhoneLink";
 import { trpc } from "@/lib/trpc";
@@ -17,6 +19,15 @@ const RESOURCE_TITLES: Record<string, string> = {
   "avoiding-foreclosure-scams": "Spotting the Red Flags: Foreclosure Scams Guide",
 };
 
+const SERVICE_OPTIONS = [
+  { value: "foreclosure_help", label: "Foreclosure Prevention Help" },
+  { value: "cash_offer", label: "Get a Cash Offer on My Home" },
+  { value: "short_sale", label: "Short Sale Assistance" },
+  { value: "loan_modification", label: "Loan Modification Support" },
+  { value: "consultation", label: "Free Consultation" },
+  { value: "other", label: "Other / Not Sure" },
+];
+
 export default function ThankYou() {
   const [location] = useLocation();
   const params = new URLSearchParams(location.split("?")[1]);
@@ -26,7 +37,8 @@ export default function ThankYou() {
   
   const [formData, setFormData] = useState({
     phone: "",
-    propertyZip: "",
+    serviceInterest: "",
+    message: "",
     smsConsent: false,
   });
   const [step2Completed, setStep2Completed] = useState(false);
@@ -46,7 +58,8 @@ export default function ThankYou() {
     updateLead.mutate({
       email,
       phone: formData.phone,
-      propertyZip: formData.propertyZip,
+      serviceInterest: formData.serviceInterest,
+      message: formData.message,
       smsConsent: formData.smsConsent,
     });
   };
@@ -87,17 +100,18 @@ export default function ThankYou() {
           </div>
         </div>
 
-        {/* Step 2: Optional Contact Info (only show if email param exists and not completed) */}
+        {/* Step 2: Optional Additional Info (only show if email param exists and not completed) */}
         {email && !step2Completed && (
           <Card className="mx-auto max-w-2xl p-8 mb-12 border-2 border-accent/30">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold mb-3">Get Personalized Help (Optional)</h2>
               <p className="text-muted-foreground">
-                Provide your phone and ZIP code for location-specific foreclosure timelines and local resources.
+                Tell us more about your situation so we can provide tailored assistance.
               </p>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-5 max-w-md mx-auto">
+              {/* Phone Number */}
               <div className="space-y-2">
                 <Label htmlFor="phone" className="flex items-center gap-2">
                   <Phone className="h-4 w-4" />
@@ -113,22 +127,46 @@ export default function ThankYou() {
                 />
               </div>
 
+              {/* Service Interest */}
               <div className="space-y-2">
-                <Label htmlFor="propertyZip" className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  Property ZIP Code (Optional)
+                <Label htmlFor="serviceInterest" className="flex items-center gap-2">
+                  <Briefcase className="h-4 w-4" />
+                  Service Interest (Optional)
                 </Label>
-                <Input
-                  id="propertyZip"
-                  type="text"
-                  placeholder="75001"
-                  maxLength={5}
-                  value={formData.propertyZip}
-                  onChange={(e) => setFormData({ ...formData, propertyZip: e.target.value })}
-                  className="text-base"
+                <Select
+                  value={formData.serviceInterest}
+                  onValueChange={(value) => setFormData({ ...formData, serviceInterest: value })}
+                >
+                  <SelectTrigger id="serviceInterest" className="text-base">
+                    <SelectValue placeholder="What can we help you with?" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SERVICE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Message */}
+              <div className="space-y-2">
+                <Label htmlFor="message" className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Tell Us More (Optional)
+                </Label>
+                <Textarea
+                  id="message"
+                  placeholder="Describe your situation or any questions you have..."
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  className="text-base min-h-[100px]"
+                  rows={4}
                 />
               </div>
 
+              {/* SMS Consent */}
               {formData.phone && (
                 <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-md border">
                   <input
