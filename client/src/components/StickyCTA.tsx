@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackStickyCTAClick } from "@/lib/analytics";
 
 interface StickyCTAProps {
   onCtaClick?: () => void;
@@ -37,6 +38,9 @@ export default function StickyCTA({ onCtaClick }: StickyCTAProps) {
   }
 
   const handleClick = () => {
+    // Track GA4 event for sticky CTA click
+    trackStickyCTAClick();
+    
     if (onCtaClick) {
       onCtaClick();
     } else {

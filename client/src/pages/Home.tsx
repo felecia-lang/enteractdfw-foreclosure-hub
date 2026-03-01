@@ -33,6 +33,7 @@ import LeadConnectorContactForm from "@/components/LeadConnectorContactForm";
 import { blogPosts } from "@/data/blogPosts";
 import TrustBadges from "@/components/TrustBadges";
 import StickyCTA from "@/components/StickyCTA";
+import { trackLeadCaptureStep1 } from "@/lib/analytics";
 
 export default function Home() {
   const [showPropertyValueModal, setShowPropertyValueModal] = useState(false);
@@ -51,6 +52,9 @@ export default function Home() {
       const email = formData.email;
       setSubmitted(true);
       toast.success("Thank you! Check your email for the guide.");
+      
+      // Track GA4 event for Step 1 lead capture
+      trackLeadCaptureStep1();
       
       // Reset form
       setFormData({
