@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { ChatEngagementTracker } from "@/components/ChatEngagementTracker";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 // Lazy load all pages except Home for better initial load performance
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -119,6 +120,7 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
+      <GoogleAnalytics />
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <PageViewTracker />
