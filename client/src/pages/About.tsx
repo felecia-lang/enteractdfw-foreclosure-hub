@@ -138,7 +138,7 @@ export default function About() {
               Felecia specializes in working with homeowners who are behind on payments, facing foreclosure notices, or dealing with financial hardship. She provides honest assessments, fair cash offers, and connects clients with HUD-approved housing counselors and legal resources when needed. Her goal is not just to close deals, but to help families find the best path forward for their unique situation.
             </p>
             <p>
-              As a Texas native and longtime DFW resident, Felecia is deeply committed to her community. She regularly provides free foreclosure prevention workshops, partners with local housing counseling agencies, and advocates for homeowner rights at the state level. Her work has helped hundreds of families avoid foreclosure, negotiate with lenders, or sell their homes quickly and fairly when that's the best option.
+              Having relocated to Texas in December 2006, Felecia has made the DFW community her home and is deeply committed to the people in it. She regularly provides free foreclosure prevention workshops, partners with local housing counseling agencies, and advocates for homeowner rights at the state level. Her work has helped hundreds of families avoid foreclosure, negotiate with lenders, or sell their homes quickly and fairly when that's the best option.
             </p>
           </div>
         </div>
